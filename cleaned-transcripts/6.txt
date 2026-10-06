@@ -1,0 +1,4083 @@
+WEBVTT
+Yeah, good evening guys. He's better.
+I'm back on schedule or
+I'm back on schedule or our schedule up constantly.
+our schedule up constantly. LLM ops will be on Monday and Thursday.
+LLM ops will be on Monday and Thursday.
+People are still joining in guys.
+People are still joining in guys.
+5 minutes early.
+Any questions?
+Any questions?
+Today's session will be theory plus code.
+Today's session will be theory plus code.
+And don't worry if anyone hasn't seen the last session,
+we will also take a small recap here.
+And whatever we covered in the last session,
+the continuity that we had broken due to a long leave,
+we will cover it again.
+It's a sixth class, but you can take it as a fifth.
+Meaning we are going to cover a little part of the fifth again.
+Officially it is a succession, but we will cover a little second half of the fifth again.
+Not in that much detail, but we will definitely do a recap.
+Let's wait for another two minutes. People are still joining in.
+Yeah, he's better now.
+Thanks for concern Abhishek.
+Questions, questions guys.
+I'm looking for questions.
+You guys saw the last session.
+Here we were discussing the generating of golden data set.
+Great.
+Who is the one who joined here and didn't attend the last session and didn't see it.
+He is covering for the first time.
+Okay.
+No problem. We will cover it again, but not in depth.
+If you want to cover it in depth, then you can go and see the last session.
+Great. Let's start.
+So guys, our discussion was last time.
+We left it around generating the golden.
+How do we generate the golden? We were discussing about it.
+We do a lot of work because it took a lot of break.
+So let's discuss the whole flow once and our evaluation journey so far.
+Let's recap it so that you get an idea of where we are now and what we have to cover.
+So you will remember that when we started discussing about evaluation,
+we made sure that we understood the concept of evaluation through an example.
+Meaning, we will be able to understand the concept of evaluating your LLM based application by relating it to a real world example.
+So we discussed in the example that evaluation is similar to your exam.
+Now whenever you have to conduct an exam, you need two things.
+Actually, you need three things.
+First is your actual exam paper or your question paper.
+You need questions.
+Second thing is your student who will conduct the exam.
+And third is your evaluator.
+Or you can say that a person who will check the exam after the student has conducted the exam.
+So these are the three things.
+These are the prerequisites of conducting a successful exam.
+So we read that whenever you have to evaluate a LLM based application,
+then the biggest issue you have here is the data set.
+If you have a machine learning application, then you already have an evaluation data set in the machine learning application.
+How do you make sure that you have a data set on which you train your machine learning model?
+From within that, you sample some part of the data set and take it out as your evaluation data set.
+Whereas if you want to evaluate an LLM based application, then you do not have this particular data set available.
+So what do we have to do?
+We have to make this data set in some way.
+Now there were three methods to make this.
+There were three types or three methods you can say through which we can make this data set.
+What was the first method?
+The first method was to generate the data set using humans.
+You can create a data set to evaluate an LLM based application with the help of humans.
+We also read that if we create a data set through humans, then it is time consuming, costly and scalable.
+If you want to do your evaluation again and again on a certain frequency, then evaluating through humans is not a scalable system.
+The second method we found is that whatever queries we have in the application,
+because we are building a rag application, then our user will send a query to our application.
+So whatever queries are coming, we can lock it in some way, save it somewhere.
+And through these queries, we can test our LLM based application.
+Now what was the problem in this?
+The problem was that we were getting queries in the production.
+But the problem was that the answers that we needed to get the correct answers to the queries were missing.
+So again to generate these answers, we had to use a human.
+And the second problem was that we deployed our application without properly evaluating it.
+So if there is a problem in the production, then we cannot solve it.
+We have to take down our application.
+So this was the second type in which you evaluate your production data.
+But for that you again need the human's requirement.
+The third method that we had studied was our generating of data set using LLMs.
+We will generate the data set using LLMs.
+So what we had understood in this is that we will give our context to our LLMs.
+Meaning that we will give our knowledge base to our LLMs.
+And our LLM will generate this data set through a pipeline or through a workflow.
+Meaning that whatever documents are read in the knowledge base, we will get this data set on their basis.
+So here the third method was that we finalized it as a data set creation method.
+What can we do with this help?
+With this help we can generate the data set very fast.
+The second benefit is that it is scalable.
+And the third benefit is that it costs less than your humans.
+So the cost is an advantage.
+And we can use this type of data set generation in different iterations.
+So this gives us reproducibility.
+I hope you remember these points.
+After that we discussed that if we want to do an evaluation to conduct the exam,
+then first of all we should have our questions.
+And we decided that we will generate the questions through LLMs.
+But will this generation be direct?
+The answer is no.
+This generation will not be direct.
+There is a proper workflow in this which we will use.
+And through LLMs we get the method of generating these questions or this exam paper inside DeepEval.
+So through your DeepEval library, you can easily use a synthesizer.
+You can generate these questions on your knowledge base.
+I know I have covered things very quickly because we have already discussed this many times.
+So I took a quick recap.
+Now we will explain the entire workflow once again.
+We will not go into detail.
+We will read the part which we have already covered in detail.
+Is it clear?
+Is it clear?
+Right.
+I am taking the class after a long time so it may be a bit rusty.
+But I will pick up the flow.
+Don't worry about it.
+This class will be very interesting.
+Trust me.
+So let's start.
+So as we have already discussed, what is our issue here?
+Our issue is that we have multiple documents in our knowledge base.
+Whenever you build a rag application, do you build it on a single knowledge base?
+The answer is no.
+You have multiple documents on which you build your rag application.
+And in our case also, we are building a rag chatbot for campusX.
+And this chatbot will assist our students in solving doubts.
+Basically, we have added all the transcripts of our live classes to our knowledge base.
+And here we have made a rag chatbot which retrieves the documents from this knowledge base.
+And it generates answers on this retrieved context.
+Is this clear?
+Now our main concern of generating our evaluation is that whatever evaluation we have to do for rag chatbot,
+it should be our context-based or grounded.
+This means that the questions we have to generate should be solely from our knowledge base.
+It should not be outside our knowledge base.
+As we have covered in the example that if you want to make a paper, then this paper should be inside your ncrt.
+You cannot ask questions outside ncrt.
+So the mechanism we adopted was that we will use deep eval synthesizer.
+And this deep eval synthesizer will take my context or all my knowledge.
+And on the basis of this knowledge, it will generate my evaluation data set or my questions.
+But we also read that there are not only questions in our data set.
+If you have questions in any question paper, then you cannot evaluate it properly.
+You should have answer key along with questions.
+It is obvious that if you have only questions and your students have written answers, then how will you evaluate it?
+You should have a criteria, a ground on which you can compare and evaluate.
+Let's say that answer key has answer A and student has written answer B which is similar to answer A.
+So if this is the case, then I will score this student B as high.
+Let's say that I have to score it from 10, then I will score it as 8 or 9.
+Because its answer is similar to my answer key.
+Whereas if there is another student who has written answer C, then it is not similar to my answer.
+So what I will do is that I will score it low in this case.
+Let's say that I will score it 2 or 3.
+And who is doing all this?
+All this is done by LLM.
+And LLMs are good at understanding your language patterns.
+So here the exact keyword matching is not happening from inside my answer during the evaluation.
+Here basically intent matching is happening.
+So always remember that you don't do exact keyword to keyword matching.
+It is not necessary that the answer B which has got a high score, the words written in it are similar to answer A.
+That is not the primary requirement.
+The requirement is that the facts written by the student or application in answer B,
+the intent of the answer should match with the key.
+That is why we use LLMs here because LLMs are good at intent matching.
+We basically calculate similarities here.
+It should not be the exact.
+Is this clear to everyone?
+Now let's discuss how this whole workflow works.
+So what we have to do here is that we have to generate questions from our context.
+And we have one more limitation that the questions we have to generate should be limited in number.
+They cannot be infinite because we are generating questions through LLM.
+And you know that whenever you use LLMs, the cost of LLMs is the API.
+You have to bear the cost of all the API calls.
+So it is not that you can generate infinite questions here.
+There has to be a limit.
+So what we have to do here is that we have to decide how many questions we have to generate.
+So let's say I am the examiner.
+I am doing this evaluation and I have decided that I need 30 questions in my exam.
+And the second problem is that the context is very vast.
+So I have to do a smart approach here.
+What does smart approach mean?
+First of all, I have to filter out the most useful context from my context.
+It is very obvious that I have to create 30 questions here.
+I have a limited number of questions here.
+But the context is very big.
+So I have to assemble my context properly.
+I can create questions from a limited set of context.
+Is this thing clear?
+So the first thing is that I have to create this context and assemble this context.
+And secondly, what I have to do is that I have to make questions from the filtered context.
+Those should also be of good quality.
+I can't make light questions.
+Because what I have to do here is that I have to evaluate my student.
+I have to evaluate my application.
+So the questions I am making should also be of good quality.
+Again, I have to do one more set of filtration here.
+I hope you are understanding this point.
+So what I mean to say is that you have to do two levels of filtration here.
+First of all, you have to filter your context here.
+Because you make questions from the context of your BRAC-based evaluation.
+You set your question paper from the context.
+So this is your first prerequisite.
+So what we have to do here is that we have to refine this context.
+From where we are making questions, our source should be the best source.
+Is this thing clear?
+And secondly, the questions we are generating from this context,
+we will not select only the questions from the first pass.
+We will filter those questions further.
+So that the questions we have in the end and the answers related to them are our best of the best.
+That's why they are called Golden or Golden dataset.
+Basically, what is the golden dataset?
+Golden dataset is a template of you, a blueprint.
+Blueprint of what?
+Blueprint of the best of the best questions.
+Based on this, you will evaluate your LLM-based application.
+And there should be two or three things in this blueprint.
+First of all, the questions you will generate should not be straightforward questions.
+They should not be very simple questions.
+It should be a little tricky.
+That's why when we generate these questions, we evolve them further.
+We make them better.
+Second, you have to take care of coverage.
+Let's say, in your context, in your knowledge base, there are 50 documents.
+And you have to make only 30 questions here.
+So on an average, you are not making a question from one document.
+So what you have to do here is, first of all, you have to filter some of the best documents from these 50.
+Let's say, those are our 15 documents.
+These 15 documents are the best of all.
+Based on which we can evaluate our LLM-based application.
+And after that, you have to make sure that you generate two questions from each document.
+So what will happen with this?
+You can also maintain coverage here.
+What does coverage mean?
+You can test your LLM-based application from an all-rounded perspective.
+And third, you have to make this whole system scalable.
+It's not like you have generated these questions here.
+And it took you a lot of time to generate these questions.
+Or it took a lot of cost.
+So you have to make this whole thing scalable.
+And you have to basically generate this golden data set only once or twice.
+So you make it your source of truth or ground truth and save it.
+And you reuse it again and again.
+So what we generally do is, whenever we make an LLM-based application, like our RAG application.
+Now what we did in this RAG application is, we made our golden data set here.
+Which we are going to make in this lecture today.
+As soon as we create this golden data set, what we will do after that?
+In upcoming lectures, we will make some changes in this RAG application.
+We will make some iterations.
+We will change the value of some parameters.
+We can change some parameters in architecture.
+And what will happen with that?
+Our entire pipeline will change.
+If the pipeline changes, then its performance may also change.
+It is not necessary that every time you change something, the performance changes.
+But if you are making major changes, then performance can change.
+So whatever changes you are making, they are called your experiments.
+So the experiments you will do, you will create this golden data set every time.
+You will not create it again and again.
+You will create it once and you will run this golden data set on these experiments every time.
+And evaluate your RAG pipeline.
+And you will calculate deltas here.
+What does delta mean?
+The simple meaning of deltas is your differences.
+So basically what we do here is regression analysis.
+Regression analysis means that if your deltas are negative,
+that means your performance is decreasing.
+So we flag those iterations or experiments.
+Whereas if your performance is increasing,
+then we make it our next version or base line.
+Let me explain this with an example.
+Let's say that the RAG application we have made now is version 1.
+Let's say that it is also version 1.
+And we have evaluated it.
+So the average score that is coming out is 0.8.
+80%.
+So this means that 80% of the FAPs are grounded in nature.
+Now what I have done is I have made a version 2.
+I have made some changes in it.
+I have changed the generator model.
+Earlier I was using GPT model.
+Now I am using Gemini model.
+So what I will do again is I will test my application on this metric.
+Using the same golden data set that I used at this time.
+I will not change it in my data set.
+And at this time, let's say my value for faithfulness came to 0.95.
+Now with the change of the model, my application has become better.
+So I will consider this version 2 as my baseline.
+What does baseline mean?
+That this is my best.
+I can't call it baseline.
+I can call it best.
+Baseline will always be the same.
+Let's call it best.
+These terms are mine.
+Baseline is best.
+Nothing happens.
+But now let's call it best.
+This is my best version.
+Now I have made B3.
+Again, I used the same data set in B3.
+Using the same metric, I evaluated here.
+Now the result that I have got here has come to 0.75.
+So here I can see the dip in performance.
+So this is my delta.
+And how much is delta here?
+Delta is my point 2.
+So this is my regression.
+So I will never consider this version.
+Because this is giving me less performance than my best.
+So whenever you do the evaluation and experimentation,
+After experimentation, you always select the improvement iteration.
+Wherever you see drawbacks or loss in performance,
+You discard that particular version there.
+You don't use it.
+Is it clear?
+Is it clear?
+Great.
+Guys, how is the flow of the lecture?
+How is the flow?
+Okay.
+Today's lecture will be interesting.
+Again, it's been a long time.
+It's been 10 days since the lecture.
+It will take a little time.
+But I will come to the flow.
+So have patience.
+Today's lecture will be very interesting.
+We will also code side by side.
+Okay.
+Let's move forward with our discussion.
+So we have discussed all these things.
+Now we will discuss what will be our flow in today's session.
+So in today's session,
+What will be our flow will be that
+What we have to do is we have to create our evaluation data set here.
+Instead of that data set,
+I write here evaluation data set.
+We have to create this evaluation data set.
+Okay.
+And what we will do to create it here
+First of all, how is it created?
+We will understand its entire workflow.
+And at the same time,
+We will implement this workflow in the code side by side.
+Okay.
+So it won't be like we will understand the whole workflow in one stretch and implement it in the code.
+We will understand a little part here.
+An important step.
+And we will implement that step in the code.
+Then we will move on to the next step.
+Then we will implement it in the code.
+So the code will be live.
+So
+We are going to do this whole thing.
+We have to create an evaluation data set here.
+So to do this whole thing,
+We will require two things.
+First of all, your context.
+Okay.
+Because as we have discussed that
+In Rack based applications,
+You are on this context.
+On your question paper or on your questions.
+Set it.
+So we have to set it here.
+So we have to understand this context filtering here.
+How it works.
+And at the same time,
+We have to understand how you generate this goldens here.
+Okay.
+We will also see how its generation flow or pipeline works.
+Okay.
+So we will use exactly the same flow that we were using in the last session.
+We will use exactly the same flow that we were using in the last session.
+We will read this whole thing in reverse.
+Okay.
+First of all, we will see how you generate goldens.
+And then we will understand how you assemble the context here.
+And then we will understand how you assemble the context here.
+Okay.
+So we will do similar things in the code.
+The first code in the code will be
+How you create goldens here.
+How you create goldens here.
+As soon as we write the goldens code,
+After that,
+We will go to the context assembly code.
+Okay.
+And we will write it in one file.
+And finally, when our code is completed,
+Then we will run it.
+And then we will create our goldens.
+As soon as our goldens are created from our context,
+We will save it.
+We will save it.
+Because we are using LLMs here.
+Okay.
+So our API calls are running here.
+So we will save our goldens that will be generated here.
+So we will save our goldens that will be generated here.
+After that, what we will do is
+We will convert these goldens to an evaluation data set.
+We will convert these goldens to an evaluation data set.
+Now these are just goldens.
+This is not a data set.
+When is your data set created?
+Your data set is created when you
+Give these goldens
+To your application.
+To your application.
+So the final
+That you get here is your
+Dataset.
+And inside this, every unit
+Is called your LLM
+Test case. I hope you remember.
+If you don't remember, then we will discuss it again.
+But this is the whole flow.
+So what do we have?
+We have our goldens.
+Goldens are what? Goldens is my question paper
+Along with the answer key.
+So here are two pieces of information.
+First is my questions
+Or queries. And the second is my
+Answers.
+And what are these answers?
+These are my answer keys.
+The expected answers
+Which I, here, if I get
+This answer from my application
+Then I will score it 100% here.
+Now I will give these goldens
+To my application.
+What will my application do here?
+If my application, because it is a rag waste
+Application. If it
+Has this query.
+If this query goes
+Then what will be the first thing?
+First of all, retrieval will happen here.
+So my
+Retriever will here
+Retrieve some chunks
+From my PromaDB
+From my vector store.
+And after that
+What will we do?
+We will set an augmentation here.
+We will make a prompt and we will send
+That prompt to our LLM.
+And what will LLM do?
+It will take this context plus my query
+And here it will generate
+My response.
+And I will add that
+To this LLM test case.
+And this will be my
+Final evaluation data set.
+So after doing all this
+What I will get in the end
+Is my evaluation data set.
+And the evaluation data set
+That I will get, I will save it
+And persist it.
+Why? Because here
+Again I have to run my application
+Let's say I have
+Created 30 goldens here.
+So these 30 goldens
+Will go to my application one by one.
+My application will do retrieval here.
+Will generate response here.
+For this 30 goldens.
+And I will
+Basically save it at one place.
+So that I don't repeat these LLM calls.
+And finally
+The evaluation data set that I have saved
+When we will read about metrics
+We will do actual evaluation
+We will do actual scoring
+So there we will use this data set.
+So if I explain you
+With the exam analogy
+What is golden?
+In the exam analogy
+Golden is my
+Exam question paper.
+To make this golden
+Question paper
+The component that we are using
+That is our LLM
+We are calling LLM, LLM is costly
+So we are saving this question paper
+Because we have to save it somewhere
+Because tomorrow
+We have to take the test.
+Now when you are giving this question paper
+To your application
+What is the work of your application?
+If the question paper comes to the student
+Then he will write the answers.
+So the answer that your application is generating
+That is your student writing the answers.
+So you save the answers somewhere
+Basically that is your answer sheet.
+So your LLM
+Test cases are generated
+For these 30 questions
+This is your answer sheet.
+You have to persist this too
+And save it.
+So we are saving it here.
+And finally
+When will we use this answer sheet?
+We will use this answer sheet
+When we have to score here.
+So when our evaluator
+Scores here
+We will take this answer sheet
+We will compare their answers
+With the answer
+And give the final scoring here.
+After this, it will be clear
+What we are doing here.
+We are using LLMs
+Here we are using LLMs
+First
+When we are generating our goldens
+We are using LLMs
+And secondly
+When we are giving our application
+These goldens as input
+Then also our LLM is working
+Because it is an LLM based application
+So here also LLM is used
+So we will persist the final results
+And in the third step
+The scoring that we will read
+Here also we will use LLMs
+And LLMs as judge
+We will use this technique
+So in every step
+Here you are using LLMs
+So in every step whatever you will generate
+You will save it.
+Is this clear?
+Let me take some questions
+I will take questions in 2 minutes
+And then we will move forward
+Yes, this is synthetic data
+Yes
+Shruti, we will create
+Questions from context
+That is what is here
+We will make questions from context
+Our question paper
+That will be from my NCRT
+It will not be from outside NCRT
+No, DeepAval and Langsmith are different
+Langsmith is for tracing
+Where you basically
+Can see the data
+And you can also see
+Where you basically
+Trace every
+Input
+Now we will move forward
+What is complete tracing
+What are the steps in tracing
+So we will read those things
+DeepAval is used for your evaluation
+Arun, where are you confused
+Will you tell me once
+Yes, DeepAval and Raghav
+Are similar
+You will get the answer to Mayank's question
+In the judge's
+We have not read it yet
+Arun as a judge
+You will read it when you do the evaluation
+Don't worry about it
+You will understand that
+When we will discuss this generate golden
+So you will understand
+First golden and then context
+No problem
+You will understand that
+Now
+We have taken half an hour
+Overview of what we have read before
+I have read things very quickly
+Here
+So class is basically
+About to start
+This was all the recap and
+The flow
+I have not discussed the flow with you yet
+It will be discussed now
+It's clear guys
+You will understand everything
+All your questions will be answered
+Nothing will be pending
+Don't worry about it
+Actually
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+My
+Today we will do less refer to documentation
+We will do more focus in the workflow
+Which I will explain to you
+So what we have to do here
+Let's do one thing first
+This is the start of the lecture
+We should first define our goal here
+So what is our goal
+Our goal is to generate the evaluation data set
+Right now you must be thinking that
+Sir, we have to generate this evaluation data set
+This is our goal
+But what is this evaluation data set
+Is it that we can use this evaluation data set
+To evaluate our LLM based application
+If you are thinking like this
+Then the answer is yes
+But this is an incomplete answer
+Because the evaluation data set
+Is not generated directly
+There is no way through which you can generate this data set directly
+This is also a complete process
+I will explain that process to you
+So the process is that our LLM based application
+That is a rag based application
+You have to keep this thing in mind
+What we are doing here is that we are doing the specification of our application
+We are learning the specifications of it
+So for rag based application
+We have to do a special evaluation
+Now in rag based application
+There are two types of failures
+What is the first failure
+The first failure is the failure of your retriever
+Means that generally when you test your rag based application
+Then you test the retriever
+Which is a main component of your rag application
+You test it
+And secondly you test your generator here
+And you sometimes mix these two
+And test your entire application
+Means where the retriever and generator are working together
+You test that particular flow here
+So what is our goal
+Our goal is that we have to make this test paper
+And for what we have to make the test paper
+We have to make the test paper for our application
+So this is my student
+And I have to test three attributes of my application
+So I have to test the retriever failure and generator failure of my application
+And along with that I have to test the workflow of this application
+Now whenever you conduct a test
+There are three stages of conducting a test
+What is the first stage
+The first stage is that you should have your question paper
+The second stage is your exam day
+The day your student will write the exam
+And the third stage is your checking of the exam
+After which you give your results
+So what we are doing here
+This question paper and exam day
+We are combining these two steps
+And through this we are making our evaluation data set
+With the analogy of the exam
+After today's session
+How do you set a question paper
+That will also come to you
+And how this exam is conducted
+You will also get this
+And after that we will have
+What will be the end result
+This is our evaluation data set
+So whenever you evaluate your student
+Now think about it
+So do we care about his question paper
+The answer is no
+After the exam is over
+We give the question paper to the student
+We never keep the question paper with us
+Who do we care about
+We care about our answer sheet
+So you can understand in a way
+That this evaluation data set
+This is my answer sheet
+Clear?
+So let's go
+This whole thing step by step
+Now let's understand what we are going to do here
+What is our first task
+What is the first task
+To conduct the exam
+No
+The first task is
+We have to make this question paper
+So our sub task number one
+That is the
+Generation of
+Question paper
+This is my sub task number one
+Okay
+Now the biggest prerequisite here
+To set this paper
+What I have
+That I have to set this paper
+It should be
+Solely based on my
+Available knowledge base
+Means whatever documents
+I have added in my vector database
+On which my rag application is doing the answers here
+So I just have to set my question paper
+On those documents
+I can't add any question here from outside
+Means
+There should not be any such question in my question paper
+That is based on the external knowledge
+This is completely off-limit
+Okay
+So this sub task that I have decided
+Generation of question paper
+Here I have set the first limit
+That whatever questions will be here
+Will be based on my knowledge
+And who will generate these questions
+Will generate these questions
+This is a paper setter
+Which is
+Readily available
+Okay
+It is a little costly
+Not as costly as human
+But it is a little costly
+And
+By reading the context well
+It can generate questions of very good quality
+But readily available means
+Or
+It is not less costly
+That you misuse this whole setup
+It generally happens
+That if we have something easily accessible
+Then we misuse it
+It is not that you have LLMs
+Which can make your data set
+Can make it faster than humans
+Can make more
+Can understand more context
+So you misuse that whole thing
+You have to pay attention to one thing
+That the evaluation you have to do
+It should be on a certain set of questions only
+Okay
+You have to do this evaluation
+On a limited set of questions
+So you will get a question in your mind
+If you are setting this paper
+You are the setter
+You are the person who has to set these questions
+And you have a lot of energy
+You have a lot of time
+You can do this work very easily
+But you have a limitation
+That the questions you have to include
+Those are limited
+So I ask you
+If you want to set a paper like this
+Okay
+And you want to set a paper on a very big book
+Let's say the book is of 5000 pages
+And in that book
+Let's say
+There are 30 chapters
+So what kind of question will you set here
+And you have to set 20 questions
+This is your limit
+So I am looking at the chat
+You tell me
+If you are setting this paper
+What kind of questions will you include here
+Keep in mind that no question should be from outside
+It should be from inside the book
+It should be from inside these 5000 pages
+Guys
+I am not talking about clustering or anything
+No
+I am saying that you have to set a paper
+I am not talking about rag application here
+I am simply talking to you
+That you have to set a paper for humans
+So what kind of paper will you set
+Main concept
+Okay
+Trane navigation is absolutely right
+That we will filter out the main concept from each chapter
+But
+There is an issue here before filtering out the main concept
+If we filter out one concept from each chapter
+Then we will have three concepts here
+Because there are 30 chapters
+But how many questions do we have to generate
+The question we have to generate is 20
+So what will be the first filtering criteria here
+The first filtering criteria will be that
+We have to filter over chapters
+That we have to filter out those chapters
+Which are a little tough
+Okay
+A little tricky
+Through which we can evaluate properly
+Like if I give you an example
+It is possible that in physics
+You are teaching angular momentum
+Okay
+Or it is possible that there is electromagnetism
+Those are tricky chapters
+So you want to include them
+Whereas if it is an easy chapter
+Let's say it is a biology chapter
+I don't remember the NCRT chapters
+So you don't want to include that
+Because you want to make the paper a little tricky
+Okay
+I hope you understand these examples
+Like if I have to ask a limited set of questions in an interview
+Ask 20 questions from my candidate
+And I want my interview level to be good
+So what will I do here
+I will not ask what linear regression is
+I will ask him to tell me about boosting algorithms
+Tell me about SVM
+Okay
+So I will select the tricky topics here
+Is this clear
+So the first thing is to filter out these chapters
+So the work of filtering chapters
+This is my context filtering
+Okay
+And now what I have to do
+Now I have the context
+Let's say I have 15 chapters
+Now I have to generate these 20 questions
+So let's say 10 instead of 15
+Calculation will be simple
+I have 10 chapters
+What are these 10 chapters
+These chapters are a little tough
+On the basis of which I can evaluate my application and student well
+Now what I have to do here
+I have to make 2 questions from each chapter
+And these 2 questions that will be made
+These will be the best questions of that particular chapter
+Okay
+These will be the toughest questions of that chapter
+So I will call these 2 questions my golden
+And a group of golden is your golden data set
+Okay
+So what I told you is that we will read this golden step first
+After that we will read this context step
+So basically what we will read first
+We will read that you have a hypothetical situation
+That you have these 10 chapters
+You can filter out and make it available
+Okay
+If a teacher comes to you
+Let's say a principal or a HOD comes
+He said that you have to make questions only in these selected chapters
+So your task is not to select chapters
+You have 10 chapters
+You have to make questions only from them
+And you have to make sure that you have to make 2 questions from each chapter
+Okay
+So what will be the next step
+The next step will be that when you go to make these questions
+So what will you do first
+You will not make 20 questions in the first pass
+Okay
+Because you don't know that the questions you have made are good or not
+You will make a little more questions here
+Let's say what you did here
+Instead of 20, make 60 questions here
+Means you had 10 chapters here
+You had to make 2 questions from each chapter
+But how many did you make
+You made 6 here
+Okay
+You made more questions 3x
+And now you will take these 60 questions
+And what will you do here
+You will bring a critic here
+What is critic basically
+Critic is nothing but an evaluator itself
+This is also a kind of evaluator
+What will this critic do
+He will see your 60 questions
+And every question
+You have 60 questions here
+He will see every question here
+1 score
+Okay
+Now this score will be on any particular criteria
+We are not discussing the criteria now
+Simply you understand that a critic came
+Another teacher came
+He took your 60 questions and gave him a score
+Now what is your task
+Your task is that you are here
+Best scoring questions
+You will select them
+So what will you do for that
+You will put a threshold here for that
+What will this threshold do
+This threshold will basically work as a filter
+That if the score of my question
+Is crossing this limit
+Okay if its score is better than this
+Then only I will select it further
+Otherwise I will drop it here
+So basically what I did with this threshold
+That I have to select 20 questions here
+How many do I have
+I have 60 here
+So I have put a filter in between
+Okay and I am here
+On the basis of that filter
+Select these 20 questions
+Now there can be two things here
+What can be two things
+The first thing is that I have to select 20 questions
+And the filter that I put
+I would say that I have kept the criteria very low
+Means I have put the threshold very low
+What will be the drawback of this
+The drawback of this will be that
+I have to take out 20 questions from 60
+I have 30 questions here
+More than the requirement
+That is one thing
+If I have set the threshold very high
+Then what will happen in that case
+In that case I wanted 60 questions here
+Sorry 20 questions
+And I got 10 questions here
+Less than 10
+So what I have to do
+I have to set this criteria
+This threshold
+According to the fact that I have only 20 questions here
+Right
+But in case if I have set the criteria a little hard
+And I don't have 20 questions
+So what I will do
+These 10 questions will be those
+Which have been filtered out
+Ok
+Who are passing the criteria
+Whereas I will take the remaining 10 questions here
+Which are not passing the criteria
+But those are my top scoring questions
+Ok I will explain this through an example
+Let's say you have three questions for now
+And you have to select two of them
+This is the first question
+It went to the evaluator
+It went to the critic
+The evaluator gave it a score of 0.8
+And your threshold
+Let's set the threshold
+Let's say it is 0.6
+Ok
+The second question went to the evaluator
+The second question was given by the evaluator
+Let's say the score of 0.56
+The third one went
+And it got a score of 0.38
+I gave random scores
+Now I have to select two questions
+Minimum
+So the 0.8 one is fulfilling my criteria
+So it will be selected naturally
+Ok
+Now it comes between 0.56 and 0.38
+One way is to drop these two
+And generate a new question
+And do this filtering criteria again
+One way is
+I will select the top scorer
+Who did not reach the threshold
+But because I wanted two questions
+I selected this
+So I will select this 0.56 one
+It is not as good as 0.8
+But because I wanted two questions at minimum
+So after this workflow
+I am getting two questions at the end
+Is this clear?
+So basically what we did here
+We performed the filtration in the first step
+We generated more questions than needed
+And we gave it to another model
+We gave it to an evaluator
+We gave it to a critic
+What did the critic do?
+From those many questions
+Which are maybe 3x or 4x
+Select from them
+And select some best possible questions for us
+Ok
+The questions which were going through our criteria
+Were automatically selected
+The top performing ones
+We selected them
+Is this clear?
+This step is clear guys
+This is a very important step
+I am looking at the chart
+It is a little tricky
+Yes, we have already discussed this in the last class
+Great
+So you are understanding the goal here
+I have a goal
+I have to create my goldens
+I have to make my evaluation data set
+For that I need my context
+And I need my goldens
+Now goldens has a limit
+I can't breach that limit
+So I have one way
+To generate questions in one shot
+But the problem of generating questions in one shot
+Is that there can be some questions
+Not of that good quality
+Because we are getting this generation work done by an LLM
+So the response of LLM is not always of good quality
+So what we will say to LLM
+That you generate more questions
+After that I will use another powerful LLM
+And evaluate those questions
+And after evaluation
+I will do the full filtration work here
+Is this clear?
+So this threshold
+This is the threshold of filtration criteria
+This is the threshold
+I set this as a developer
+This is a parameter value
+Or hyperparameter value if you want to say
+This is a parameter that I set
+Whereas the work of evaluation
+Who does this?
+This is done by my LLM
+Now here in this particular thing
+There is a retry loop
+Now you must be wondering
+What does this retry loop do?
+This retry loop basically does this
+That if you have any question
+Like this particular question
+Which got 0.56 score
+So generally what we do
+We don't select it in one shot
+We make some effort
+We try a little
+That the one who could not pass your threshold
+But still top performing
+So what can we do?
+We can take them
+And we can rephrase this question
+And try a little more
+That maybe this is my threshold
+And I can do it
+So maybe this can
+Breach my threshold
+What I mean to say is
+What is my threshold?
+0.6
+Let's say this is 0.6 based on the clarity
+What is the clarity
+Of my questions
+So 0.8 was very clear
+That this particular filter
+Passed
+0.56 just came on the edge
+And stopped
+Now one way is
+That this one is better
+Than this one
+Second way is
+Let's try one more
+Attempt
+Let's try this generated question
+And send it
+To an LLM
+Let's call an API
+And tell LLM
+That this is your original question
+And what you do
+On the basis of clarity
+Make it more clear
+And this try
+We do it in a retry loop
+So this is my original question
+My 0.56
+What I will do
+I will give this 0.56
+To an LLM
+I will tell LLM that this is my original
+You make it a little better
+On the basis of clarity
+So my LLM will give a response
+What will be the response?
+Again this will be a question but a little rephrased
+LLM will try
+To make it better
+Again this rephrased question
+I will give it to the evaluator
+Now on the basis of clarity
+The evaluator may score it
+0.7
+Now it is clearing my threshold
+So it will be selected
+So what I did
+One more attempt
+One more nudge
+And made my generated question better
+But let's say
+Even after that
+My evaluator gives it a score of 0.58
+Instead of 0.7
+That still
+My score is below the threshold
+The score is better
+But again below the threshold
+It may be below 0.56
+Because again you are making it work through LLMs
+So the next iteration
+May be useless
+So whatever score you got
+But it is not breaching the threshold
+Again what will you do
+Again you will rephrase it
+Again LLM will give you a better rephrased version
+Again you will evaluate it
+And you will run this work
+In a loop
+But can you run it in an infinite loop
+It may be that you have a question
+Which even after rephrasing it
+It is not meeting your clarity criteria
+It may be that
+It is always between 0.5
+And 0.59
+Never cross 0.56
+Never cross 0.59
+In that case
+You will set a limit
+So you always have a retrial limit
+And after crossing that limit
+Even if your question
+Can't breach the threshold
+Then you select the maximum
+Which is here
+Is it clear guys?
+This is a little tricky concept
+But I hope you are getting this point clear
+Sorry
+Is this point clear guys?
+It can be same, it can be different
+You decide all this
+Through parameters
+Now when we go to the code
+I will show you LLMs
+Which LLMs you are using
+Is this concept clear?
+It is clear
+Is the filtration thing clear?
+Right
+Now what we have done here
+We have generated
+20 questions
+We have 20 questions
+Which are coming from our context
+Right, but the problem is
+That the 20 questions
+Which LLM has generated
+Is very straight forward
+These are very straight forward questions
+If I will give these questions
+To my application
+Then my application generally
+Will score high
+Because you can understand
+In the context of retrieve
+There are straight forward questions
+And straight forward queries
+So my rag based application
+Will be able to answer them easily
+What I have to do here
+If I have to judge
+My application very well
+And evaluate it
+Then I have to make it a little tricky
+These straight forward questions
+I have to make them a little tough
+But the process of making it tricky
+There is a limit on it
+It is not like I make it
+Endlessly tricky or very tricky
+That my LLM based application
+Can't solve it
+I have to make it so tricky
+That I can make a difference
+Between a donkey and a horse
+I hope you are understanding this point
+So I have to make it
+That much tricky that
+My LLM based application
+Can solve it
+So I can make a difference
+Between a LLM based application
+And a ill performing application
+I mean to say that
+If the questions are very easy
+Then all my iterations
+Because after evaluation
+I have to do experimentation
+So all my iterations
+My version 1, version 2, version 3
+Will score high
+So it will be very difficult to make a difference
+Whereas if my questions
+Are very hard
+Then every version will perform low
+And any of my
+Threshold
+Passing criteria
+Will not meet it
+So what I have to do here
+I have to set a question paper
+That is a mixture of
+I would say
+Questions you can say
+And mixture of hardness you can say
+That there are some easy questions
+And some hard questions
+So that I can test my application
+And the concept you use for this
+That is the concept of
+Evolution
+Ok
+What you do on different basis
+You evolve your questions
+We have seen this
+In the last session
+We made a whole graph
+How you select a particular route
+Through probabilities
+Now this step of evolution
+This work of evolution
+The depth you do
+What is the meaning of depth here
+The meaning of depth is
+Your number of evolutions
+Means
+You hold a simple question
+And evolve it
+Let's say you evolve it based on
+Your comparison
+This is the type of evolution
+After that you
+Evolve it again
+Based on your reasoning
+So you made your simple question
+Tricky within 2 steps
+If I put one more step
+Then
+It will be more tricky than reasoning
+So the number of evolutions
+That I have
+My question becomes tricky
+So what I have to do
+In between this
+I have to find a middle ground
+And the middle ground is generally
+2-3 evolutions
+You keep one evolution
+What does one evolution mean
+The first question you made it tricky once
+That is also generally simple
+And your application can easily answer it
+What does two evolutions mean
+That you are making it
+Comparatively tricky
+Where you can understand the difference between a donkey and a horse
+But
+If you set its evolution depth
+Or number of evolutions
+4,5 or 6
+Then your question will become so tricky
+That your normal LLM based
+Application will not be able to answer it
+So I hope
+This whole thing is clear to you
+Is this clear guys
+Concept
+We have discussed these concepts quickly
+Because we have already discussed it
+In the last session
+We spent 1-1.5 hours on it
+Clear
+Do you remember these concepts
+Those who are attending for the first time
+Please watch the previous recordings
+After that you will read this concept again
+Then you will be more clear
+Clear
+Great
+So let's do one thing
+Whatever we have discussed so far
+Let's convert it into a flow diagram
+With that your understanding
+Will be more
+Confirmed
+So
+You can see my scaly draw
+You can see the screen guys
+Yes
+So let's do one thing
+We confirm this whole thing through a flow diagram
+So what are we doing first
+First of all
+We have
+Let's say this is our context
+This context
+Has come to us
+Let's say these are my 10 chapters
+Now where did it come from
+We are not focusing on it
+Now what I have to do next
+Next step
+I have to create
+Golden's
+But can I create golden's straight away
+The answer is no
+So what will I do in the first step
+In the first step
+Generation
+But what will be this generation
+This will be
+Let's say my 60 questions
+So I have
+60 questions generated
+So I have
+60 questions generated from the original context
+Now what I have to do next
+Next step
+I have to put a filter in the middle
+So
+I create
+A filter
+This is my filter
+If I can
+Change the
+Style
+Where does the mesh style come from
+I don't know
+I am not able to find it right now
+Just a second guys
+I am looking for the mesh style
+I can't find the background
+Whatever
+I am not getting it
+So this is my filter
+Now what is this filter
+This filter is basically my
+LLM
+And you can say this is my evaluator
+Or you can call it my critic
+It has different names
+Now what are these 60 questions
+I will give my filter one by one
+So these 60 questions
+Will go to the filter
+Now what will this filter do
+It will pass some questions
+Let's say I have set a threshold here
+And the threshold value
+Is 0.6
+Let's keep it
+So let's take some examples here
+These are my
+Certain set of questions
+I saw it here
+These are my questions
+I couldn't fill this
+But I saw the option
+I don't know
+Whatever
+These are my questions
+This is my question number one
+This is my question number two
+This is my question number three
+Now I will give these questions
+To this particular evaluator
+The work of evaluator is simple
+What will the evaluator do
+It will evaluate me
+So I
+I am evaluating it
+Passing through the evaluator
+The evaluator answered this question
+Let's say 0.9
+Now the work of evaluator
+Is just
+Scoring
+The comparison I will do with the threshold
+For number two
+So what I got here
+Score
+Let's say
+Let's keep it
+0.55
+Let's keep it
+This score
+And for number three
+Let's take a lower score
+So for number three
+I got here
+Point let's say two
+It is very less
+So what I will do
+It is very useless
+I will discard it completely
+So
+I have discarded it completely
+I will not use it
+Now what I want here
+I want two
+I need here
+Two questions
+But I have two questions
+The answer is no
+I have only one question
+Now what I will do here
+I will try to make this Q2 a little better
+So what I will do is
+I will take this Q2
+And here I will open an LLM
+Here I will
+Open an LLM
+And I will
+Provide this Q2 to my LLM
+And what my LLM will do
+For this Q2
+A rephrased
+Version
+This is my
+Q2 but
+You can say rephrase
+You can't say better
+It will be better or bad
+But this is rephrase
+You have generated this
+And you will give this rephrase
+To Q2
+Again to where
+To my filter
+Again to my filter
+And again
+Here this Q2 rephrase
+Will get a score
+Let's say you got a score at this time
+0.7
+It now clears your threshold
+So what you will do
+You will select these two Q1 and Q2 rephrase
+And if after 2-3 retries
+If these points don't clear
+Then also
+This Q2 rephrase
+Which is better
+You select it
+This whole flow is cleared
+This way you are getting better
+Explanation using the diagrams
+Okay
+It is cleared
+Now what you will do
+You will select Q1 and Q2
+Okay
+And by selecting Q1 and Q2
+What you will do is
+You will evolve them
+So let's say this is my
+Evolution
+Component or pipeline
+Now again this whole graph is going on
+We are not discussing the graph again
+What will you get in input
+Input will get your
+This particular Q2
+Which is the rephrase one
+And you will get Q1
+Because
+You already selected this one
+So I can
+Select this one
+This one
+Okay
+And you will give these two
+And what will you get in the end
+You will get your evolved questions
+This will be your
+Q1 but how will it be
+This will be evolved
+You will get your Q2
+But how will it be
+Evolved
+I hope you understood this whole flow
+Okay
+This is your Q1
+Let me select that
+R only
+This is your Q1
+And this is your Q2
+Okay
+Is it clear guys
+The whole flow
+Great
+Now let's do one thing
+Now this whole flow
+We have already seen this
+We saw its parameters last time
+Now let's implement it in the code
+Okay
+I will turn off the camera now
+I will start my VS code
+And just give me one second
+I will show you the changes
+In the code
+And the whole code will be live
+So I will show you
+This whole work in live code
+And for this particular
+Code the documentation we are going to refer
+Is this one, our golden synthesizer
+Okay
+This actual documentation we have already referred
+In the last session
+So what we have to do first
+Is create our synthesizer
+Okay, in the synthesizer
+What we do
+We
+We
+We
+We
+We
+We
+Basically what we do to help
+Okay, I will discuss this with you
+So
+Basically
+In the DPval
+Whatever criteria you are setting
+Okay, whether it is your filtration
+Criteria
+Or your
+Evolution Criteria
+You set these two things
+Using your config
+So you have special config classes
+And you define in these config classes
+What kind of
+Criteria you want
+So basically we are going to use this config class in the code
+Okay
+So first of all is your filtration config
+From the name only we can understand
+It will give you a configuration around filtration
+Okay, it will give you options
+To select and the second is
+Your evolution
+Config, okay
+If I can scroll down
+So this is your filtration config
+These are its parameters, okay
+We will see every parameter in the code
+And this is your evolution, okay
+And these are its particular parameters
+Is it clear now guys?
+It is clear
+Voice is breaking
+Is my voice proper now?
+I don't know why my voice is breaking
+Everything is working fine on my end
+Yes
+Okay, maybe there is some issue in between
+Okay, let me take some questions
+And then we will move to the code part
+Okay, we will do it slowly
+It is a very important concept
+It will take a little more time
+But we will finish it today
+What did you say if
+Q2 doesn't clear the threshold
+After multiple rephrase
+We take the best
+That is close to our threshold value
+Yes, look it is written here
+If you go to documentation
+In filtration
+In filtration
+If the quality score is still lower
+Who is giving the quality score?
+My critic model, my evaluator
+If it is still less than my threshold
+After retry
+I told my LLM to rephrase
+Still I didn't get a good question
+Because the starting question
+It can be of that quality
+Not that good
+So here the golden with the highest
+Quality score will be used
+So after multiple retries
+We will select the best
+From that
+Like I selected Q2
+And I sent it to LLM twice
+Both the times what my LLM generated
+Was less than my original
+So I will select the original
+If Q1 has a score of
+0.9 why do we have to
+Evolve again?
+Sachin, your Q1
+Is basically your simple question
+It is directly generated from context
+So it is not a simple question
+We basically do evolution
+To make our question a little tricky
+And why is it important to make it tricky?
+So that you can test your application
+A little better
+Is Sachin's point clear?
+In easy questions
+Every application will give a good answer
+You will not be able to differentiate
+To differentiate you have to
+Bring some edge cases
+So these edge cases are after
+The code
+Clear?
+So let's go towards the code
+I hope you guys can see my
+VS code
+VS code is visible
+Yes
+For multi hop questions we use graph rag
+Our rag right now
+Can't give answers
+To multi hop questions
+Okay
+Fine
+So let me check
+I have made some changes
+Let me show you the changes
+Let me check
+That we have added dpval
+We haven't
+So the changes are
+You can see the transcripts
+1 to 14
+So all these transcripts
+Which we have done live
+I have included all of them
+Why have I given this number?
+Because when
+We are working with the name of the transcript
+There are white spaces
+So the paths were not working properly
+When I was working with this code
+So I have given it simple numbers
+So that there are no path errors
+So there is no reason behind this
+You can give them numbers
+Or name but that should be
+Without the white spaces
+There was white space in the original files
+So these are my 14 transcripts
+I have cleaned them
+Again you can see
+This is a particular session
+This is my LLMops
+If we open this
+This will be another session
+You can see different things here
+My rag application
+Which we built in the notebook
+I have brought it here
+Into my script
+I have generated a python script
+Now if anyone is afraid
+Of working with scripts
+Then don't worry
+Today we will do live code in this session
+And you will be comfortable working with scripts
+Because your DPVal
+Is at the back end
+Async
+When you have to generate multiple questions
+You don't wait
+You don't wait for a question to be generated
+You wait
+Asynchronously
+Along with that
+You do multiple LLM calls
+And generate questions in parallel
+So that they get faster
+So if it doesn't work in the notebook
+Then you have to write the code
+Of the evaluation in the script
+For that, first of all
+You have to install DPVal
+Because we are doing this whole work
+Through UV
+We will write UV add
+And we will write DPVal
+And DPVal is installed
+It is super quick
+How will we check it
+We will check DPVal
+I can see its version 4.0.7
+Now we will do one thing
+We will start writing our evaluation code
+Here
+Because we are working in two phases
+First of all we are creating
+Our cold ones
+We are creating python file
+So I will use touch command
+And I will write
+Generate
+Goldens.py
+So I have
+Generate Goldens.py
+Here we will write our DPVal code
+So first of all
+I will import
+From DPVal
+Dot synthesizer
+Synthesizer dot synthesizer
+From here I will get my
+Synthesizer class
+I will import my
+Synthesizer
+Ok
+Next what I have to do here
+I have to attach
+Conflicts of filtration and evolution
+So I will write from
+DPVal dot
+Synthesizer
+You will go inside this
+I am showing you a sub module by config
+You will import
+Your configs
+So which configs are available
+You have evolution
+Config available
+You have filtration config
+Available
+And you have context related config
+We are only importing
+We will understand it later
+How to use it
+Basically it will be used to create context
+Which we have to cover in step-a-v
+So I will import it here
+Next what I have to do here
+From DPVal
+Synthesizer
+I will go inside types
+And I will import
+Evolution class
+Ok
+And because we are going to use
+LLMs and openAI
+LLMs
+So I will need my epa key
+From
+.env
+I will import
+load.env
+And from
+pathlib
+First of all
+Let's load our epa key
+And I have done it
+Next what I have to do here
+To define paths
+So to define paths
+I will define some paths here
+First of all I will define
+Root path
+Paths are generally constant
+So I am using all caps
+I will use path here
+And here I will use
+Magic variable
+Ok
+Which is file
+So what will file give me
+It will give path of my current python file
+And what I need
+I need root path here
+path of LLMops rack app
+So what I will do
+I will simply do .pyrite
+And what I will get from this
+I will get path of my root
+If I print and show you root path
+Let me open up the
+terminal
+And simply I will write
+ub run
+Oh
+generate
+golden.py
+So see my root path came
+Ok, in LLMops
+This is LLMops rack app
+So I am correctly able to locate the path
+Ok, I have defined this path here
+Now what I have to do here
+I have to generate my data set
+So to generate I will need a directory
+So here
+Let's make
+And variable
+Which is data set directory
+Ok
+And we will name this directory
+So
+root path
+and data set
+Ok, we can do data set or data sets
+Let's do data sets
+And what I will do
+I will also create
+the directory if this directory
+I have not made yet
+For that I will use pathlib again
+So data set directory
+and
+make directory
+Ok
+This code on
+I have already seen
+So this will create my directory
+If I run this file again
+You will see here
+A directory named data sets is created
+Ok, so we have done this work
+Now what we have to do
+First of all we have to create our synthesizer
+So this will create the synthesizer
+So I will create a variable
+here
+With the name of synthesizer
+It will be of the synthesizer class
+Now let's see
+What all things
+I add in synthesizer
+So let's go back to the documentation
+Golden synthesizer
+Ok, let's go towards the main class
+Which is our synthesizer class
+Again I am referring to the documentation
+So I am referring to it
+So that you can understand things
+So your synthesizer
+It is used to
+Gild your evaluation data set
+And in it there are some parameters
+Which you use
+All are optional, you can leave it
+And if you want you can set it
+Ok, so for the model
+We are using GPT 5.4
+If you want you can use a small model
+Because newer models are
+Efficient, so what we can do is
+Here we can use a small model
+It will save us on our API cost
+What we can do is
+Here in model parameter
+I can set as
+GPT 5.4 mini
+Let's use it
+It is quite efficient
+There is no problem like this
+Our data set is not too complex
+After that, what is the max concurrent
+An integer that determines
+The number of goldens that you can
+Concurrently generate in parallel
+So this is default 100
+We are not generating so much goldens
+So let's keep it default
+Then we have to set two more things
+Which are our configs, filtration config
+And our evolution config
+Now you define these two configs
+Using the filtration config and evolution config classes
+What does filtration config do
+Allows you to customize the degree
+Which the goldens are filtered during generation
+Ok, you can use default
+But we will change it a little
+We will tweak it
+And in evolution
+You set your evolution
+Styling as a set that we will not use here
+So let's go towards our
+Filteration config
+First of all, we create this
+What is the work of filtration config
+You can customize the degree
+On which the goldens generated are filtered away
+To ensure the quality of the
+Synthetic inputs
+So here you have three optional parameters
+Critique model
+What is the critique model
+This is your evaluator
+LLM, Eval, Evaluator, Critique
+You can call it anything
+This is your critique
+Right, what is the second
+Your threshold
+As I told you, you set the threshold
+Default is 0.5
+But you can change it
+And generally when you change the threshold
+If you don't have good goldens
+Then you reduce this threshold
+So that
+Whatever the top
+Goldens are, you get them
+And if you want to make your goldens
+A little better
+Then you increase this threshold
+Generally 0.5 or 0.4
+0.6, this range is correct
+We will go with 0.6
+But you can tweak it
+Again this is experimentation
+So we will also take this threshold
+So this is the first one
+And what is the final
+The final is the value of maxretry
+How many times you want to rephrase
+So default is 3
+Because we are saving on our LLM calls
+So we will keep default 2
+Ok
+So let's do this
+Changes in the code
+What we have to do first
+On the synthesizer, we have to set our configurations
+So we will
+Read the
+Configs
+What will be our first config
+Filtration config
+It will be of type
+Filtration config
+Again we have to set 3 things
+First is our
+Synthetic input quality threshold
+We set its value
+0.6
+It should be float
+Then you have to set here
+Max quality retry
+Max
+Retry
+We are setting this to 2
+Then you have to set your
+Critique model
+Here we
+Can use a small model like GPT-5
+Ok
+So we have set the critique here
+Now you must be thinking that what if
+We don't set the critique model here
+So if you don't set the critique model here
+Then your synthesizer model is used
+See it is written
+A string specifying which of the open AI
+GPT model to use
+To determine the context quality score
+If you don't define anything here
+Then your synthesizer model is used
+And if you have not defined anything in the synthesizer
+Then GPT-5.4
+Is the default, it will be used
+Ok
+We have also set the threshold
+It is the minimum
+Quality threshold for synthetic
+Input generation
+And your quality score
+Inputs with quality score lower
+Then the threshold will be rejected
+This is our max retry
+Is it clear?
+Now we have to set our
+Evolution config
+We have set one config
+Now we will create the next config
+Let's connect
+Guys
+I want to ask you one thing
+Quick feedback, that this live code
+Do you like it better or if the code I have written
+Already, it looks better
+Because it takes some time to write it
+Which way is more better
+You like the live code better
+Why is there an issue of voice
+The mic is working fine
+There should not be an issue of voice
+For how long is the voice breaking guys?
+For too long or
+For a little while
+Because I can speak loudly
+And I can bring
+I don't think so
+I am connected through the ethernet
+Some people are getting an issue
+Some people are not getting
+Maybe some network issue
+Because weather is bad
+Maybe there is some problem
+It was for few seconds, so fine
+Now we have to set
+Evolution
+You can customize the type and depth
+Applied by the synthesizer
+You set two things
+First is
+Number of evolutions
+What is number of evolutions
+How much depth you want to go
+It controls the complexity and diversity
+Of the generated data set
+Default is 1
+We will set it as 2
+You tell in the dictionary
+What type of evolutions you are applying
+What is the probability value
+For the rack application
+You apply these 4 evolutions
+Multi-context, concretizing
+Constraint and comparative
+We will use these 4
+We will give equal score to all
+0.25, 0.25
+With the evolution values
+You can compare
+How golden will be generated
+We will give equal score
+We can change it
+Let's see
+Let's go to the code
+Let's go to the code
+First of all
+I have to set
+Number of evolutions
+Parameter name is
+NumEvolutions
+I will set it as 2
+Set depth as 2
+Set here
+Evolutions
+What are these evolutions
+This will be my dictionary
+Let's make a dictionary
+Now in this dictionary
+These keys
+These are your
+Specific keys
+Where will you get these
+From your evolution class
+If you remember
+We imported this evolution
+Its use is coming here
+We will use evolution
+Evolution.
+Because it is an enum
+What does it mean
+It is an enumerator
+You can set specific values
+These are your particular values
+Let's check
+What do you set in rack
+Multicontext, concretizing, constraint and comparative
+We will use all these
+First of all
+We will set the multicontext
+We will keep the value of multicontext
+Keep it less
+Because our lectures are different
+We will keep its value 0.1
+Keep in mind that its total
+Should always be 1
+Because it is probability
+Second
+Evolution
+Let me see what are the values
+We will keep the concretizing
+We will keep it 0.3
+Evolution
+We have to be careful
+So that there is no typo
+We will keep the constraint
+We will keep it more
+We will keep it more
+And we have
+70
+Now we will have to keep 0.2
+Sorry
+Let's increase it
+Let's do it 80
+And constraint
+And finally which is ours
+Finally it is multicontext
+That is constraint
+Comparative
+Let's do this
+I hope this is the right code
+So we have set both our configs
+Now we have made both the configs
+Now we will set it in our synthesizer
+In two synthesizers
+Which is ours
+Filtration config
+In which we will put
+Filtration config
+And which is ours
+And which is ours
+Evolution config
+In which we will put
+Evolution config
+We don't need styling
+We have added everything
+Async mode will be there
+Concurrently your code will be generated
+Is this code clear?
+Is it clear?
+Clear
+Now we will leave this code here
+We will discuss this and then come back to this code
+So let's
+Discuss that concept
+Which is this
+Concept of generating the context
+How do you generate this context
+It is also a very important concept
+So let me
+Turn my camera back on
+Am I visible?
+So far we have understood
+That you have
+Context
+We have discussed that you already have
+Context available and on that basis
+How do we make our goldens
+We have understood this in theory
+And we have
+Dissolved its code
+So this
+Is basically very easy
+Let me explain to you
+So what do you have? You have your knowledge base
+Now we call it knowledge source
+Knowledge base is not actually this
+Which is your documents
+And what are these documents?
+This is your ground truth
+Whatever questions you want to make
+You have to make it from inside these documents
+So what you have to do first
+You have to load these documents
+Here
+So the amazing thing is
+It doesn't work like this
+Here only the injection phase of the rack
+Works
+In a similar way
+Your particular context building works
+Ok
+Now your synthesizer
+The synthesizer you have made
+What is the work of the synthesizer
+The work of the synthesizer is to generate your goldens
+This is its prime work
+Now
+To generate goldens
+It uses four methods
+And
+Those four methods depend
+On its source
+Knowledge
+Source is what is going to happen
+Ok
+I will tell you about those four methods
+First of all is from docs
+Generate goldens from docs
+From name is correct
+In the knowledge source
+On the basis of that you create your goldens
+So when do you generally do this
+Generally you do this in your rag applications
+Always you have to remember
+That this is the default of rag applications
+To generate your questions
+Because
+What is the specialty of your rag application
+What is the characteristic
+That it gives grounded responses
+So for grounded responses
+Your questions should be from your documents
+Not from outside
+So you make sure of that
+Second is from context
+Again from name
+What is from context
+That you already have your
+Retrieved documents
+You are generating your questions
+Right
+When do you use this
+Ok
+Ok
+We will not use this
+And generally it is not used
+Because this context
+Which you add in it
+This retrieved context
+It has to be very
+So only then
+You will trust this whole thing
+So we are not going to use this
+Third is
+Goldens from scratch
+From name again
+What is from scratch
+That we don't have any knowledge source
+So if you don't have knowledge source
+Then how will you generate
+Goldens or questions
+Is there an issue
+Shruti
+Is it due to the weather
+I don't know how is the weather outside
+Is there an issue of connectivity
+Ok maybe due to my bandwidth
+There is no issue in mic
+Guys you can tell me
+Where did it get missed
+From where to repeat
+Now what you have to do
+Is to
+Our synthesizer
+Which will create goldens
+Now is voice clear
+Guys
+Should I continue
+Yes
+So I will open chat and keep it here
+So that if there is any problem
+You can ping me
+At the same time
+Again it is breaking
+Let me see guys
+I will disconnect the mic code
+And connect again
+Just give me a second
+Is it fine now
+Because I haven't changed anything in my setup
+It is exactly the same setup
+Ok video is also getting stuck
+So there is no problem in mic
+Then maybe some issue with my wifi
+If it is fine then we can continue
+If there is any issue
+Then you can tell me
+I am bringing the mic closer again
+Ok
+So I will talk to the mic
+So that you can understand more clearly
+Yes chat is on
+So what is the work of synthesizer
+The work of synthesizer is
+To generate goldens
+So where are we generating goldens
+We are generating goldens from a knowledge source
+From available documents
+Now we have 4 available methods
+To generate this
+First is
+From documents
+Where we already have
+Available knowledge source
+Or from document source
+We generate our goldens
+From docs
+Generally in rag app
+Your from docs is default
+Because what you have to create
+The questions you have to create
+That should be from your ncrt
+So you have to generate grounded questions
+So whenever you will build a rag app
+Then you will use from docs as a default
+You will not touch any other method
+But we will read all the methods
+What is the second method
+Second method is from context
+What is from context
+You already have
+Retrieved context available
+What are we doing in from docs
+We are taking questions
+And sending them to our retriever
+We are sending them to our retriever
+From retriever we are generating
+And we are checking the response
+Whereas from context
+You already have
+Retrieved context available
+What you do is
+You generate questions
+On your retrieved context
+Now generally
+You do this in scenarios
+Where you have already evaluated your retriever
+Where you know
+That the context retriever is fetching
+That will be correct
+You don't have to evaluate the retriever
+You just have to evaluate the generator
+So you use from context
+And we are not going to use this method
+Because for this
+You should have grounded context
+And you generally write this context
+From humans
+Because we are doing all the work from LLM
+So we will not use this method
+The third method is
+That is generate goldens from scratch
+From scratch means
+That you don't have any source of document
+You create your goldens from scratch
+You create your goldens from scratch
+Now you will have a question
+That we are generating
+Questions on a context
+But we don't have context
+So how will we create context
+We don't have documents
+So we basically generate goldens
+From scratch and tell our LLM
+That what is our application type
+That we have a rag application
+That we have a rag application
+We tell our audience
+What kind of evaluation
+We want to do here
+Basically we define our whole application
+Using natural language
+And on the basis of that
+LLM generates goldens
+With its internal knowledge and understanding
+And the fourth method
+Is generate goldens
+From goldens
+From goldens
+Means already you have
+A golden data set available
+What you have to do is
+You have to augment your golden data set
+What does augment mean
+You have to increase it
+Let's say I have generated
+10 goldens from here in the first pass
+Now what I have to do is
+I have to use these 10 goldens as a source
+And make 100 questions from them
+So what I will do is
+I will generate goldens from goldens
+And give these 10 goldens
+To my LLM
+And I will tell it that for every question
+I will have to make 10 questions
+So I will have 100 questions
+At the end
+So if you have a human curated
+Golden data set available
+But the number of questions is less
+Then you use this particular method
+So that your goldens increase
+If you find this complex
+Then you have to
+Focus only on point number 1
+Because here we are going to
+Work with context assembly
+In any other step
+We don't do any text assembly
+And in track, this from docs method
+This is your go to method
+I will show you this in documentation
+So if I go here
+If I go up
+See
+What is written here
+Hmm
+That to generate goldens
+There are many methods
+From docs is used here too
+In most of the documentation
+We will show you using from docs
+Because this is the most powerful method
+Hmm
+Which
+The two of the four generation methods
+See what are the four methods here
+Generate goldens from docs
+Useful for generating goldens
+To evaluate your LLM application
+Based on the context extracted from your knowledge base
+Which we need
+Generate goldens from context
+Useful for generating goldens
+To evaluate your LLM application
+Based on a list of prepared context
+If you have a human context already available
+And retrieve context is already available
+You can use this particular method
+From scratch
+Useful for generating goldens
+To evaluate your application
+Without relying on context or knowledge base
+If you don't have context or knowledge base
+You can use the scratch method
+And goldens
+You augment your existing goldens
+Which means you increase their number
+Now it is written here
+You can read clearly
+You can notice that from docs is a super set of context
+And
+From context is a super set
+Of generating from scratch
+What does super set mean
+That from scratch you don't have knowledge base
+Right
+Whereas from context
+You have knowledge base
+But from that knowledge base
+The filtered context
+Already prepared by humans
+Means these 10 chapters
+Which we selected
+I am not selecting LLM
+This is already selected by humans
+Whereas from docs
+Inside that
+I am asking my LLM to do the context assembly
+So this is
+Complete automation
+You can understand this as
+Partial automation or goldens
+LLM is doing, context generation
+Is my work
+What happened Arun
+Is there any issue in voice
+I am explaining you as an example
+You don't have to focus too much on correlation
+I am not using it
+I am telling you that
+In your scratch method
+Inside the scratch method
+You are doing
+The least automation
+You don't have to create context
+You don't have
+Any knowledge source
+What you are doing is
+You have told your application
+How it looks
+And from scratch
+It is generating golden data set
+What you are doing in generate goldens from context
+You have
+The golden generation
+That work has to be done by LLM
+That should be automated
+Whereas the retrieved context is
+Human generated
+It is partial automation
+Whereas the method from docs
+Is complete automation
+Your context assembly
+Or context work
+Is done by LLM
+Automated
+And the questions generated
+On the basis of that context
+Is also done by LLM
+I can work for your help
+In these three methods
+I can show you what is in it
+You will get a good idea
+Look generate golden from context
+What you do in this
+You pass context already
+You just pass that context to your LLM
+And it will generate
+Goldens
+Like you
+Used this method
+You provide this context to your LLM
+It has to be
+Passed to the LLM
+And it is mandatory
+It is a mandatory parameter
+You pass this
+And your LLM
+Creates goldens
+Context assembly is not used
+This is the only documentation
+If I talk about from scratch
+You tell your LLM
+In the application
+In which scenario you are working
+You explain the scenario
+You explain the task
+And what kind of input you are expecting
+In your application
+And your LLM
+Automatically generates
+Goldens
+It is written
+The approach is particularly useful
+When your LLM application doesn't rely on RAC
+You don't use this technique in RAC
+Look what you are telling
+What will be the input format
+What will be the expected format
+What will be the task
+What will be the scenario
+And your goldens are generated
+Then you have
+Generate goldens from goldens
+Where you augment existing goldens
+And create new goldens
+What you do in the input
+You give your existing goldens
+And tell how many more goldens
+You need from your existing goldens
+Then LLM creates you
+After this is clear
+We are not going to use these three methods
+That's why I am not focusing on it
+The method we are going to use
+That is our main focus
+This is default for RAC
+Look if your application is a RAC
+I am talking about the documents
+If your application is a RAC
+System
+Then generating goldens from documents
+Can be particularly useful
+Especially if you already have
+Access to documents that make up your
+Knowledge base
+Because we have RAC application
+Which we are evaluating
+And we have this knowledge base
+So we are going to use this particular method
+I hope guys this is clear
+Is this clear guys
+Clear
+Now let's understand its flow
+How does this flow work
+As I told you
+This whole flow mimics
+Your RAC ingestion phase
+So in this pipeline
+There are four steps
+Exactly same as in your RAC
+Ingestion step
+First of all you do
+You first parse your documents
+Here you load the documents
+And you parse them
+Basically you extract all the
+Text out of them
+For this you use exactly
+Lang chain document loader
+I will show you internally
+It uses Lang chain
+Second step in RAC ingestion step
+You chunking
+So here also you chunking
+In your context
+And here instead of recursive
+Character text splitter
+You use token based splitting
+What we are basically doing here
+We have documents in our case
+Our transcripts
+We have to generate
+Golden on our transcripts
+So those transcripts
+As a context how you give your synthesizer
+We are learning that process here
+So first of all you load your documents
+So we have 14 transcripts
+So 14 will be loaded
+After that you chunk it
+So based on the chunking
+Criteria you will have chunks
+After that what you will do
+After that you will embed your chunks
+So here we will use
+OpenAI embedding model
+And embed our chunks
+And finally we will use the
+ChromaDB
+Vector store and these embeddings
+We will save in our
+Vector store
+So this is the whole process
+Where you load your documents
+Chunk them, embed and store
+Now we have only
+Ingested our documents
+We have not made a context
+Now we have
+The book of 5000 pages
+We have just loaded it
+We have broken it page by page
+And we have
+Preserved 5000 vectors
+In our vector store
+That's it
+Now we have not filtered out important concepts
+This point is cleared
+Now I will show you the documentation
+What you do is
+You take your documents
+This is your knowledge source
+And from that you make your context
+And based on that context
+You make your goldens
+Now see what are the prerequisites
+Read carefully
+Why we are not installing it
+Because we have already installed it
+So DPVAL says that if you want to use this method
+Then it should be dependency
+ChromaDB, why do you need it?
+Chunk storage and retrieval
+LangchenCore, LangchenCommunity
+TextBitter, we already have this
+Now the step is
+Generate your goldens
+So whenever you want to generate
+Then you use
+Synthesizer from docs method
+And you have to provide 3 things
+First thing is mandatory
+Which is your document path
+And where are your documents
+Second thing is
+Include expected output
+What is expected output?
+This is my answer key
+If I set it to 2
+Then in my goldens
+Along with my input and question
+I will also get answer key
+Now it's not difficult to generate answer key
+This answer key can easily generate my LLM
+What I have to do is
+I have to give my question
+And context
+Just like in rag pipeline
+And my LLM
+Will generate my answer
+Is this clear?
+Now for this particular thing
+We are going to use a better LLM
+Video is stopped
+I have turned off the video
+Voice is clear
+Video is off already
+Camera is off
+It must be on your side
+And it's fine
+Don't slow down
+Because I am going to show you
+The whole implementation in code
+It is very much important
+So what I was saying is
+What you do here
+First you tell me what is your document path
+Do you want answer key
+Or not? You set it to Boolean
+You tell me how many goldens per context
+You tell me that
+And then
+Context construction config
+This config tells you
+How you will construct your context
+How you will assemble your context
+Right?
+So we understand this particular flow
+That how you assemble your context
+Now what is our scenario?
+Our scenario is
+That we have
+A book of 5000 pages
+Listen carefully guys
+This is very important
+You listen carefully for 5 minutes
+You will understand this concept
+We have broken the book
+Of 5000 pages
+Into chunks
+So how many chunks we have
+We have 5000 chunks
+We have to write
+We have taken these text chunks
+And given it to our embedding model
+We have created vector embeddings
+And saved it in our vector store
+Right?
+Now how many pages are there in our vector store?
+5000 pages
+And what I have to do here
+I have to create
+The goldens here
+Only from 100 pages
+Clear?
+So what is the problem here?
+So what is the problem here?
+That I have to filter
+In some way
+I have to select these 100 pages
+One way is
+That I go through these 5000 pages
+And give it to my LLM
+And my LLM decides
+From these 5000 pages
+Which 100 pages are worthy enough
+Through which I can build my questions
+And the second way is
+That I randomly pick here
+And I test it
+And I test it
+Using an evaluator
+So here we
+Instead of loading all the documents
+Because our LLM also has a context limit
+That we can't load all the documents
+Even in 5000 pages
+We can go out of our LLM context limit
+So what we will do here
+Randomly
+We will select some pages
+Now our pages
+Those are nothing but my vectors
+So I have already chunkified these pages
+And converted them into vectors
+Using my embedding model
+And stored them in my vector store
+So what I will do
+I will simply go inside this vector store
+And inside this
+I have 5000 embeddings
+And randomly
+I will select 100 vectors
+I will select 100 vectors
+Do you understand?
+Now
+What is the next step?
+Now I will select 100 vectors
+And give it to an evaluator
+Again this will be my critic model
+And what this evaluator will do
+Basically
+It will judge these particular vectors
+On some basis
+On some particular criteria
+And it will give a score on that criteria
+What is that criteria?
+We will see in the documentation
+So here what happened
+I randomly selected 100 vectors
+And gave it to my critic model
+Critic model
+Generated 100 scores for 100 vectors
+Each vector having its own score
+Based on a certain criteria
+Now here again
+I have set a threshold value
+What I am deciding in the threshold value
+In the threshold value
+If let's say
+This threshold value is 0.5
+So the vectors on the basis of
+That criteria
+This clarity
+If it is more than 0.5 on the basis of clarity
+I will pass it
+If it is less, I will stop it
+Again it is the same flow as we saw earlier
+So what we had
+Let's say in this two dimensional space
+We had 5000 vectors
+A lot of vectors
+We randomly selected some vectors
+Let's say
+These are the vectors
+And passed them through a filtration criteria
+The filter that came out
+Okay it came out
+Let's say this came out
+This came out
+These 4 vectors are filtered out
+Now what I will do here
+Second thing
+I will calculate the similarity score between these 4 vectors
+Because
+What we have to do here
+The goldens we have to generate
+Those should be
+Absolutely best
+They should be best of the best
+And to generate these goldens
+I have to remember one thing
+That there should not be a duplication of questions
+You think
+If in your question paper
+Where you have a limit
+That you have to put 20 questions
+There
+And you have selected 10 chapters
+With so much effort
+So you will add 20 questions
+You will try not to repeat any question
+No similar question
+If it is similar
+If it is similar
+Then obviously you are
+There is redundancy
+You are adding one extra question
+And you are not able to test
+In the evaluation
+Because you have already tested
+The same thing in a question
+Means you are basically testing
+Your student on similar
+Type of questions
+So that is not a better test
+So what we will do here
+We have selected
+Vectors through the evaluation
+Using similarity score
+We will assign scores
+So how will you get the similarity score
+The similarity score will be a matrix
+Let's say
+From these 4 vectors
+V1, V2, V3, V4
+And here there will be columns
+Sorry rows
+V1, V2, V3, V4
+And for all of them
+You will assign a similarity score
+For similarity you can use any metric
+You can use Euclidean distance
+You can use cosine similarity
+Let's say we are using cosine similarity
+And we are giving similarity score
+So what will be the similarity of V1 and V2
+Maximum will be 1
+So all will be 1 on diagonal
+And basically you will give some scores
+Ok
+And on the basis of those scores
+You will form groups
+Is it clear?
+You will form groups
+So what you had here
+You had 100 chunks that you randomly picked
+You passed it through a filter
+With that filter
+You have 60 chunks left
+Ok
+40 that you couldn't cross
+They were already discarded
+These 60 chunks are the ones
+On which we have to make our questions
+But before making these questions
+What I will do here is
+Context grouping
+So that similar type of context
+I can put it in one group
+And I will make questions on that group
+So that there is no duplication
+Or redundancy in my questions
+Is it clear?
+So I will calculate the similarity score
+And the chunks that
+I will get more than my threshold
+I will group them together
+So let's say
+V1 and V3
+I selected them here
+And made one group
+And made another group
+And V4
+Now what I will do
+I will select this group
+And from this group I will make two questions
+I mean two goldens
+And I will select this group
+And I will make two questions here
+So whenever you have to
+Generate goldens here
+You don't directly tell your synthesizer
+How many questions you have to make
+You don't tell your synthesizer
+That make 30 questions
+No, this is not defined in this way
+What you do first
+During context assembly
+You tell how many groups you will form
+So you tell the number of groups
+Or number of context
+Let's say that context is 10
+Then you tell that from every one context
+How many questions you will make
+So
+Number of goldens
+Or questions
+So let's say this is 2
+So now how many questions I will get in total
+I have 10 groups
+And from every one group I have to make 2 questions
+So I will get 20 questions
+And I will not make these 20 questions straight away
+I will make 60 questions here
+Which we saw in the previous slide
+So from every one group
+You will make 6 questions
+You will filter it
+After filtering it
+It will be a complete process
+So basically
+What you do first
+You make context and after context
+You make your goldens
+Why we read it backwards
+Because this is a particular method
+Synthesizer is a main class
+And this method
+Where you are making your goldens from your documentation
+Will this be clear
+Clear
+Great
+So let's see this documentation
+You will be cleared from here
+So written here
+So here
+The final maximum number of goldens
+Which you get
+How do you get them
+Maximum goldens per context
+So this is a parameter
+Which you define here
+How many goldens you need from every context
+Like default is 2
+Means how many questions you need from every one group
+This is that value
+And max context per document
+How many context you need from one document
+That is that value
+Which is the number of groups
+So from that you get to know
+How many final goldens you will get
+So this is created
+So what we will do here
+To customize this context construction
+We will use a config called
+Context Construction Config
+You can customize the quality of context
+Constructed from documents by using this config
+Now in this config
+You have 7 optional parameters
+First is your critic model
+Again you will get to know why critic model
+The vectors you randomly selected
+You will evaluate them
+That whether they are correct or not
+After that
+You can set the encoding
+This is basically for your document loading
+After that you tell
+Max context per document
+How many groups you want to create
+From your document
+Maximum number of groups
+Like we have 14 transcripts
+So let's say we have set max context per document
+So we have set it as 2
+So from every document
+From every transcript
+My groups will be on the best concepts
+What is the context? My group
+So how many groups I will have
+Guys
+If I have 14 transcripts
+From every transcript
+From 14 transcripts
+If I am making a group
+On 2 important concepts
+So how many groups are there in total
+Can anyone tell in the chat
+So 14 transcripts
+From every transcript
+2 groups, yes 28
+So you are understanding these points
+Minimum is
+You have to generate this much
+If you are not able to generate 3
+Then you have to generate this much
+Means you are not getting any number
+Then you have to keep the most correct
+Again that is the filtration criteria
+That if no one is getting
+Not crossing the threshold
+Then you keep the highest scoring
+So these are the same concepts
+Then you have max context length
+This means
+How many number of chunks you have to keep
+Now what I have told you
+These groups
+You are making
+From whom are you making
+From vectors, right?
+What are your vectors? Chunks are there
+Embedded chunks
+So in max context length
+You tell what will be the group size
+Maximum group size or group length
+That is your max context length
+So in our case
+What is the group size of this particular group?
+2, these 2 chunks
+Are made of 2 vectors
+So similarly you set this value
+In this parameter
+Ok, default is 3, you can change it
+Means if we take default
+Then in every group
+There will be 3 chunks
+And how is its value defined
+Its value is defined that you
+With your retriever
+You are retrieving
+So your k value is generally
+Your max context length value
+So you should keep it similar
+In our case, I think k value is also 3
+So we will give 3
+What is the meaning of min?
+If you are not getting 3 chunks
+Then you can make a group from 1
+What is the meaning of chunk size?
+Obviously what we are doing here
+We are splitting here, chunking
+So chunk size and chunk overlap
+They are using the components of the line chain
+These are their parameters
+Context quality threshold
+When we give these vectors to our evaluator
+To check for the
+Context quality
+So this much minimum threshold should be there
+Similarity threshold
+What does similarity threshold mean?
+When you group
+Then what should be the minimum similarity score
+So that they can be a part of a group
+Means
+When we were grouping here
+So we have here
+0.54
+Why should they be a part of a chunk?
+Because their similarity score
+Must have come
+Let's say your similarity score is 0.56
+So you set a minimum threshold here
+Generally default threshold is 0
+If it is above 0
+Then we will consider it as a part of a group
+Is it clear?
+Max retry
+What does it mean?
+If any vector in your group
+Is not able to be a part of that group
+Then what you do is
+You retry here
+An integer that specifies
+The number of times retry context
+Selection or grouping
+If it does not meet the required quality
+So you are doing things randomly
+So you randomly
+You retry there
+You check if you can get anything better
+Because it is possible that the first
+You randomly picked 100
+Some of them were not good
+So you randomly pick them
+So these things are randomly picked
+And what you set in the embedder
+Your embedding model
+Generally you keep the default
+Your default values work well
+See it is written here
+Unlike other customization
+This document generation
+Is yours
+At the context construction level
+So first context is made
+Then the whole work is done
+All the steps are written here
+Document parsing is step number one
+Context selection is step number two
+And grouping is step number three
+What are you doing here
+Here you are chunking your documents
+Which are in your knowledge source
+After that you randomly select the chunks
+And finally
+You are grouping them
+I will show you the whole process
+Let's go a little fast
+Read the rest of the things
+From the documentation
+First is parsing
+You will read the document and split it
+How to split it?
+You have two parameters in the splitter
+Chunk size and chunk overlap
+Which you can provide
+Then you will embed it
+After embedding you will do context selection
+In context selection
+What you randomly do
+You randomly select some vectors
+In your vector database
+Each time when you select a node
+You put it on filtering
+You see
+The vector you have selected
+Is it good or not
+If it is good
+You pass it ahead of the filter
+If not
+You stop it there and go to the other
+For this
+You use a critique model
+And what are the criteria
+Criteria are these four
+Clarity, how clear and understandable
+The information is
+Depth, structure and relevance
+If it is above the threshold
+It will pass
+If it is below the threshold
+It will be the same retry mechanism
+This will be clear
+And finally
+What you do
+You group the similar chunks
+You group them there
+See what is written
+In the final grouping step
+Each previously selected
+Node which has been filtered
+You calculate the cosine similarity
+And if it crosses the threshold
+Then you make it a group part
+Here is a diagram
+You have documents
+You randomly created chunks
+And gave it to the critique model
+Then you made your context
+With filtered chunks
+See
+Is it clear now
+Is it clear
+You have to read the documentation
+These steps will be clear
+I will show you the whole thing
+So this context
+Where it came from
+I will show you
+Now I will take your questions
+I will take your questions
+You have to complete this code
+We will complete this part
+We will write the code
+It will take time to execute the code
+Then I will take your questions
+I want to show you the whole flow
+It is very interesting in the code
+You will see everything in the console
+Step by step
+So what do we do first
+Let's say this is my knowledge source
+This is my knowledge source
+What is here
+Here are my documents
+These are exactly the same documents
+Which I am using in my rag application
+In our case
+These are our transcripts
+Next
+What will I do here
+I will parse them
+I will put them in the vector store
+So let's say this is my vector store
+This is my vector store
+So I have done chunking
+Embed everything
+And put the chunks in the vector store
+Now what I will do is
+I will enter the vector store
+And randomly pick some chunks
+So now what I will have is
+I will have my random chunks
+What are the random chunks
+They are your vectors
+So let's say
+These are the spheres
+These are the circles
+These are my vectors
+So these are my random vectors
+Random vectors
+I have randomly selected them
+Just a second
+These are all my vectors
+Let's assume this is my vector store
+The inside view
+I am looking through the window
+In my vector store
+There are so many vectors
+And I have selected some of them
+I have selected this one
+I will choose some other color
+Which one will be better
+This one is better
+So I have selected this
+Let's say I have
+Selected this one
+Where did the color go
+Here it is
+How to make this color permanent
+I forgot to do the work with this black draw
+Let's say I have
+Selected this one
+And this one
+It is happening randomly
+Don't think why you have selected this
+Everything is random
+I have randomly selected these four
+Now after selecting these four
+What I will do is
+Again I will pass through a filter
+This is my filter
+And how is this filter
+This is my critic model
+What will this critic model or LLM do
+It will see
+The information in these chunks
+Is it useful or not
+It will not see the actual vectors
+It will see their text
+That these chunks
+Are they good or not
+Can I make my golden with them
+Means
+The things written in the transcript
+Is it important
+Good evening
+Hello how are you
+Video is audible
+I am talking about all these
+If you understand the course
+Then
+The time of the beginning
+Or the time of the questions
+Which is not so important
+Some important concepts are not discussed
+So are those vectors or not
+So this critic model will filter
+After the filter
+Let's say you have some vectors
+Selected
+Now we will
+As chunks represent
+These are some chunks
+Which are selected after the filtration
+Now you can consider them
+Vectors or chunks
+It is one or the same thing
+Now what will you do here
+Now you will take these chunks
+Or these vectors and form them
+In groups
+So you will calculate the similarity score
+So what you will do is
+You will calculate the similarity score
+And here you will group
+So let's say
+This was your chunk number 1
+This was chunk number 2 and this was chunk number 3
+When you went to calculate the similarity score
+There was a similarity between 1 and 3
+And 2 was the most different
+So what you did here
+By mixing 1 and 2
+You made a big context
+So you made a big context
+So here some parts are of 1
+And rest of the parts are of 2
+So by mixing 1 and 2
+Sorry by mixing 1 and 3
+By mixing 1 and 3
+You made a chunk
+So this is your grouping
+This is your group number 1
+And group number 2 is your only
+So this is your group number 1
+This is your number 2
+Now the context in 1 and 3
+Here
+Similar type of talking is happening
+Let's say this context
+Here we are talking about
+Golden data set
+So in 1 you were talking about
+Golden data set
+And here you were talking about
+Context assembly
+Both are related to Golden
+So we made them in one context
+Whereas in 2
+Let's say Langsmith
+Which is completely different
+Langsmith or tracing
+Tracing was the topic
+So we made it different
+Now finally
+We will generate 2 questions from these
+So these are my
+Questions
+I caught this
+2 golden generated
+Means 2 questions
+were generated on golden data set
+And I caught this tracing
+And I have
+2 questions generated
+I hope guys this
+was clear to you through the diagram
+Is this concept clear to you guys?
+It is a little theoretical
+But I hope it is clear
+Why are we doing this?
+It is clear
+And how did we get to know
+That 1 and 3 are similar
+Because we have calculated
+Similarity scores through cosine similarity
+Right
+Now we will implement
+This whole thing in the code
+So let's do the code
+Now you will see
+A very beautiful output
+So we are at that point of the class
+When we will see the result
+Of the hard work we have done
+So
+Let me start with the code part
+Now we have made
+Evolution config
+We will make one more config
+That will be our context config
+It will be of type
+Context
+Construction config
+You can pass many things in it
+First of all is your embedding model
+We will keep default here
+Then we will choose our critic model
+For critic model what we can do is
+We use GPT 5.4 mini here
+It is a strong model
+So it will give us better context
+Next what we have to put here
+Next we have to put max context per document
+Max
+Context
+Per document
+It is typing
+Max context
+per
+document
+Is there any issue here
+Context
+Now it is fine
+We will do this as 2
+So what will happen with this
+That here we have 14 documents
+If you see here
+Clean transcripts folder
+And if you see here 14
+So here I have 28
+Contexts will be created
+28 groups will be created
+Of chunks, of information
+Unique information
+After that
+We will keep minimum as 1
+If I want to
+Set more parameters here
+Let me see
+We will keep max context as 3
+Because I think my key value
+Is 3
+So I will keep it as 3
+So I will keep it as 3
+So I will keep it as 3
+I hope guys you know
+What is this value
+Max context length
+This is my group size
+We will keep chunk size default
+Quality threshold will be 0.5
+Let's do this as 0.6
+We need good quality
+Contexts
+We can do 0.6
+We can do 0.7
+Let's do some more
+Regress
+Similarity threshold
+We will keep max retries as 2
+Max retries is 2
+Rest is default
+So here we have
+This
+Now what we have to do
+Why is this error showing
+Now here
+We have made our synthesizer
+Next we have to add our golden sponge
+We will
+Generate the
+Goldens
+We will name the variable
+Goldens
+We have made our synthesizer
+We will use this
+And we will use generate
+Goldens from docs
+Ok
+We will define some things in this
+First we will define our document path
+We don't have that already
+So we will have to
+Bring it through a function
+We will leave it empty
+For now
+I will pass an empty
+List
+And
+Include expected output
+Yes we need our answer
+Max goldens per context
+So we will
+Make it 3
+Means
+From every group
+How many goldens will I get here
+How many questions will I get
+So this will be 3
+I will give construction config
+Context
+Construction
+Construction config
+Is my
+Context config
+Now what I have to do
+Simply provide our documents here
+So we will make a function
+Through which we will
+Name it
+Get
+Docs
+Path
+And we will give it our directory path
+Directory
+Path
+And directory path can be
+Both my path object
+Or it can be a string
+And what will I get by turning
+I will get
+A list of string
+Ok, so let's make this function
+So first of all
+What I will do here
+The directory path that I will get
+I will convert it to path object
+If it is a string
+So directory path will be
+Path of directory path
+Ok, now what I have to do
+Next here
+First of all, check
+Is directory available or not
+Ok
+If
+Directory path
+Exists
+Already I have made
+So what I will do here
+First of all, I will search
+So I will get the
+Paths here
+What will be my path
+I will go inside the directory
+And I will search here
+What I have to do
+I have to bring all the text documents
+So we have already seen
+Its pattern
+So our asperg.txt will be there
+Ok
+What will happen with this
+Our paths will come
+Right, after that what I have to do here
+I have the paths
+After that
+Paths came and I think that's it
+Paths will come, I just have to return it
+So
+Here we return using
+List comprehension
+And
+We use as path as possible
+So that we can return string path
+As
+Possible
+For path
+In paths
+I think
+I will check the code once
+Give me a second
+We have defined the path here
+Checked if the path exists or not
+One more thing
+We can also check if this path is directory
+This is also good
+Ok, so we searched in directory path
+We took all the text paths
+If you see glob method
+It returns all your paths
+Ok
+And after that
+We are looping every path
+As posix means saving string
+And whatever is stored in this path
+We are returning it
+Yeah, that's it
+Now we can do one thing
+We can simply call this function
+And we can give it our directory path
+So data set
+Directory
+Our data set is done
+One more path
+And we will make it here
+That is our
+Document
+Path
+Which will go to clean transcripts from our root path
+This is done
+And
+That's it guys
+One more thing
+When our goldens will be generated
+Finally we discussed that after
+We have to save it
+Because
+If we have generated goldens
+And I have closed this application
+After class, then whatever I have generated
+Will be lost
+So what I have to do is to persist it
+I will
+Save the
+Goldens
+So to save
+First I will make a directory
+Make the
+Goldens directory
+So goldens directory
+Will be in data set directory
+Goldens
+So let me see the data set directory
+I am making a directory by making goldens
+And it
+I am also making the parent
+True set
+So I have made the directory
+Now I have to save
+I will use synthesizer
+And it has a method
+Synthesizer.saveas
+I have to provide some things
+In save as
+First I will provide file type
+I have to save as JSON
+I will provide file type as JSON
+Then I have to provide
+Which directory I have to save
+So my directory will be
+Goldens directory as POSIX
+And finally I have to tell
+File name
+I will have my file name
+Always remember this without extension
+There should not be extension here
+It will be golden
+Data set
+So
+Golden data set
+Will be saved as JSON
+And let me
+See if everything is
+Correct, everything is fine here
+So now it is
+The time guys
+Whoever is available in the class
+I know it's been a long time
+Now you will see the most interesting part
+Here
+Simply I will write here
+UV run generate
+I will basically run this file
+And you will see here step by step
+Whatever workflow we have discussed here
+You will see here
+What happened
+Documents path
+There is some error here
+Documents path
+What is this
+Let me see, it's document path
+There is a small type
+While live coding
+There is some error
+First of all, what is happening
+Here my 84 goldens are being made
+How 84 are being made
+Because here I had 14 documents
+And 2 context per document
+And 3 goldens per context
+14 documents loaded
+Now chunk is being made
+And see from the chunk, 28 context are being made
+Everything is visible here
+Concurrently
+Chunks are being made
+And here
+My 28
+Context filters are being made
+As soon as my 28
+Context will be made, every context
+Will make my 3 goldens
+See, these 28 context are made
+Completed, now see
+Generating goldens from context number 0
+3 inputs are being made
+And then they will evolve
+See
+Everything is happening step by step
+And everything is running parallel
+See how beautifully you can track
+Are you having fun
+Now
+It will take some time
+Till then if you have any questions
+I will take them
+Because back end is having LLM call
+Filtration is happening
+LLM calls are happening
+So it will take some time
+Till then if you have any questions
+You can ask me
+No, it is same
+In some places it is light
+In some places it is same
+It is not hard
+See we have used 5.4 mini
+In the synthesizer
+If I am correct
+Yes
+So it is same here
+And in other places it is 5 mini
+5 mini is older than your 5.4 mini
+Any questions guys
+This will keep on going automatically
+First your inputs will be
+Generated after filtration
+And everything
+And then evolve
+It is almost complete
+And some error came
+Oh my god
+This is a big issue while live coding
+I have typoed here again
+File name
+What was this
+File underscore name
+Shit
+Sorry guys
+Now I have to generate it again
+But it is good for you
+More
+API calls for me
+And one more
+Awesome console
+Complete for you
+Now I will
+Complete for you
+Now I don't know if it was better before
+Or it will be better
+But we will persist this
+Yes we are generating the answer keys too
+We are generating the answer keys
+You will see
+After generating
+I will show you the golden
+It is my question paper
+This code we have written
+This is my question paper
+I have not given this question paper to my student
+We will give it to student
+In next class
+Where our application
+The one I have made a script of my rag application
+Here rag workflow
+We will give it
+And through this we will solve
+Everything from our student
+This is just building my question paper
+This is the question paper code
+This is the main code
+If you understand this then the rest of the code is easy
+How was today's session guys?
+I know it was a bit rusty in the beginning
+But how did you like it now?
+We have breakdowned things step by step
+Great
+Thanks for sticking around
+You can experience this
+Great
+Great
+I hope you are not a typo
+And our golden data set
+Is saved
+It is like rag
+Yes, see it is saved
+We should also put a print statement
+At the end
+But you can see
+In the data set, we have created a folder
+With the name of golden
+And here is my golden data set
+And it is so beautiful
+I think I have 58 golds in this
+If I am not wrong
+I think I have 58
+So you can see guys
+This is my input
+If I can show you using the word wrap
+Where is the view?
+Just a second
+I will show you everything
+See this is your input
+This is your query
+Which is from your context
+And this is its expected output
+Which means this is your answer
+It is harder than ML
+Because see how
+Here it has written the answer
+In the bullet points properly
+Outputs are non deterministic
+Like you have an answer
+If someone wants to check the paper
+If this is the bulleted answer
+Then it becomes so easy
+Multiple components can fail
+No single fixed label
+There are multiple things
+And this particular question
+And its answer
+How it generated using this context
+So this context
+My retriever retrieved
+This is my context from the group
+So on that context
+First of all my LLM made a question
+And this question and context
+I gave to another LLM
+And from that it generated the answer
+Everything is happening from LLM
+There was no role of human
+See this is my context
+So these are my three chunks
+And which was this file?
+This is file number 5
+If I had named it better
+I would have known from which class
+But you must have understood
+This is LLM vs MLEval
+Because here
+I had said two questions
+From each context
+So here this second question was made
+This context is same
+This context is same
+See this is also starting from here
+This is also starting from here
+This is my one group
+This is my exactly same group
+But here the question is little different
+I think I have said three questions per group
+So these are three questions
+So these three questions will be from one group
+Let's go down
+I will show you something else
+See
+How does LLM eval measure
+App output quality, reliability and correctness
+So this is a particular question
+Let's scroll down
+If I can show you from the AI pulse
+Something good
+Yes you will get all this on the GitHub
+I will push it now
+See contrast
+MLEl vs LLM drag eval
+And AI pulse
+Nothing came?
+Why do open AI and anthropic plan
+Ipos despite high compute cost
+and lawsuit
+So how beautiful it is
+If you evaluate your drag application
+So how good coverage you are getting
+And all this
+Automatically yours is coming
+You just have to do LLM calls
+Return JSON
+Define prompt injection, dangers
+And three mitigations
+So it is asking for a particular type of output
+Why do LLM apps
+Need multiple eval pipelines
+This is from Nithi sir
+So he is telling eval pipelines
+So it is above that
+Yes you can
+And simply if you go to its code
+So there are prompts in the backend
+How does MCP different from
+Plugins in excel
+So this is the excel app
+So you can see
+I will share this with you
+I think everything is good
+No problem we do it through commands
+So let me run the git status
+Let me see
+There are datasets
+There is dp eval
+Everything is good
+Added
+Everything is added
+Created
+Golden dataset
+For drag app
+Committed
+And I will push it
+Pushed
+Pushed
+You pull it, I have updated the code
+Now I will check
+If the camera was on
+What is the time
+Oh, time is over today
+Aren't we going to use
+Data versioning tool
+Here also for transcript
+For your dataset
+You can use it
+But because our classes are
+Being done and we are bringing
+Transcripts here
+We are not doing the version because
+We are not changing it, our transcripts are static
+Let me turn on the camera
+If I can
+I am tired now
+It's been a long time
+It has been a long session
+But did you enjoy it
+Did you enjoy
+Was it worth it
+If it was worth it, then it's great
+Can you rate today's class size
+Based on clarity of concepts
+Flow out of 5
+If you want to rate
+Very complex
+Yes, entertaining
+Yes, it is complex
+Theory is too much
+If you have seen practically
+Then you have understood
+Otherwise you don't understand what is being generated
+You will be confused
+You will have to see the documentation
+If you have detected 0.1
+For parameter names
+Then that documentation will help you
+I was also continuously referring to the documentation
+A little context assembly
+Point
+We will discuss it in a recap
+In the next lecture
+And from the next lecture
+We will start our matrix
+What will we do first
+With this particular golden dataset
+We will create our evaluation dataset
+So we will do it in the first half an hour
+Along with the code and then we will move on to the matrix
+So our evaluation
+We will create an evaluation dataset
+We will save it in JSON
+And you will see
+These missing points
+This will fill your rag application
+Actual output
+This will be the response of your rag application
+This will be from there
+This is your grounded context
+One will be your retrieved context
+It is not coming here
+But you will add that too in your dataset
+So these values
+Will fill your application
+And finally the dataset
+That you will create
+You will use it for your matrix
+So we are going to read 5 metrics
+For rag
+We will cover all 5 in detail
+And side by side on our dataset
+We will run the code
+We will read each metric
+And will implement the code of each metric
+Is it getting clear guys?
+Great
+Any questions?
+I will be here for 1-2 minutes
+And then we will end the session
+Already it is about 11
+Did you enjoy it? Did you find it worth it?
+It should be worth it
+You should enjoy it
+If you learned it today
+If it took time
+That is worth it
+If it was worth it, that's good
+Great
+Any feedback guys?
+Where can we improve our sessions?
+In starting it may be a little rushed
+Any feedback?
+Yes, we spent some time
+Getting into the concept
+Because again there was a gap
+It takes time to build the gap and flow
+Sumit, I can't help with the theory part
+There is a lot of theory in this
+It is completely conceptual
+But again I
+Tried my best to share
+Workflows with you
+I don't know how much this workflow has helped
+I will improve it
+And share it with you
+You will like it better
+I am signing off for today
+Goodnight
+See you in the next session
+I think it will be on Monday
+See you on Monday
+Bye

@@ -38,7 +38,9 @@ def load_and_clean_transcript(original_dir: Path | str, new_dir: Path | str):
         cleaned_content = clean_transcript_text(file_content)
 
         # get the file name 
-        file_name = transcript_path.name 
+        # file_name = transcript_path.name 
+        file_name = transcript_path.with_suffix(".txt").name
+
 
         # create the output path 
         output_path = NEW_PATH / file_name
