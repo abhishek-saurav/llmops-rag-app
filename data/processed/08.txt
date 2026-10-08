@@ -1,0 +1,2884 @@
+WEBVTT
+Yes, I am going through the questions.
+OK Hardik, let's discuss about this too.
+Can we do it at the end of the session?
+Because there is a metric in DPVal.
+Keys can change. I think so.
+The metric supported in DPVal has a fixed schema.
+You make a schema through Pydantic.
+You come to the schema and check the keys.
+You basically want the values to be exactly same.
+Keyword matching in values and semantic keys.
+To do this, you have to make a custom metric.
+Because DPVal works directly on the schema.
+I will show the rest of the DPVal implementation.
+And today we will see how you generate custom metrics.
+Any more questions?
+People are still joining in.
+Guys, again join a little bit timely.
+Like 5 minutes before.
+Any questions from the previous session?
+Is my screen visible? Is one note visible to you guys?
+Can anyone confirm that recording is going on?
+Recording is in progress.
+Recording toggle is visible.
+Fine.
+If you have any questions, you can ask me.
+Yes, there will be a summary of more than 5 minutes.
+A summary of 10-15 minutes.
+We will cover metrics from a different perspective.
+Because today's class will be on rag metrics.
+We have already covered 2 metrics.
+We will have a recap of that.
+And we will see a different perspective around metrics.
+We did not discuss that in the last session.
+We will discuss that today.
+Are you getting reminders of classes?
+Notifications through Google Calendar?
+Okay, fine. I will read the questions also.
+Great.
+Let's wait for 2 more minutes.
+People are still joining in and then we will start.
+Guys, please join in a little bit.
+We have to cover a lot in a session.
+And it takes a lot of time to start.
+And people are still joining in.
+That's why I am not able to start.
+We have submitted the eval data set.
+I will clear your doubt.
+Actually, I was also getting a doubt.
+If we go to the data set section,
+You will remember that we checked our evaluation data set at the end of the class.
+And after seeing this particular data set,
+I felt that the missing values,
+Like the actual output key,
+And the retrieval context are not coming.
+I thought that there is a problem in our execution.
+Actually, there was no problem in the execution.
+If I show you the code of this particular file,
+So what we did here is,
+When we made our evaluation data set,
+First of all, we added the golden in this data set.
+Which was saved in our JSON file.
+We imported the particular golden in this folder.
+And after that, we made our test cases and added them in the data set.
+So this thing got missed by me.
+I thought that this code is not working properly.
+These are basically your goldens.
+You can see the context here.
+These are your goldens actually.
+So we have appended two things in the data set.
+Goldens and our test cases after that.
+So if you can go down,
+Like our question is,
+Why is LLM app harder than ML?
+So if we go down here,
+These null values are finished.
+If I can go to the exact point,
+Still null is not working.
+Here.
+So see, this same question is repeated again.
+Here, your nulls were.
+So this is basically the line 1513.
+This is the end of your goldens.
+And after this, these are our test cases.
+So you see, this context field that is in our goldens,
+Grounded context,
+These are not available.
+We added four things in the test cases.
+Our query, which is the input.
+Our response, which is the actual output.
+Expected output is our grounded response.
+And our retriever output.
+These are the four things we are getting here.
+So basically, your test cases are starting from here.
+I hope you understand this thing.
+And when we evaluate our metrics on this data set,
+Then we will use these test cases.
+We will import these test cases from this data set.
+And then run it on our metrics.
+Is this thing clear?
+So nothing was problematic.
+Our code was working.
+Just a small point got missed out.
+Fine.
+Great.
+So let's start the class.
+So we actually.
+What are we going to discuss?
+We are understanding the evaluation metrics here.
+So we have created our data set.
+And now we have to understand the different evaluation metrics.
+Which DeepEval provides you for your rag application.
+But let's do one thing.
+Let's come in the overview mode.
+I want to give you a bird's eye view.
+That the whole effort we are doing.
+To do the evaluation.
+Why are we doing this?
+What is the end goal of this?
+So let's discuss the end goal once.
+So the end goal of the evaluation is basically.
+That the evaluation gives you a number.
+Number means it is a quantifiable quantity.
+It gives you a quantifiable number.
+Through which you can test your rag based application.
+Now we are talking about rag metrics.
+So we will talk about rag application only in LLM based application.
+So it is basically used for testing your application.
+You get a number through which you can tell.
+That your application.
+Passed or failed in any particular criteria.
+Now why are we working on pass and fail?
+We are doing this because our goal here is.
+Our goal is that if our application.
+Can't pass a particular or multiple metrics.
+So our end goal is that we have to get that application passed.
+Basically what we are trying to do is.
+We are tweaking and tuning our application.
+And we are tweaking and tuning our application.
+We are also trying to pass the metrics.
+On our given data set.
+Which is our evaluation data set.
+On that.
+Clear the metrics.
+Pass the test.
+So what we are doing here.
+The application we have made here.
+Which we have built here.
+How to make that rag application.
+Rag application is basically.
+A mixture of different components.
+We have arranged some components.
+According to a particular architecture.
+In our application.
+And we have hyperparameters available in each component.
+What we have done here.
+We have selected the hyperparameter value.
+So we don't have a definitive answer.
+We don't have an answer.
+That the hyperparameter values we have selected.
+Are they the best.
+Or not.
+We don't have an answer to this question.
+So the answer to this question.
+Basically whatever hyperparameter or components we have selected.
+Are they the best.
+Are they well suited for our application.
+We are trying to find the answer to this through evaluations.
+So whatever we have been studying from so many days.
+Data set creation, evaluation matrix.
+We are doing all that work.
+So that we can test our application.
+And after testing.
+We have a number.
+A quantifiable number.
+Which we can use further.
+And we can draw comparisons.
+So basically what we will do.
+When we run our evaluations on this application.
+So this application we have made through guesswork.
+This will act as our baseline application.
+This will be our baseline application.
+And what is our end goal.
+Our end goal is to tweak this hyperparameter.
+Every one version.
+Because we will change the hyperparameter value.
+So what will happen.
+Our different versions of application will be made.
+So we will lock every one version.
+And along with that.
+Whatever its test result is.
+Means the result of our evaluation.
+Means the result of our evaluation.
+We will lock this also.
+And we will basically compare between different versions.
+Between different versions.
+And through this comparison.
+We will know.
+What are the best possible set of hyperparameter values.
+So like you do evaluation in machine learning.
+What is your goal in machine learning.
+When you evaluate your baseline application.
+Then after that you do hyperparameter tuning.
+So sort of.
+We are doing the same thing here.
+We are also going to set hyperparameter.
+Of our rag application.
+And because we don't know.
+What are the best values.
+So through these evaluations.
+We will find the best values.
+This thing is clear guys.
+It is clear.
+Why are we doing this evaluation.
+Why are we working hard.
+This point is clear.
+Basically we want to make the best application.
+By tuning hyperparameter.
+We want to make the best application.
+I am looking at the chat.
+I hope this point is clear to you guys.
+So whatever we are reading in the evaluation.
+The whole 5-6 lectures we have done.
+All that hard work.
+Simply to give this quantifiable number.
+Now let's discuss.
+What kind of problems can come.
+In our rag application.
+Because I told you.
+What are we doing here.
+We are tuning hyperparameter.
+So we should also know.
+What are the hyperparameters.
+In your rag application.
+As I told you.
+You never evaluate the ingestion phase.
+You evaluate this.
+You evaluate the retrieval phase.
+And in the retrieval phase.
+You have two components.
+On which you have prime focus.
+First is your retriever.
+And the second is your generator.
+What is the work of retriever.
+Retriever basically acts as a search engine.
+The work of retriever is simply.
+That inside your knowledge base.
+There are many vectors.
+Many embeddings are available.
+Basically it is full of information.
+What is your goal.
+That out of that many information.
+According to your query.
+Whatever is the necessary information.
+You have to fetch the retriever.
+Like in a search engine.
+What happens in a search engine.
+You index all the web pages.
+In your search engine.
+What does index mean.
+You store them in a way.
+You store their address.
+Whenever you query in your search engine.
+What is the work of search engine.
+To read your query.
+To understand it.
+And according to that.
+It will give you relevant information.
+Is it your actual web pages.
+No. They are your web pages.
+So our retriever.
+Will do the same.
+That what will he do.
+He will take your query.
+He will understand your query.
+How will he understand.
+He will understand by creating embeddings.
+Because embeddings capture the semantic meaning of your text.
+And when you convert them in embeddings.
+You do comparison between embedding and embedding.
+Embedding of your query.
+Embedding of your documents.
+You do comparison between them.
+And after comparison.
+Whatever your top results are.
+Which we call our top results.
+You give these top results.
+Through retriever.
+As an output.
+To your LLM.
+So retriever's work is basically.
+Of a search engine.
+And generator's work is.
+I would say it is a little.
+Bola component.
+Bola component means.
+On the retriever.
+Because.
+The generator's work is.
+Whatever retrieved results.
+Whatever retrieved chunks he got.
+On the basis of those chunks.
+He has to generate his answer.
+So here our generator.
+Is not that he can do anything freely.
+He does not have any free will.
+We have specifically told our generator.
+That whatever retrieved results.
+Will come to you.
+On the basis of that.
+Generator's matrix.
+Here.
+This particular thing.
+How the generator can understand.
+The input query.
+And is giving the answer.
+According to that.
+These are the matrix we will read.
+For the generator.
+Is it clear?
+Now let's talk.
+Which hyper parameters.
+Is this retriever component.
+Responsible for.
+Evaluation.
+Which hyper parameters can we tune.
+So a logical.
+Discussion.
+We will do.
+After this discussion.
+You will figure out.
+Which parameters you have to tune.
+You will not have to remember.
+You will not have to keep anything.
+You will be able to make relationships.
+So what are we doing in retriever.
+Basically.
+We have a lot of information.
+And we are fetching the information.
+So whenever we go to fetch information.
+Then we have.
+Three types of problems.
+What is the first problem?
+The first problem is.
+Let's say for a given query.
+We have.
+To answer that query.
+Let's say 10.
+Web pages were available.
+So what I am here.
+All the links.
+Could you retrieve it or not.
+Basically we want to see.
+Is my answer.
+Complete or not.
+I am checking for completeness.
+I am checking for coverage.
+Whenever you check completeness.
+Or coverage.
+Your prime goal is.
+Is it complete or not.
+How it is completed.
+What is the order in it.
+It doesn't matter.
+Whenever you give a query.
+So if you want to check completeness.
+You will check.
+That in your search results.
+You will not check.
+Which is the first result.
+Maybe you have.
+Your query answer.
+Or your retriever output.
+Could be 20 results.
+But what is your prime focus.
+Your prime focus is.
+How many results I get.
+Are those 10 results coming to me or not.
+Your focus is only this.
+You are checking for completeness.
+I hope this thing is clear to you.
+And how do you check this thing.
+You check this thing through the metric.
+Called as contextual recall.
+Which we have already covered.
+So recall.
+Doesn't decide right or wrong.
+Recall only decides.
+That for a given query.
+You should have 10 units of information.
+10 facts.
+Could you retrieve those 10 facts.
+Or not.
+Is this thing clear.
+So.
+The factual information we are storing.
+Where are we storing this factual information.
+This factual information is stored.
+Inside our chunks.
+Right.
+And what are we doing with chunks.
+We are converting chunks into vectors.
+So if we.
+In our given chunk.
+Let's say in this chunk.
+We had 5 facts.
+Now I want my vector.
+Which is my embedding.
+That too will take the information of these 5 facts.
+When we are giving numerical representation.
+To this text.
+Then in numerical representation.
+I shouldn't have loss of information.
+So this particular thing.
+If I want to do it faithfully.
+Means I don't want to do.
+Lossy conversation.
+It should be lossless.
+So which component will be responsible here.
+Of course my embedding model.
+So whenever we talk about recall.
+We talk about embedding model.
+We check.
+That our embedding model.
+Will function properly or not.
+Because.
+You will search for similarities.
+On the embedding of this embedding model.
+So here we don't look for similarities.
+Because similarity search will be done automatically.
+I will explain it through an example.
+Let's say.
+We have.
+A particular query.
+Let's say this is my query.
+And this is my query's vector.
+Now to answer this query.
+I have 5 more.
+Vectors requirement.
+5 more chunks requirement.
+So if my embedding model.
+Is working properly.
+Here these 5 facts.
+Can capture and represent them in vectors.
+Then obviously.
+Semantic meaning of all.
+Will be similar.
+You understand this thing.
+That if I want to answer.
+A particular question.
+I need 5 pieces of information.
+So that query and those 5 pieces of information.
+The semantic similarity.
+Will be quite same.
+Okay.
+So what will happen here.
+Here my.
+These 5 pieces of information.
+Will be in my query's neighborhood.
+It will be in the local.
+Neighborhood of my query.
+And how will it be able to make sure.
+That it is in the local neighborhood.
+It will be able to make sure.
+If my embedding model is working properly.
+If my embedding model is losing some information.
+Then what will happen.
+Here some query.
+Can be misrepresented.
+Sorry I am saying query.
+Here some embedding will be misrepresented.
+And it will be far from your query.
+So if it is far.
+It will not be retrieved here.
+During retrieval.
+Okay.
+Here along with embedding model.
+You see other things too.
+Like your.
+Topk's value.
+Because if you need 5 pieces of information.
+To answer this query properly.
+But you have set 3 here.
+If your topk is 3.
+So you can do anything.
+If only 3 pieces of information will come.
+Then the recall will be less.
+So generally what happens.
+If your recall is less.
+Then you increase the circle.
+So that you can retrieve more results.
+So that you can achieve that completeness.
+Basically.
+I hope you are understanding this point.
+And what can you do here.
+You can increase the size of your chunk.
+What are we doing in every vector.
+We are storing information in every vector.
+So what you did.
+You increased the window of information.
+That here I am storing a lot of information.
+In a particular chunk.
+So there is a high possibility.
+That complete information is available there.
+But there is a tradeoff to increase the size of the chunk.
+What is the tradeoff to increase the size of the chunk.
+If you increase the size of the chunk.
+Then your embedding model.
+There.
+In a lossless way.
+It will not be able to convert all the information into a vector.
+Because embedding model.
+At the end of the day.
+They do compression.
+So you have to make a balance here.
+It is not like you make the size of the chunk very massive.
+That I want to bring all the information here.
+Because you have to create a balance.
+If you keep increasing your chunk size.
+Then your embedding model.
+Faithfully will not be able to capture all the information.
+I hope this point is clear to you.
+That what we are doing in recall.
+Now let's talk about the point number 2.
+Point number 2.
+What is in point number 2.
+Point number 2 is that.
+The results we are bringing.
+How many results are there.
+How many of them are relevant to you.
+Relevant results.
+In point number 1.
+We were not factor in relevancy.
+We were saying that.
+We need x pieces of information.
+If they are coming to us.
+Then we will high score it.
+Is it right or wrong?
+How is the rest?
+It does not matter to us.
+Whereas.
+In relevant results.
+Where we are seeing relevancy.
+Contextual relevancy.
+In this contextual relevancy.
+We see that our.
+Signal to noise ratio.
+Signal to noise ratio means.
+That you have.
+How many useful results are coming.
+And how many useless results are coming.
+Out of the total results you are getting.
+Let's say you have 10 results.
+And out of those 10 results.
+3 are relevant.
+Whereas 3 are non relevant.
+So your relevancy will be.
+7 out of 10.
+Now.
+You will think.
+Why do we need to increase this relevancy.
+What is the benefit of it.
+What is the benefit of increasing the relevancy.
+So we understood.
+That our results should have relevant results.
+But what will we get by increasing it.
+What will benefit our application.
+By increasing your application.
+That your context.
+Your context purity will increase.
+Purity means.
+If your answer.
+To make a perfect answer.
+If.
+You need some information.
+And that specific information.
+You have put in your context.
+You will not put extra things.
+So your LLM.
+That generator.
+Will not be confused.
+Because what you have done there.
+You have put there.
+The exact information.
+The relevant information.
+That is put in your context.
+So basically what you are doing here.
+The entropy of your context.
+You are reducing it.
+You are basically.
+Reducing your context pollution.
+You will say a word.
+Context pollution.
+What is the meaning of Context pollution.
+Pollution is.
+Where its value should be less.
+It should increase a lot.
+So if you.
+Increase the Context pollution.
+What you are doing.
+You are using your irrelevant results.
+More inside the context.
+As compared to your relevant results.
+Now what is the disadvantage of this.
+The disadvantage of this is.
+Let's say your relevance is.
+20%
+You have added the noisy chunks.
+In your context.
+So.
+Your work information.
+Will be hidden.
+In your context.
+And your LLM will have to work extra.
+To retrieve that work information.
+Out of your context.
+So in this case.
+LLMs generally miss out.
+On work information.
+In some cases.
+They misinterpret work information.
+And.
+In this case.
+Your LLMs.
+Hallucinate.
+So what we have to do.
+We have to increase.
+The relevance of our retrieval.
+In our context.
+By increasing the relevance.
+Our context will be pure.
+Only with work information.
+And if your context is filled with work information.
+Then you can.
+Generate good responses.
+Because you are only showing.
+Your work information.
+You are not giving your work information.
+You are not confusing your LLM.
+I hope you understood this point.
+So if you ever.
+Want to increase relevant results.
+In your context.
+If your relevance score is decreasing.
+Then what will you do here.
+You will.
+Fine-grain your information.
+Fine-grain your information.
+What does that mean?
+That you will reduce your chunk size.
+Because.
+Your textual chunks.
+If you reduce chunk size.
+Then what will happen.
+Your work information.
+Will be a chunk.
+And noisy information.
+Because noisy is not bad information.
+Noisy is not relevant for the given query.
+If you have a big paragraph.
+In that.
+Let's say 10 pieces of information.
+So it doesn't mean.
+That out of 10 pieces of information.
+5 are good. 5 are bad.
+10 out of 10 are good.
+10 out of 10.
+They are good information.
+But they are not relevant information.
+Only 5 of them are relevant.
+So the relevance changes according to your query.
+The kind of question you are asking.
+According to that.
+The criteria of relevance.
+Changes.
+Any particular information.
+Will be relevant for any query.
+And there is another information.
+Which was irrelevant before.
+So what you do.
+You reduce your chunk size.
+By reducing chunk size.
+Your pieces of information.
+Will be atomized.
+Basically you break down them.
+By breaking down.
+There is a separation of concern.
+You have separated the information.
+Now.
+Compiling good information.
+Is easier.
+It is like you are breaking your.
+Context into bullet points.
+So it is easier to fetch.
+The bullet points of work.
+And second.
+You will reduce chunk overlap.
+Because in overlap.
+You are bringing information.
+Of your neighbor's chunk.
+If you reduce the value of overlap.
+Then you are.
+Reducing the information of the next chunk.
+You are integrating it.
+And you can also reduce the top.
+K.
+It is possible that your chunk size and overlap.
+Is fine.
+But your top K is too much.
+You can retrieve 10 chunks.
+Out of that.
+3 are useless. 7 are useless.
+So if you keep your top K.
+5 or 4 or 3.
+Then it is possible that your.
+Context is more pure.
+You just retrieve relevant information.
+Irrelevant information.
+Will be missed out.
+I hope this thing is getting clear.
+Is this thing getting clear guys?
+Is it getting clear guys?
+Now I will ask questions Sumit.
+I will give you time to ask your questions.
+Whatever we discussed is getting clear.
+Why is it getting clear?
+Behind every metric.
+I am looking at the chat.
+Great.
+So now if you have any metric value.
+Then you can judge.
+Which parameters I have to tweak.
+Recall.
+What to tweak.
+If the relevancy is like this.
+Contextual relevancy.
+Here you will not tweak your embedding model.
+Because your embedding model.
+Is not creating any issue.
+What issue is coming here.
+That you are bringing some extra information.
+With your work chunk.
+So you have to remove that extra.
+Is it getting clear?
+And third comes.
+Precision metric.
+Which we are going to read.
+Contextual Precision.
+So we have seen the completeness.
+Now your search results.
+Ranks also matter.
+Let's say I have given my query.
+To Google.
+So the official page of Deep eval.
+Is coming first on rank or not.
+Is it coming first on rank or not.
+Is it coming first on sponsored links.
+And deep eval page is hidden below it.
+So that is not a good result.
+So here order of results.
+Matters.
+Ok.
+So basically you check this order of results.
+Through your contextual precision.
+Clear.
+And in this particular thing.
+You.
+Which you are retrieving.
+In this thing.
+Your things should be relevant.
+It's not like you have fixed the order.
+But the results are bad.
+You have to check the relevancy.
+Ok.
+So here two things matter.
+First is relevancy.
+Which is the results are relevant.
+And they are top ranking.
+So the top ranking.
+Results should be relevant.
+Sponsored links should not be there.
+I hope this point is clear for you.
+And whenever we talk about contextual precision.
+We do not target our embedding model.
+Because it's work is not about ranking.
+And neither we work for chunk size and chunk overlap.
+And neither we work for chunk size and chunk overlap.
+And neither we work for chunk size and chunk overlap.
+Our main goal is.
+To test our re-ranker.
+To test our re-ranker.
+Because this is the job of my re-ranker.
+Because this is the job of my re-ranker.
+What is re-ranker.
+Re-ranker is basically a component in your rack pipeline.
+Re-ranker is basically a component in your rack pipeline.
+Which after your score.
+Which after your score.
+Which after your similarity score.
+After that in a particular order.
+It gives your results in output.
+It gives your results in output.
+Now.
+Top ranking results should be good.
+That is basically because.
+Whenever you build your context.
+So your LLM.
+That is the starting pieces of your context.
+That is the starting pieces of your context.
+So.
+This inputs more focus on it.
+And.
+The information in the end of your context.
+Focuses more on that point.
+So how can you see your context.
+I will tell you.
+So.
+This is your retrieved context.
+First You give you retrieved context to your LLM.
+And below that.
+You give your query.
+To end.
+Which is your user query.
+So this query.
+This is the last part of your context.
+the starting point of the information
+is the focus of your LLM
+and the focus of your LLM is very less on the middle part
+and there is a proper term for this
+which is called lost in the middle problem
+and you must have seen that when you search on Google
+and after searching on Google
+if you see sponsored links
+and after that you see a link which is relevant to your query
+then you scroll down many times
+meaning your focus is not on this point
+you feel where is my result
+but your result is here, it may be on the second or third number
+but because you see irrelevant results above
+then your focus gets missed
+LLM is the top and bottom of your context
+and it focuses more on it
+whereas the information of the middle
+focuses less on it
+so we basically test our re-ranker here
+so if your precision is less
+basically what does it mean that your retriever
+is not able to rank the results properly
+what you can do here is you can use a re-ranker
+you can change the hyperparameters
+you can tweak your re-ranker
+and increase your precision
+I hope you understood this
+did you understand guys?
+now I will take your questions for 2 minutes
+and then we will move forward
+questions guys?
+what is the best recall value we can say
+in production grade? again through experimentation
+you will know that there is no best recall value
+we always try to do one
+that our recall value is 1
+are these metrics applied together
+or we decide individually based on cases
+you apply metrics together
+on your entire application
+but your metrics check different things
+so if you know which component
+is being targeted by each metric
+then you can individually tweak it
+if its value is less
+and we have also discussed
+in which direction you have to tweak
+basically the direction of gradient descent
+we have discussed that
+that you have to increase or decrease chunk size
+in the case of recall if the recall is less
+then you have to increase chunk size
+you are retrieving less information
+whereas in the case of relevancy you have to decrease chunk size
+so we have discussed this in advance track course
+there is a module on reranker
+reranker is basically a different component
+it is also a transformer model
+which is based on your cross encoder
+I will give you a little gist
+how reranker can do better ranking
+what your retriever does here
+in your retriever, similarities course is calculated
+you know that
+and on the basis of that
+you return your outputs in descending order
+what reranker does is
+it calculates the similarities again
+your retriever is basically a bi-encoder
+what bi-encoder means is
+that here you
+make your vector
+you separate the query
+and you separate the vector of your documents
+and you compare the dot product
+with a particular metric
+you do comparison
+whenever your query vector is generated
+it can't see the vectors of the documents
+and similar situation is that
+it doesn't know which query it is querying
+here you have a cross encoder
+which rerankers basically use
+you have two components
+one is query and other is documents
+and basically the vectors
+that you make here
+when you make document vectors
+they see your query and when you make query vector
+they see your documents vector
+and you can calculate it easily
+and it is very much similar to your cross encoder
+in your transformers
+you must have studied encoder, decoder, architecture
+and attention scores
+I hope this thing is clear to you
+you can use the BERT model to create a reranker
+because it is based on your encoder, decoder, architecture
+basically here cross attention type is happening
+how do we evaluate if the chunking is done correctly
+how do you know if it is done correctly or not
+that will be known after evaluation
+evaluation is done basically because
+whatever components you are setting here
+whatever hyperparameter values you are setting
+are those values correct or not
+so you can evaluate
+whether those values are correct or not
+you don't set values on gut feeling
+you evaluate properly
+and check after evaluating
+is this thing clear
+Bayesian optimization
+no sorry, you don't use Bayesian optimization
+or any technique that you use in machine learning
+the reason is simple that
+the outputs that are coming to you
+those are not deterministic, they are probabilistic
+so you have to tweak manually
+in Bayesian optimization, the score that comes to you
+no matter how many iterations you run there
+the score will be standard, scores also change here
+because the whole technique is probabilistic
+and you don't have to do so many iterations
+when you get scores
+you tweak only a few parameters
+means you don't make too many changes
+any more questions guys
+or continue, is this clear
+that what we have to tweak
+in which direction
+if this point is clear
+then when we calculate our baseline scores
+and improve our application
+then you will understand where to hit the hammer
+which nut to hit
+how much to hit so that our results improve
+again it is all experimentation
+how much to do is also an experimentation part
+you can't tell your results by looking at your results
+you will understand that my chunk size is more
+my noisy chunks are retrieved
+I have to reduce the chunk size
+but how much do I have to reduce, 100, 50, according to characters
+according to tokens, that is an experimentation part
+so you tweak each and every metric
+and you do things according to it
+metrics like nd, cg, mrr are also used
+elaborate this a little, sorry which metrics are these
+mrr is your matroshka
+is that the relevancy
+mean reciprocal ranking
+mean reciprocal ranking is used in your rrf
+I have not heard this metric
+but if there is a metric
+which tests the ranking then it can get the ranking
+because reciprocal ranking
+we do it there
+in the rack fusion
+we do multiple results
+and then we do the normalised discounted cumulative gain
+I have not heard about this
+I will read about this and then I can answer
+again these are custom metrics
+ok
+now the metrics
+which we are focusing on are basically LLM as a judge
+metrics
+let's move ahead
+now let's discuss
+about contextual precision
+we discussed recall and relevancy
+this is our metric which is
+your metric for the retrievers
+now as we discussed
+what is contextual precision targeting
+it is basically targeting your rank of results
+now what do you do in this metric
+I will tell you what you do
+you don't just target rank
+you take two things together
+you target
+your top results
+listen carefully
+top results means these are your high ranking
+their rank is highest
+top 3, top 2, top 5
+all these are your high ranking results
+they should be relevant
+what is the goal of contextual precision
+the goal of contextual precision is simple
+what you have to do is all your relevant results
+where are relevant results
+relevant results of your retriever
+means your retrieved chunks
+let's say that your retrieved
+10 chunks
+4 were relevant
+6 were irrelevant
+your goal is when you get final results
+which is your ranked results
+above that
+the first, second, third and fourth rank results
+those should be all your relevant results
+if all these results are relevant
+then your precision score will be 1
+and if the order is not correct
+then your precision will start to hit
+I hope this point is clear to you
+let's read the definition
+this is a tricky metric
+so keep it focused
+we will calculate this formula with our hands
+and implement it in the code
+what does this check?
+where ever you see notes, they are your chunks
+your relevant chunks in your retrieval context
+where are we checking?
+in our retriever output
+are ranked higher than the irrelevant ones
+so your precision metric is ready
+for this that your retrieved results
+will have relevant chunks and irrelevant chunks
+if you want to increase your precision
+then you have to bring relevant chunks
+above your list
+as I said that you are searching the web
+so your work result
+should be above the deep eval
+not that there should be a sponsored link
+because it is an irrelevant result
+I hope you understood this point
+and the other API references are on the second number
+here it is possible that
+your particular metric page is on the third number
+which are more related to your deep eval
+after that your sponsored links are coming
+after that you may be getting something else
+blog or reddit link
+your precision will be maximized
+so it is not asking
+whether your retrieved work stuff
+is relevant or not
+it is asking whether your retrieved work stuff
+is top ranking
+precision is targeting this
+so I would like to reiterate again
+that our three metrics are checking
+three characteristics of retriever
+I will tell you again, this is confusion
+if you test a retriever
+then you don't test standalone metrics
+you test them together
+because you want to improve three properties of your retriever
+first property is that whatever retriever is retrieving
+is of use, so we check it through the relevancy metric
+second property is that whatever retriever is retrieving
+is complete, meaning there should be no missing information
+which we would have had
+so it should be complete, relevant
+and top ranking
+so this top ranking criteria
+is our precision
+is it clear now?
+now this is the formula to calculate
+this formula may seem a little confusing
+now I will calculate this formula
+with my hand
+so I will tell you how LLM as a judge
+is doing this work
+I hope this point is clear to you
+so let's take an example
+and this is the example
+so we will do our calculation here
+I will show you the example
+our input is what is linear regression
+so this is my query
+so this is my answer key
+so this is basically my golden pair
+so this is basically my golden pair
+so linear regression is a supervised
+learning algorithm that models
+the relationship between dependent variable
+and one or more independent variables
+by fitting a straight line to the data
+typically using least squares to minimize the error
+so this is the definition of linear regression
+this is my grounded response
+what does this mean?
+that I am expecting from my rag application
+for this particular question
+that I get this answer
+this answer is relevant, complete and perfect
+is it clear now?
+now I have to take this answer key
+and take this input and test our retriever
+what is the characteristic of the retriever
+we have to check that
+our top ranked results
+those should be relevant
+we have to check this
+we have to check that the top results
+top 5, top 10 should be relevant
+if it is relevant then our precision is high
+if it is irrelevant then our precision is low
+I hope this point is clear to you
+so first of all we will fix one thing
+whenever you have to calculate the precision
+or whenever you have to calculate the recall
+in the case of recall you generally
+don't focus so much on this
+but when you have to calculate the precision
+your focus is that how many top results
+you are getting
+because your retriever may be giving you
+20 results or 30 results
+what is your target?
+top 3, top 5, top 10
+so first of all
+we fix our top k value
+let's say for this particular example
+we are taking the top k value as 5
+the top value is 5
+we are focusing on top 5 ranked results
+whether they are relevant or not
+so whenever you have to calculate the precision
+for a particular top k value
+you calculate it like this
+precision at the rate k
+so this is the way to write
+the contextual precision
+you will write it like this
+contextual precision at the rate 5
+you write it like this
+and there you calculate the individual
+precision of each result
+I know this is a little confusing
+I will explain it to you in a better way
+this point is clear that you write
+contextual precision at the rate top k
+now what is next?
+this is the result of my retriever
+linear regression assumes linear relationship
+this is chunk no.1
+this is chunk no.2, logistic regression
+these are not serial numbers
+these are your ranks
+so for this particular input
+I gave this input to my rag application
+and it gave me an answer
+I already had an answer
+and I got the output of retriever
+and how is the output of retriever?
+it is a list
+the first element in the list was at index 0
+and so on
+I got my 5 results here
+now what I have to do here
+is to check that
+how many of the top 5 results
+are relevant to me
+and for that I will use
+contextual precision
+contextual precision at 5
+so what is the formula for this?
+I will tell you the formula
+first you write 1 upon number of relevant chunks
+and then you do a summation
+you do summation from i equal to 1 to k
+if k is 5 then how many times will this summation open?
+this summation will open 5 times
+and then you calculate some things
+first is your precision at the rate k
+and then you calculate the rate of the
+top 5 results
+and then you calculate the rate of the
+precision at the rate k
+multiplied by your relevancy factor
+now let's break down this formula
+I know it is confusing
+and it might seem difficult to you
+but we will break it down step by step
+now what we have to do is
+we have to check that our top 5 results
+which results are relevant to us
+so our first goal is
+to check for relevancy
+now our goal is not to calculate
+precision
+our goal is that we get some results
+we have to tell whether the result is
+relevant or not
+so first we will take
+every retrieved chunk
+let's say we took chunk number 1
+which is chunk number 1?
+this is chunk number 1
+linear regression assumes a linear relationship between input
+feature and target variable and fits a line
+by minimizing sum of squared residuals
+so we took chunk number 1
+and along with it we took our input
+which is our query and our expected output
+these 3 pieces of information
+we got to our LLM
+which is our LLM as a judge
+we simply told this LLM in our prompt
+that this is my retrieved chunk
+this is the input query and this is its grounded answer
+you tell me whether this particular chunk
+is relevant or not
+give me a Boolean value
+simply I gave this task to my LLM
+that for each chunk
+tell me whether this chunk is relevant or not
+is it clear now?
+I am looking at the chat, we will do it step by step
+clear
+I will take the questions, don't worry about the questions
+I will take the questions, you understand it once
+I will take all the questions, we will go slowly
+what are we checking here?
+we are not checking any ranking
+we have all the results, I say we have 10 results
+20 results, 100 results, we simply have to check the relevancy
+to check the relevancy
+we gave 3 pieces of information to our LLM
+we took a chunk
+we are taking rank wise because it is in order
+so we ran a loop, we took rank 1 chunk
+output and expected output, which will be static
+for each chunk, we are giving it to our LLM
+and we are asking our LLM whether this particular chunk is relevant or not
+now you must be thinking that
+for this relevancy
+why did you give these two attributes of your golden data set
+to the input?
+we could have given only input to check the relevancy
+we could have given our input query, what is our input query?
+what is linear regression?
+and what is our chunk? linear regression assumes a linear relationship
+so by looking at the input and output, we can understand that it is relevant
+why did you give this perfect answer
+your grounded answer
+the reason for giving this is simply
+that you do not check the relevance of your chunk on the basis of your input
+because on the basis of the input
+your chunk may be relevant
+so your chunk is bringing the answer of your query
+but we also have to check that
+whether the answer is factually correct or not
+we have to check this too
+it is like that I asked
+in my search engine
+that I want a deep eval documentation
+take the documentation
+now your search engine
+instead of giving the actual documentation link
+gave a block link
+here it may be a github repo link
+in which your documentation has been used
+it has been referred
+so now where deep eval is being discussed
+so here we have the actual information
+but is this my original documentation
+is it factually correct? the answer is no
+so I will mark this particular result irrelevant
+this is the information of the deep eval
+but the actual thing I want is not coming to me
+so what we do here is
+we give our expected output of our answer
+to both our LLM and say that this is our input
+and this is its exact answer
+these are the facts that should be in your answer
+and this is the chunk that I have
+now tell me the comparison
+that is this thing relevant or not
+I have given you all the pieces of information
+check for relevancy, is it clear guys?
+is the point clear to you that why we are giving
+both the input and expected output
+because we have to check the factual correctness
+is it clear? great
+if you will also see the deep eval documentation
+I will show you the documentation
+if you go to contextual precision
+and if you go down, what is required in the arguments
+you have to give the input, the expected output
+and the context also
+but if you go to the how it is calculated segment
+then you can see clearly
+if I can show you that exact point
+see who is targeting this
+we have already seen this
+what are the required inputs
+this is our required inputs
+where is the particular segment, yes here it is
+you can see clearly
+this is the point
+the contextual precision metric first uses an LLM
+we are reading that you will use your LLM
+to determine each node in the retrieval context
+so you will take every node
+every chunk in your retrieval context
+and ask your LLM that is this particular chunk
+relevant or not, now we are not talking about
+LLM, we are simply asking
+if we have 20 results of retrieval as output
+then we are giving every chunk to our LLM
+and also taking input and retrieval
+and asking if this chunk is relevant
+simply we are calculating the relevance
+whether it is relevant to the input
+but on what basis, if it is relevant to the input
+then we have to check based on the information
+so we have to check two things
+in our chunk that it is relevant to the input
+and the facts that are told in it
+should also be in our expected output
+we are also checking factual correctness
+is it clear now, ok
+so what have we done here, we have only 5
+chunks here, not 20, so for these 5
+chunks we have calculated the relevance
+and the relevance is not a score
+we are not calculating the metric
+relevance is simply your boolean value
+either it is true or false
+so in our formula, there can be only two values
+of relevance, either it can be 1 or 0
+ok, now what we have to calculate next
+next thing is for every k
+we have to calculate the precision at the k
+so here every k is my chunk
+every chunk is my k
+I have 5 chunks
+so I will open it 5 times
+what will I get after opening 5 times
+I will get after opening 5 times
+precision at the rate k
+for that particular chunk
+and its relevance value
+now let's talk about
+precision at the rate k
+this is different from contextual precision
+that k and this k are different
+this k is all the chunks
+and the main one of the formula
+is your top k chunks
+so k is also different
+if you see in the documentation
+k is the i plus 1th node
+in the retrieval context
+all your chunks come in this
+i plus 1th is what
+because this is a list, so what is i
+i is your index value plus 1
+so this is your i plus 1
+and your outer k is your top k
+that how many chunks you are
+calculating the precision
+no problem, we are breaking down this formula
+you will understand things slowly
+now I have to calculate
+precision at the rate k
+so let's talk about this
+this is the formula of precision in machine learning
+which is tp by tp plus fp
+in the denominator
+what is this term
+this is all your predicted values
+predicted positives
+you calculate the actual true positives
+of the predicted positives
+so you are calculating the same thing here
+what is the meaning of precision at k
+precision for chunk no.1
+means what
+that out of your total chunks
+how many chunks are relevant
+here
+so here are your
+relevant chunks
+upon your total chunks
+basically what you are doing here
+you are
+making cuts here
+you have retrieved data
+this is your retrieval context, this is a list
+so what you are doing is when you are
+calculating at the rate 1
+so there you are seeing that in my list
+there should be only one chunk
+so in my list there should be two chunks
+when you are calculating at the rate 3
+there should be three chunks
+so basically what you will do is
+you will make cuts here
+in precision at the rate 1
+you will consider this particular chunk
+in precision at the rate 2
+you will consider these three
+so we are calculating this
+so now we are
+breaking down our summation
+so let me write it again
+this is my i equal to 1 to k
+where k equals 5 and we are calculating
+some dangerous thing which is precision
+at the rate k multiplied by your relevancy factor
+now we are
+calculating this whole thing
+so we know that its value will be 1 or 0
+and this llm will tell us
+so we are calculating the precision at the rate k
+so let's start calculating
+so first we will calculate our k
+so what will be the value of k? k will be 1
+so first we will calculate precision at the rate 1
+precision at the rate 1 means
+we have to calculate the total chunks
+so obviously because I am working with one chunk
+in my list
+so total chunks are 1
+and I have to tell that
+is this particular chunk of work or not
+so this particular chunk is talking about linear regression
+so linear regression is assuming linear relationship
+between input features and target variable
+so this is my relevant chunk
+so what is the value of precision at the rate 1?
+it is coming out to be 1 upon 1
+which is 1
+now let's calculate precision at the rate 2
+I will calculate 2 and then I will ask you
+to calculate with me
+let me calculate 2 for you
+so what is the first chunk in precision at the rate 2?
+so let's calculate the second chunk
+logistic regression is used for classification task
+not regression despite the name
+is this particular chunk of work to answer your query
+which is on linear regression
+I am looking at the chart, you will tell me
+is it of work?
+no right? this is irrelevant chunk
+so what will be the value of precision at the rate 2?
+so what are the total chunks in the list?
+you have 2 chunks, first is linear regression
+and second is logistic regression
+so how many are there in total?
+these are all predictive positives, how many are of work?
+work is only 1
+so what is precision at the rate 2? it is 0.5
+now let's calculate precision at the rate 3
+and mind you guys
+you have to calculate precision at the rate 3 for every chunk
+so if you have 20 in retrieved chunk
+then you have to calculate precision at the rate 1 to 20
+is this clear? now you will tell me
+for precision at the rate 3
+I will show you the data
+in linear regression the model estimates coefficients
+slope intercept that best fit the training data
+using least square method
+so this is on linear regression
+and the facts listed in this are in my expected output
+here we are talking about least square
+fitting straight line, so all that is visible
+so yes this particular chunk is also relevant
+so now if I have to calculate precision at the rate 3
+so how many total chunks will be there?
+I am looking at the chart, you will tell me
+yes, people told me right
+it is 2 by 3
+now let's calculate precision at the rate 4
+I hope you are understanding these things
+how to calculate this
+so it's good, now you will pick this particular formula
+now you will not have to scare me
+precision at the rate 4
+precision at the rate 4 is about decision tree
+reading it is clear that it is useless
+so this is the precision
+this was coming out to be
+0.67 and this is 2 by 4
+which is 0.5
+now let's calculate precision
+at the rate 5
+so let me show you the last chunk
+last chunk is also on linear regression
+we are talking about supervised
+dependent variables which are in my expected output
+so this is also a relevant chunk
+so how much is the total at the rate 5
+total was 5, relevant is 3
+so it is coming out to be 3 by 5
+which is my 60%
+so what have we done here
+we have calculated these precisions
+now we will open this summation
+so in this we have to do two things
+we have to open the precisions
+and also multiply this relevant factor
+which can be either 1 or 0
+it has to be only boolean
+so basically what we are doing here is
+we are summing this precisions at the rate k
+what does summation mean? we are adding them
+but which precisions are we adding?
+we are adding only those precisions
+which are relevant because if the value of Rf is 1
+which is relevant then this whole thing will be 1
+means it will be positive
+if its value is 0 then this whole thing will be 0
+in the bracket
+so what are we doing? what were we going to do?
+we wanted that we need top ranking chunks
+all our chunks should be top ranking
+but which chunks should be top ranking?
+relevant ones
+so whenever we are calculating the precisions
+we are only factoring in the relevant ones
+we are calculating the irrelevant ones as 0
+so you can calculate here
+so the first chunk was relevant
+so this will be multiplied by 1
+and this will be our precision 1
+so the second chunk was irrelevant
+so because we are doing it for the second chunk
+so this should be Rk not Rf
+so for the second chunk what will be the relevance?
+so this will be 0
+for the third chunk which was relevant
+yes it was relevant so its factor is 1
+and this will be our 6
+fourth chunk was relevant
+so this was irrelevant
+so this will be 0
+5 was relevant, yes it was relevant
+so this will be 1 and it will be 0.6
+now what you have to do is
+add the relevant chunks
+so you have to add 1 plus 0.67
+plus your 0.6
+once you calculate it and tell me
+1.27
+right
+is this calculation ok guys?
+check and tell me
+this is 1.27 and this is 2.27
+2.266, yes we have rounded it
+its ok, we have made the calculation easy
+so 2.27 right
+now what you have to do is
+you have the summation term
+so you have this dangerous formula
+this whole thing
+this whole thing was dangerous
+you have calculated this
+and what is the final output?
+your final output is 2.27
+now what you have to do is
+simply divide it by what?
+by the number of your relevant nodes
+relevant nodes means
+what was the value of top k?
+we were taking the value of top k as 5
+so tell me how many of your 5 nodes are relevant
+our total is 5 and top is also 5
+so we have 3
+so we have 3
+what is its output?
+someone will tell us
+we can actually calculate here
+so it will be 2.27
+by 3
+I think it should be equal to
+0.75
+0.76 ok
+so here your output is 0.76
+and this is your contextual
+so what is the final output?
+contextual
+precision for your top 5
+which is this
+is coming out to be 0.76
+is it clear guys?
+how do we calculate the precision?
+let's see if it is clear
+I am looking at the chat
+is it clear?
+great
+now let's replicate this in the code
+so I have already written the code today
+so that there is no mistake
+exactly this case we are replicating
+so this is exactly the same code
+guys now I will take questions
+give me some time, let me explain this code to you
+and I will show you one thing
+and then I will take questions
+so what are we doing here?
+we are importing our contextual precision metric
+it is the same, we are making our test case
+this is my linear regression input
+so this is the retrieval context inside the list
+so I have retrieved these 5 chunks
+so I made my test case and gave it to my metric
+and finally I am measuring my metric
+so let's do one thing here, let me open a new terminal
+and let's run this file
+ok
+I will simply write uvrun and the file name is
+test
+precision metric dot p1
+ok it is exactly the same code
+so we are not seeing this again
+my file is running
+what is the score guys?
+exactly the same as we calculated with our hands
+ok let's see the full output
+so what was our first chunk?
+so what was our first chunk?
+so what was the verdict?
+that yes this chunk is relevant
+so it is explained
+so what was the second chunk?
+so here we have explained that the logistic regression chunk
+is useless because it is talking about classification task
+not regression
+third was on linear regression so it is of use
+and fifth was on real linear regression
+and it is of use
+so what is our final score?
+0.76
+and it is because your first node
+means the first ranked chunk
+it is relevant and well ranked
+with linear regression assumes a linear relationship between
+the input feature and target variable
+so when you will pause the video and watch the recording
+so here the whole reason is given
+why your precision score is this
+is this clear?
+now let me show you one thing
+and what we have to do is cut this particular thing
+ok if I can cut this one
+why it didn't cut
+it is cut
+so I will paste it here
+I simply put the first
+linear regression chunk
+in second position
+and the logistic regression chunk in the top
+now I will show you this particular file
+and I will show you that if you
+give any irrelevant chunk a high rank
+then how your precision will be affected
+let's see
+what is the result
+now we had 75%
+now see
+the chunk is there
+I didn't change any chunk
+I didn't add a single comma
+I simply changed their order
+and my precision is wasted
+so the first rank is irrelevant
+is it clear guys?
+see how much hit I took
+from 76% to 58%
+let me show you one more thing
+let's resume the order
+let's do one thing
+let's not touch this first chunk
+let's touch this third chunk
+I cut it
+and let's do one thing
+let's keep the second and third chunk useless
+and the fourth chunk is relevant
+so what I did here is that the first chunk is relevant
+second and third chunk is useless
+let's run it again
+I am just changing the order
+so when I changed the first chunk
+see
+which order I changed here
+I changed third to fourth
+so I didn't take so much hit
+I changed one chunk earlier
+but now I changed lower rank chunk
+so my score is taking less hit
+can you understand this?
+so what we have to do here
+precision focuses on this
+that the top chunk should be relevant
+let me show you one more thing
+let me copy these two
+let me copy these two
+let me copy these two
+and let me paste this
+and let me paste this
+again I didn't change anything
+so what I did here is that
+all the top chunks are relevant
+top 3 results are relevant
+and bottom 2 are irrelevant
+let's calculate the precision
+bingo!
+what is the precision?
+why is this?
+my retrieval context has 2 bad results
+this is because precision is targeting
+the top ranking results
+should be relevant
+irrelevant results should be in your context
+but not at the top
+your retriever or reranker should make sure
+that all the results are at the top
+so the garbage is added
+but who will penalize this garbage?
+this garbage will penalize my relevancy
+if I had calculated relevancy
+on this test case
+then obviously I would not have good results
+let's do one thing
+let's calculate
+so what I have to do is
+import here
+contextual relevancy
+let's run this
+directly
+so contextual relevancy
+I am not turning on verbose
+and I am simply measuring my test case
+let's rerun it
+now the score you will get
+is the relevancy
+no print
+did I have to print?
+why didn't it print?
+what does it give in output?
+it gives a float in output
+let's save it in a variable
+we didn't print anything
+but we didn't get anything
+let's run it again
+contextual relevancy metric
+no result
+why is this happening?
+are we missing something?
+we are giving expected output
+we have to give our input and retrieval context
+there is expected output
+so it doesn't matter
+actual output is blank
+why is the result not coming?
+can someone tell me
+why is the result not coming?
+we didn't print above
+let's print
+I think it will come
+maybe the result was coming because of verbosity
+it is not coming because verbosity is not on
+yes it can be
+how much is it?
+it is very less
+now I will simply
+remove this noisy information
+like these two chunks
+I will comment out
+if I run relevancy again
+why is it taking so much time?
+what happened?
+it is not coming
+see it is increasing
+still there is some extra pieces of information
+now we are talking about relevancy
+I will calculate recall
+now I will call it recall
+now I will call it recall
+let's see what is the score in recall
+recall checks completeness
+what is matching between my expected output
+and my retrieval context
+recall is 100% because all the information
+in my expected output is in my retrieval context
+recall doesn't matter if there are irrelevant chunks
+relevancy was also making a difference
+now if I comment in
+I have corrected it
+recall will also come 100%
+because it is complete
+my retrieval context is complete
+right or wrong doesn't matter
+I hope you are able to draw proper comparisons
+can you do it?
+I will take you to one more note
+just give me one minute
+let's calculate it again
+I want to show you how one precision came
+by doing hands on calculation
+basically we took the second and fourth
+in bottom two
+precision at the rate 1 will be what
+I will calculate it here
+it will be 1 by 1
+it is one and one is relevant multiplied by 1
+precision at the rate 2
+2 by 2
+top two are relevant multiplied by 1
+because second one is relevant
+precision at the rate 3
+precision at the rate 3
+how much?
+top three are relevant multiplied by 1
+which is again 1
+precision at the rate 4
+fourth chunk is irrelevant
+at the rate 5
+what I have to do is add them
+3 divided by what
+I have to do in top three
+100% precision
+I hope you are able to calculate
+what are the three retrieval metrics targeting
+on what basis they are doing the calculations
+and you will never get confused
+between relevancy, precision and recall
+recall is testing for your completeness
+and relevancy is checking for your relevancy
+how much is the noise and signal
+is it clear guys?
+if every concept is clear
+today's class was more clear
+I hope
+if there was any confusion in the last class
+then today it was clear
+I have done practical things in the code
+I am checking the questions
+in the last class
+what we could do to improve
+contextual precision, I have already discussed this
+simply you have to top rank relevant chunks
+you have to improve your re-ranker
+because re-ranker re-ranks
+whatever you have retrieved
+then it is called re-ranker
+it re-rank the retriever results
+it re-evaluates and re-ranks
+so if you want to increase the precision
+then don't mess with the retriever
+improve your re-ranker
+moving forward, retriever based metrics are clear
+right clear in the chat
+and then we will move forward
+we will go to generator based metrics
+generator based metrics are generally simpler
+as compared to retriever based metrics
+so let me give you an idea
+which hyper parameters you use in generator
+which hyper parameters
+you focus on
+so what are you doing in generator based metrics
+you are providing two things to the generator
+one is you are providing your retrieved context
+whatever you have ranked from re-ranker
+whatever you are getting in output
+from retriever re-ranker
+you are passing it directly
+you don't mess with the retrieved context
+so we evaluate this retrieved context
+through our retriever based metrics
+so we have already seen and read its evaluation
+and we will evaluate it through those three metrics
+along with that you are giving a query
+again as I told you
+you don't have any control over this query
+this query will be provided by your user
+you can't evaluate it in any way
+it is not in your control
+what is in your control
+there is an important step before generator
+what you do in this augmentation step
+in this augmentation step you basically
+assemble everything
+assemble into what, assemble into a prompt
+in this prompt you define the role of your chatbot
+in this prompt you set some instructions
+in this prompt you define some rules
+in this prompt you also define
+a fallback mechanism
+also define a fallback mechanism
+that if you don't get the answer then what to do
+so here you set a fallback
+answer or fallback mechanism
+and also you add many things in this prompt
+and along with that you define these things
+in your prompt along with that you are also assembling your context
+where are you sending your retrieved context in your prompt
+where are you sending it, which position are you sending it
+which position are you sending your query in
+are you facing any loss in the middle problem
+keep all these things in this prompt
+and what is this prompt
+this will be your input to the LLM
+as I told you LLM
+in your rag application case
+there is a little bit of a blank component
+generally there is nothing
+you already have a trained LLM
+you are using that LLM by calling API
+you can't make any special changes in it
+we are not talking about fine tuning here
+what can we do in LLM
+we can tweak some parameters like temperature
+top k, top p, these parameters are in our control
+but overall how is LLM working internally
+are you interested for the application or not
+now this is not a rag based application concern
+rag based application concern is that the input you are giving to your LLM
+and some hyper parameters of LLM
+like temperature, top k, top p
+on that your LLM response matters
+so basically
+you are evaluating these two things
+through your generator matrix
+now in generator you have two matrix
+the first matrix is your answer relevancy
+from the name only we can understand
+that you are checking here that your answer is relevant or not
+like what were you checking in contextual relevancy
+that your retrieved context is relevant or not
+always remember that whenever you are doing generator based
+evaluations
+you can use retrieved chunks
+as an input in the evaluation
+because it is going to your LLM
+but you can't change anything in it
+it is already available to you
+now you can't change anything in it
+you have to use it exactly as it is
+so first is your answer relevancy
+now you check for a given input
+for a given input or query
+is the answer or response generated by your LLM
+is it relevant for query or not
+and second matrix is your faithfulness
+in faithfulness you basically check
+that is your response
+grounded or not
+now we will cover both these matrix in detail
+we will cover faithfulness in a while
+first we will cover answer relevancy
+what are we checking in answer relevancy
+that for my query that my LLM has
+generated response is it a correct response or not
+is it relevant or not
+so let's read its definition once
+answer relevancy tells that it checks whether the
+answer generated by your LLM
+whether it actually addresses the input
+question nothing more nothing less
+it is just checking that whether your query
+or response
+are related or not
+whether this response is relevant or not
+that's it, you are not checking here
+that the facts claimed in this response
+are correct or not
+for that you use correctness
+this is not a correctness matrix, this is a relevancy matrix
+in relevancy you just have to check
+whether it is making the right sound or not
+is it clear
+so it is purely about relationship
+between input and actual output
+simply you are checking its relationship
+it does not check if the answer is
+factually correct or grounded in context
+these two things you do not check in relevancy
+whether it is factually correct or grounded in context
+this is the work of faithfulness
+the work of relevancy is that your answer
+is aligned with the query or not
+that's it, a model can produce
+a relevant but wrong answer, it is possible
+that the claim in this response is wrong
+but it is relevant, let me give you an example
+let's build a campusX chatbot
+now someone asked the chatbot
+what is the fee of the advanced FRAG course
+chatbot asked the chatbot
+the chatbot told the fee that the fee of the
+advanced FRAG course is 10,000 rupees
+so is this particular answer
+relevant yes it is relevant
+I asked the query to tell me the fee of this course
+so I am getting a fee in the answer
+I am getting a value
+it is relevant but is it factually correct
+no it is not factually correct
+the fee of the advanced FRAG is 2000 rupees
+so you do not check the factual correctness
+if you go to check relevancy
+then it will be a completely relevant answer
+but is it factually correct
+no
+is this particular point clear
+this is a very important point
+you do not check the facts
+you check simply that the question is getting an answer
+that answer is correct, wrong, doesn't matter
+is it on topic or not
+is it clear
+great
+great
+now let's see how you do the calculation
+calculation is very simple
+you have to give two things in the input
+your actual query which is your input in the case of LLM
+test case and at the same time you have to give your actual output
+actual output is the response of the LLM
+you give these two things
+first of all LLM takes your actual output
+and breaks it down
+breaks it down and decomposes into facts
+into statements
+we have already done this many times
+your LLM has caught the response of your FRAG application
+and breaks it down into statements
+you have broken it down into facts
+now you will run a loop
+you will take every fact and check it with the query
+that is it relevant or not
+you will simply compare
+that is this particular fact able to give the answer of your input query
+that answer is correct, wrong, doesn't matter
+is it on topic or not
+if you see the role of LLM as a judge
+so the judge LLM reads the actual output
+what is the actual output?
+response of your application
+which my LLM generator is generating
+and decomposes it, breaks down your response into
+list of individual statements or facts
+claims is facts, not just naive sentence splitting
+sentence splitting is not done
+here you extract the atomic ideas
+after that you check
+relevancy, there is no score for relevancy
+it is a boolean value
+you are simply checking whether it is relevant or not
+not checking how relevant it is
+for each statement the judge LLM decides
+is this statement relevant to answer the input
+is it aligned with the input or not
+it labels each relevant or irrelevant
+deep eval implementation also allows a verdict
+you get a verdict for partial
+but in general cases you will get relevant or irrelevant
+it is a boolean value
+you can tweak it, after that you get a reason
+and finally you calculate the score
+now what is the formula for this?
+formula is number of relevant statements
+divided by total number of statements
+in this formula, your LLM as a judge
+extracts 10 facts
+using decomposition, from that you will check
+comparing each of the facts with your query
+that how many facts are relevant
+so in the numerator you will get relevant facts
+let's say 6 facts are relevant out of 10
+so how much will be the relevancy score? 0.6
+it is a very simple metric
+we are not checking the facts, we are simply checking
+whether our query has the answer or not
+is it clear now?
+let's understand it through an example
+this is our input query
+what is boosting in machine learning
+and how does it work
+and I got this particular response from my LLM
+that boosting is an ensemble technique that combines
+multiple weak learners to form a strong learner
+it trains models sequentially
+where each new model focuses on correcting the errors
+made by previous one
+AdaBoost was one of the most popular boosting algorithms
+Random forest on the other hand
+built trees independently and averaged their results
+Gradient boosting uses gradient descent to minimize
+the loss function when adding new learners
+the facts that we are told here
+are they correct or not?
+we are not checking now whether AdaBoost is the most popular
+we are not going to correct it
+we are checking whether this particular statement
+aligns with our input
+we got this particular response and gave it to our LLM as a judge
+the job of LLM as a judge is to extract some statements
+like it extracted these 5 statements
+and extracted the last statement from my answer
+there is no retrieved context here
+now it will capture every statement
+and compare it with my input query
+whether this particular statement aligns with my input query
+or not
+so let's see what is my input query
+we are talking about boosting and how does it work
+boosting is an ensemble technique that combines multiple weak learners
+whether the particular fact aligns with my input query
+is it correct or not? I don't know
+but yes it gives the answer to boosting
+it trains modern sequentially
+it is my boosting algorithm
+when we use LLM it matches with the intent of our query
+we don't actually need keyword matching
+or fact matching
+this is the power of your LLM as a judge
+so the LLM focuses on correcting the errors of the previous one
+so this is exactly what boosting does
+it gives the answer to my question
+add a boost gives the answer directly
+random forest is a bagging technique
+this fact is irrelevant
+gradient boosting uses gradient descent to minimize loss
+this is relevant
+so basically I extracted 5 facts
+so my answer is 4
+so my answer relevancy value is 80%
+so what are you doing in answer relevancy?
+you are calculating the signal to noise ratio
+again
+which you were doing in your contextual relevancy
+you were doing it on the basis of context
+you were relating the context and input
+here you are relating the answer and input
+so you are relating the answer and input
+so you are relating the facts that are useful and useless
+that is it
+that is your answer relevancy
+let me show you its code
+we have used the same example
+here is my answer relevancy
+let me remove this extra code
+because I will share this code with you
+this is the example of boosting
+this is my actual output
+there are only 2 things in the input
+here I made my test case and I am simply measuring it
+so let's clear the terminal
+I will write qv run test answer relevancy.py
+run is happening, let's see its output
+we extracted 5 statements
+80% score is coming
+my LLM has also extracted 5 statements
+so when you keep your verbose output
+you can see individual statements
+train model is coming sequentially
+random forest is irrelevant
+now each statement is checked with your query
+what is the verdict? yes
+4th statement is no
+it is because random forest is a different ensemble method
+and it is not boosting
+it does not align with my query
+so verdict is no, this is fail
+and finally the last statement is pass
+and 80% is my relevancy
+is this clear?
+no query doesn't contain the argument
+your augmented prompt contains the query
+if you remember our application
+I can show you rag workflow
+so you will see our augmented prompt
+here is our prompt
+in this context and query are part of the prompt
+these are your dynamic information
+which we are feeding at runtime
+so this is my query
+so this is my query
+is this metric clear?
+yes
+answer relevancy
+clear?
+right clear in the chat
+this is easy
+now you know where LLM as a judge is used
+let's check it in documentation
+because we are sticking to the documentation
+so let's check it in documentation
+answer relevancy metric uses LLM as a judge
+to measure the quality of your rag pipelines generator
+by evaluating how relevant the actual output
+of your application is compared to the input
+so here we are comparing two things
+our response which is the actual output vs our input
+and here we need two things in the input
+query and actual output
+how is this calculated?
+how it is calculated?
+very simple, first uses LLM to extract all statements
+made in the actual output
+before using the same LLM to classify
+whether each statement is relevant to the input or not
+simple
+let's move on to our final metric
+of the rag pipeline
+don't think that all these metrics are available
+you can build your custom metrics for your specific domain
+but the built in metrics that Raga gives you
+under the hood
+are these five
+two are of your generator and three are of your retriever
+let's move on
+and discuss about faithfulness
+now
+what does faithfulness check?
+what was our relevancy checking?
+the relationship between input and output
+between generator output
+faithfulness checks the relationship between
+the context retrieved context
+I will write it here
+between the retrieved context and output
+what are we doing in the generator?
+in the generator
+this is my generator LLM
+and this is the response in the output
+we are giving two things in the input
+we are giving our query and retrieved context
+so when we go to build metrics
+for this particular component
+it is very logical that we will test both
+inputs of the output
+we have tested the relationship between the query and response
+now it's time of my retrieved context
+relationship with my response
+and the metric that we use to test that is my faithfulness
+for that we check faithfulness
+we basically check
+that our output
+our output is our response
+our response of the application
+that my LLM generator has made
+is that output taking the information
+from my retrieved context
+or is it using some information
+that it has put in it
+our main goal of making rag application
+is that our LLM
+responds from our context
+if I show you my system prompt
+although we have written a simple system prompt
+but what have I written here?
+answer the query based on the given context only
+I am making sure that
+the answer is to be done according to this context
+nothing should be done from outside
+and this is what I am checking in my faithfulness
+that the answer that I have got
+is it from my retrieved context only
+or some fact has come in my answer
+which was not available in the context
+again you are not checking the factual correctness
+you are checking that
+whatever fact is listed in your answer
+it has come from your context only
+from retrieved context or from outside
+so check internal vs external
+if there is any information in your retrieved context
+which is wrong
+then that information will also come in your response
+but your LLM will make sure
+that the answer is from your context only
+is this clear?
+so what does faithfulness check?
+whether the generated answer is factually consistent
+it is not saying correct, it is consistent
+the answer is given based on the retrieved context only
+or not?
+with the retrieved context that is
+is the model hallucinating or making claims
+that aren't supported by the retrieved context
+that what has actually been retrieved
+does my model's response align with it or not?
+it is not something that hallucinates
+something else was written in the context
+so it should not be like that
+let's say I asked what is the temperature of Delhi
+it said that AQI is that temperature
+so AQI is that temperature
+is basically my model hallucinating
+you will not include that thing
+because it is not in your context
+your actual temperature value you have to tell
+this is the hallucination detection metric
+it has nothing to do with whether the answer
+is relevant or not
+whether the answer is relevant or not does not matter
+and nothing to do with whether the retrieved context
+itself is any good
+means whether the retrieved context is useful or not
+I have to simply check and compare
+that this is my answer and this is my retrieved context
+whatever important facts I have listed in the answer
+whether it is coming from the source or not
+I have to check in my answer whether the points
+written in my answer are from NCRT or not
+whether it is written wrong in NCRT or not
+if it is written in NCRT and it is available in my answer
+then my answer is grounded
+is it clear guys?
+is this point clear?
+that what we are capturing in faithfulness
+we are basically capturing
+that our LLM response
+is it grounded on our knowledge base
+or not?
+or my model has added some extra information externally
+where will this external information
+come from?
+internal information will come from my knowledge base
+where will external information come from?
+from parametric knowledge
+which he learnt during training
+maybe he learnt during training that
+AQI is that temperature
+and he told me that but what I asked him
+is tell me temperature of Delhi or AQI of Delhi
+and he told me that AQI is that temperature
+I don't want that nonsense
+simply tell me the value of AQI
+whether I am getting it or not
+I haven't added anything extra
+that's it, this is what I capture in faithfulness
+so how do you use LLM as a judge in faithfulness
+I will tell you that too
+what you do is you send your response
+to your LLM
+and you say that from this response you extract facts
+then you take these facts
+and you send them one by one to your retrieved context
+and simply you check
+that whatever facts were in my response
+have they come from my retrieved context or not
+that's it, are they supported or not
+can I attribute them or not
+that's it, facts are right or wrong
+doesn't matter, response came, let's say there were 10 facts
+you extracted 10 of them and checked
+how many of them came from my context
+if all came from my context
+then my response is faithful
+and if some came less then I will calculate faithfulness
+formula is very easy
+total number of claims you put in denominator
+let's say there were 10
+and out of these 10 claims
+8 were from my context
+and rest came from my LLM's parametric knowledge
+so my faithfulness score is
+0.8
+which means 20% of my LLM is hallucinating in response
+is it clear guys?
+let's see how LLM as a judge works
+what you are doing here is
+you are taking your actual output and from that
+extract individual factual claims
+and after that
+you are taking each extracted claim
+and giving your LLM
+to compare against the retrieved context
+that whether it came from my context or not
+now you can get 3 types of verdicts
+yes means it came from your context
+no means your model
+or LLM is hallucinating this fact
+and third is I don't know
+means an ambiguous claim came
+it can't be verified
+so these 3 are your outputs
+and after that you are providing your reason
+and calculating your score
+is it clear?
+now let's understand it through an example
+example is explain how the KNL algorithm works
+how the value of K affects performance
+now this is my retrieved context
+KNN is non-parametric instance based
+learning algorithm
+it works by finding clay closest training example
+I have some chunks here
+I have these chunks
+now I have to take my answer
+this is my response by my LLM
+this is my response
+and I extracted 5 pieces of information
+not 5, more
+9 pieces of information
+I extracted 9 pieces of information
+these are my atomic claims
+individual claims
+now I will take each claim
+and go to my retrieved context
+and check if this claim
+is coming from my retrieved context
+let's check here
+KNN is a non-parametric algorithm used for classification and regression
+so here we are talking
+non-parametric is used for classification and regression
+so yes, this is my
+I will mark it with green, this is coming from my retrieved context
+statement, it predicts a query point
+and looking at the closest K training points
+so here it is written
+finding K closest training examples
+to a query point, so yes, this point is coming from my retrieved context
+distance is usually measured using Euclidean
+so here we are talking about Euclidean distance
+this claim is also coming from my retrieved context
+prediction is done via majority vote and averaging
+let's see this too
+so yes, this is also happening
+prediction is done
+sorry, KNN doesn't learn an explicit model
+during training and just stores the data
+let's see, this is also coming
+so it is also correct
+it is referred to as a lazy learner because of this
+lazy learner is happening here
+it is also correct, fact
+small value of K makes the model more robust to noisy data
+ok
+choice of K, small k makes the model sensitive to noise
+are you seeing
+now here my model hallucinates
+it had information that small k
+makes your model sensitive
+ok, you just check your nearest neighbor
+so you have to take its value
+so here you are not made robust
+large k value, but what my model has done here
+it prints contradictory information in response
+this was not available in my context
+so this is a claim that is not grounded
+which is not available in my retrieved context
+I don't know whether it is right or wrong
+what does K do, I don't care
+it is just not matching
+feature scaling matters a lot for K&N
+because it relies on distance calculation
+distance calculation is sensitive
+so this is a correct claim
+K&N has a training time complexity of
+O n log n
+so is this thing written here
+no, this thing is not written here
+this is extra piece of information that my model has added
+hallucinating, what I want to check here
+I want to check the groundedness of my model
+because I have given a specific instruction to my model
+that whenever you give a response
+it should be well grounded in my retrieved context
+whatever is in the retrieved context
+just add that in your claims
+don't think about anything extra
+and here my model is failing in two of the nine facts
+so here how much will be my faithfulness value
+how many claims I have fetched from my response
+total claims were 9
+and how much was grounded from that, 7
+so this is my faithfulness score
+is this thing clear, how to calculate this
+faithfulness is clear
+it is easy
+if anyone has any doubt
+you can ask me
+then we will move in on the code part
+I am looking at the chat guys
+what happened guys
+are you guys tired, bored
+the chat is not responding
+are you confused
+are you confused in your faithfulness
+am I audible
+clear, am I audible
+your response
+yes
+we are not checking the correctness of claim
+we are checking the groundedness
+because we are telling our model
+whatever is in the retrieved context
+answer on that basis
+you don't have to search on web
+the fee of advanced track course
+whatever is the value of the fee
+you have to claim that value in your answer
+don't add anything extra
+it doesn't matter
+whether it is correct or wrong
+hallucination is that
+your model confidently puts wrong facts
+like this one
+this time complexity fact
+this is not available anywhere in my context
+so it confidently gave me this time complexity
+where the value of small k
+is sensitive to your model
+and it makes it robust
+is it clear guys
+yes
+if your faithfulness score is less
+we didn't discuss this in the case of relevancy
+in both generally you change your prompt
+but first let me tell you that if your faithfulness score is less
+what you have to do
+first of all
+you have to mention
+your system prompt
+you have to emphasize
+that you have to give information only from the context
+if you feel like
+I want to add some advice
+I want to add my two cents
+then simply mention that I don't know
+don't make anything from your side
+if you are feeling restless
+and feel like feeling a little bit of pain
+then we have to explicitly mention this in our prompt
+we have to tighten our generator prompt
+explicitly instruct the LLM
+to only use information present in the provided context
+and say I don't know rather than
+filling gaps with parametric knowledge
+you can use only retrieved context and parametric knowledge
+so we are saying
+only use retrieved source and don't focus on parametric knowledge
+because you are in a rag application
+in the case of rag it is true
+you can check your retrieval quality
+because whether your retrieved context is coming correctly
+or if it has some things written inside it
+which are confusing your model
+then your faithfulness will be reduced
+lower generation temperature
+if your model has high temperature value
+then it gives a lot of dynamic outputs
+it becomes very probabilistic
+so you can reduce the temperature and make it a little deterministic
+so that it doesn't add anything creative
+in your answers
+you can add citations properly
+you can add grounded instructions
+you can add the sources
+from where this particular fact came from
+this also increases your groundedness
+and you can also review chunking strategy
+it is not like your chunk
+is cutting mid fact
+where incomplete information is present
+because if incomplete information is present in your context
+then it tries to fill it
+if you have complete information
+then LLM makes sure that it doesn't fill the gaps
+and uses that information
+so if your LLM is confused
+then it tries to hallucinate
+so make sure your retrieved context is good
+and the system prompt you have defined is a little stringent
+now let's see how to improve
+in answer relevancy, response and query are not matching
+so again you have to fix your prompt
+you have to write explicitly in the prompt
+that whatever has been asked, answer it
+don't add any extra noisy information
+you have to check
+is this a retrieval problem or not
+if there are irrelevant chunks in your context
+then they will also come in your response
+so this is the effect of your retriever
+so if garbage is out in retriever
+then it will act as garbage in your LLM
+so you can fix this
+you can improve your relevancy by reducing verbosity
+means you can reduce your extra verbosity
+and tell your model not to be too chatty
+you can improve accordingly
+and multipart questions
+so multipart questions means
+where you have to decompose your question
+so you can use query decomposition
+and improve things
+so I hope you understood these things
+how you improve in your matrix
+this point is clear to you
+now I will show you in code
+how you implement faithfulness
+I will show you some parameters
+so faithfulness metric uses LLM
+as a judge to measure the quality of your
+rack pipeline generator
+it evaluates that your actual output
+aligns with the context of your retrieved context
+where I am getting this context from is from my retriever
+so does the output of the retriever and the output of the generator
+match or align or not
+so in relevancy you check whether the user's input
+and the output of your application match
+so you match both the input
+and output aspects of the generator
+so you are doing query versus response
+here you are doing retrieve context versus response
+so you have to give these 3 inputs
+so you have to give these 3 inputs
+so you have done query, output and retrieved context
+so how is the calculation done here
+so you tell your LLM to extract
+all the claims from the actual output
+and you compare it with the retrieved context
+which claims are truthful and which are not
+that's it
+a claim is considered truthful if it does not contradict
+any facts present in the retrieval context
+so now it is clear
+now here are some parameters which you can set
+one parameter is written here
+now what are the parameters here
+threshold is your passing value
+you can select the model here, do you want to give a reason or not
+so these are all common for you
+but for this particular metric
+here are some specific parameters
+like this one
+you can set an integer value here
+that from your answer
+how many facts you have to extract
+sorry not answer, from retrieval context
+how many facts you have to extract
+so basically you set your denominator
+through this particular value
+penalize ambiguous claims
+if you set it true
+then your ambiguous claims
+will not be a part of the calculation
+default is false
+but generally if you have ambiguous claims
+then if you set it true
+now let me show you the whole thing
+in the code
+so here is our code
+exactly the same example we are using
+faithfulness metric
+here we are giving our input, this is my actual output
+and this is my retrieved context
+here is my faithfulness metric
+I have turned on verbosity
+and here I am extracting
+from my retrieval context 5
+you can increase or decrease the value
+let me change the values
+so let's run it
+so we are running it
+faithfulness metric
+it is running
+so first of all
+your facts will be extracted from your response
+then from your context
+and then there will be a comparison
+so see
+how many truths you have extracted
+truth is basically coming from your context
+your context is grounded, that is your ultimate truth
+so you have extracted
+from your response 5 truths
+sorry from your context 5 truths
+these are your truth values
+and where are these claims coming from?
+from your response, now claims can differ from you
+and you are checking here how much is matching
+here you can see 100%
+why 100%? because here
+we have extracted fewer truths
+and here we have removed the ambiguous
+if I take the ambiguous ones in calculation
+then your score will decrease
+see
+I have set it false
+score has been reduced
+because I am using the ambiguous ones
+and I can change the truth extraction limit
+let's say I have set the truth extraction limit
+as 7
+so here the value of my denominator is increasing
+so basically
+you can change your ratios through this
+then 1 came
+because in the last two I don't know is coming
+these are your ambiguities
+these are your 7th truths extracted
+so you can play with these values
+and experiment with it
+and you can basically
+check this particular code
+so what I will do is I will run get status
+so I will share these files with you
+ok commit
+ok push
+so that's it for today
+we have to cover more things
+but it is already 10.15
+so that's it for today
+in the next session
+we will do here
+whatever is the production related code
+and how you do things in production
+and we will read that
+and how you make custom metrics
+we will read that too
+so till now we have
+completed the whole of reading individual metrics
+and from the next session we will see
+that in production you have created all the metrics
+on your data set
+and how you do evaluations on that
+and we will read this important concept
+that is the rack triad
+when your application is deployed
+it is in production
+then you test which metrics
+because it is not possible to test all the metrics
+because you don't have your answer key
+you have to use non reference based metrics
+and we will understand what is the triad
+so I am open up to questions
+you can ask your questions
+I have some questions too
+how was today's session?
+was it good?
+are things clear?
+we can check correctness
+but for that we have to build a custom metric
+but for correctness you have to give your grounded context
+because from there you can check your correctness
+so you have to tell the true facts
+these are your actual facts
+and these are your generated facts
+and you will compare them
+but if truth extraction is too low
+then you will get false responses
+yes, this is possible
+if you have kept truth extraction low
+then there will be no comparison
+so you can set it as none
+all the facts in default are extract
+if you look carefully
+if you leave default as none
+then all of them will be extract
+again these are parameter values
+we have tweaked it
+because there are no particular examples
+to test this parameter
+we will check correctness
+ok, it was a good session
+and thank you
+you are able to build logic
+that we are able to build this whole testing
+this metrics, this data set
+yes, so I think
+I am going in the correct direction
+if you are able to build relationships
+if you are able to build logic
+then it is good
+I have shared the code with you
+so you can update the code
+you can test it
+you can make some examples with chat gbt
+and test it
+great
+what are the con in retriever
+what are the con in generator
+what are the things to be tweaked
+what is the use of when, what is the value up
+what is the down, what is the value up
+we will read the data set
+we will read an evaluate api
+how you evaluate all the metrics
+and then our baseline application will be evaluated
+so we will keep those scores for now
+and we will improve our application
+and here I will show you
+how you can make custom metrics in natural language
+so to define custom metrics
+you don't have to do technical things
+you have to explain in natural language
+what is your metric, what is its passing criteria
+what steps you have to take
+and what are your rubrics
+you can simply define them
+and you can make any custom metrics
+what inputs you have to pass, you can define them
+so I think in the next lecture
+I hope so
+yes sumit, you can ping me once
+and I will check the main metrics
+sure we can discuss about this
+I am also looking forward
+what we can do is
+we can keep a doubt clearance session or an hour class
+when we cover some important modules
+we can have a discussion session
+so that these topics are more solidified in your mind
+so we can do that session also
+is it clear guys?
+thank you
+thank you sumit
+my goal from the beginning is
+to make you understand the vibe
+when you are coding, you will know why you are doing this
+why is there any value coming
+how to improve
+why are we reading this
+so that you can answer the interview
+that's my final goal
+any more questions guys?
+I have 2 more minutes
+and then we will close the session
+ok
+I am making a workflow
+I am not getting time
+because you have sessions
+and the session of pine cone is also scheduled
+so I am not getting time
+I am not getting time
+but trust me I will provide you these structure notes
+I have transcripts
+I am actually doing a workflow on test
+I have created version 1, it is not that good
+but I will share it with you
+but the progress will be
+when 3-4 modules are done, I will share it with you
+because sharing each class individually
+2-3 modules are done
+4 modules are done, I will share it with you
+I am providing you the hand written notes
+I know it is tough but you will get the structure notes
+that is my guarantee
+any more questions guys?
+if not, write it clear
+I will see you on Monday
+I am signing off guys
+you have dinner and see you on Monday
+we will cover the remaining topics of the evaluation on Monday
+we will also see the code implementation
+and then we will move to prompt versioning

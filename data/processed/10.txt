@@ -1,0 +1,4174 @@
+WEBVTT
+questions guys
+I have made some changes in the code for you guys
+so after this session, you can pull the latest updated code
+and we will do minor tweaks in the code
+there is no issue in the syntax, we will tweak it little by little
+we will make changes in the golden data set and the evaluation data set
+and I will tell you the reason why you are doing this
+Sumit, you can DM me your doubt, I will take it separately
+we will not take it in this session
+you can DM me your doubt
+Any more questions guys regarding your evaluations, rag evaluations
+have you run the evaluations
+wait for 2 more minutes and then start
+we are going to start a new module today
+we have finished the evaluations
+and now we will move towards prompt management and prompt versioning
+this is also a very important module
+and today we are going to learn a new framework, the framework is our lying fuse
+people are joining late, guys please join a little later
+we will wait a little more and then we will start
+another 2 minutes and then we will start
+any questions, any doubts, any feedback
+today's session is going to be very interesting, you have learnt a lot
+and the good part is that till now we have done a lot of concepts in the sessions
+so today's session has less concepts, more practical
+and you will enjoy today's session
+let's start
+let's do a small recap of what we have covered in the previous sessions
+you will remember that in the previous session we discussed our evaluation pipeline
+we will not discuss the entire evaluation pipeline in the recap
+I will just tell you why we covered the evaluation module
+our goal is to deploy the rag application that we are making
+and what we have done is that we have applied the rag application with our gut feeling
+we have not tested or validated it in any way
+that the combinations we have used are the best combinations or not
+so to test or validate this we run evaluations
+we are running LLM based evaluations and specifically we are working with rag based evaluations
+in the previous session we have covered in detail how to use a new framework inside dpval
+which is called gval, through which you can create your custom metrics
+because what is the problem in your built in metrics
+the problem in built in metrics is that it does not cover your domain specific areas
+it may be for your particular domain like we have two custom metrics
+we do not have the custom metrics in dpval
+so dpval has given us a mechanism using gval
+through which we can define our custom metrics
+and we have seen that it is super easy to define
+you have to simply define your custom metrics using your prompts or natural language
+and the good part about this custom metrics is that you can also define your custom rubrics
+like we have done, we have defined our custom scoring
+rubric is what? your scoring criteria
+so we have defined our criteria
+after covering gval we have explained the evaluate API
+till now we were testing stand alone metrics
+we were giving a particular input to our metric
+and using dot measure method we were running our metrics stand alone on each input
+but do you think this stand alone method where we are testing each metric individually
+and after that we are giving each test case individually
+do you think this is viable in production or development where you have so many test cases
+we have 7 metrics, 5 are built in and 2 are custom
+so is it possible to run each test case individually?
+the answer is no
+so dpval also knew about this problem
+so dpval gave you an evaluate API
+now what does this evaluate method do?
+it first of all groups all your test cases in one place
+and then you have to simply define all your metrics inside a list
+that you can do the evaluation in a single run in your entire application
+this feature is given by this evaluate API
+you have defined your entire test data set which is your group of test cases
+and all your metrics are defined
+and you have simply executed this evaluate API
+so now your entire rack application is evaluated
+now what is the benefit of this?
+the benefit is that you don't have to run this for loop individually
+that means you don't have to give test cases one by one
+which metric you are testing and which you are not testing
+you didn't have to take care of this
+and when you will further productionise your application
+so you have a single command and a single script
+you simply run this command or script and your entire evaluation pipeline will run
+you don't have to do any hard code or write any custom code
+everything is handled by your dpval
+is this clear?
+yes
+whatever we covered in the last session
+is it clear?
+great
+so let's discuss what we are going to cover here
+first of all, what we did in the last session
+we wrote the code of our evaluate API
+there were some minor errors
+so I have tweaked that
+I will show you those changes
+and actually I have made a major change in the entire code base
+you can clearly see what we were doing earlier
+earlier in our project
+can you see the VS code?
+can you see the VS code?
+quick check
+great
+so earlier we were making individual files in the project
+now what I have done is
+I have defined my project properly in a template
+you can clearly see that there are different directories and folders for different things
+and our code looks a little bit like production level
+looks a little bit organized
+so I have organized this for you
+now I will show you what changes I have made
+first of all you can see this utils directory
+in this utils directory we have this transcript utils code
+so you have to run this
+whenever you add some new data set or transcripts
+so simply you have to run this code
+and what will happen with that?
+so you will get the processed transcripts
+and what we are doing is
+we are saving that in this data folder
+so in this data folder there are multiple subfolders
+what is this in raw?
+you can understand it by the name
+these are my raw transcripts
+which I have downloaded from the platform
+these transcripts are also available to you
+and as soon as we run our utils on these raw transcripts
+we will get the processed transcripts
+where all the timestamps will be removed
+so this is what I have said
+and after that what I have done here
+I have added all my code related to my application
+in this source folder
+so if you see this app folder
+here is my rack app
+if you see this data folder
+here is my code related to
+generation of golden data set
+and your evaluation data set
+and if you go to this eval folder
+here in this sub directory
+which is individual eval
+here are my individual eval
+which I have tested in the class
+these are my 7 evals
+which we have measured through dot measure
+and application eval is basically my complete script
+where I am testing my entire application
+after this is clear
+so let's do one thing
+let's go step by step
+let's understand the changes
+so what is the first change I have done here
+the first change I have done is inside the rack workflow app
+what we were doing earlier
+when we were doing our chunking step
+so in the chunking step
+we were using recursive corrector text meter
+whereas the context building process
+in dpval
+we use token based splitting
+so what I have done is
+I have mimicked the same thing here
+and I have introduced token based splitting here
+now let's do one thing
+inside this chunk size
+you know this is also in dpval
+so I have defined the same chunk size here
+1024
+let's do one thing
+let's reduce this a little bit
+so let's reduce this a little bit
+and do one thing
+just like this is gut feeling
+we are doing some changes here
+and we are going to run all these things again
+chunk overlap
+what we can do is
+we can take 30 tokens
+so let's see this code
+this code is as it is
+here what I have done
+I have put this whole code in two functions
+I will tell you those functions too
+the first function is this
+update and insert documents
+basically what is in this
+your directory
+which is your process directory
+from there all the transcripts will load
+chunking will be there
+after that they will be added in your vector source
+and in this particular folder
+in the saved embeddings
+will persist
+and here I have made another function
+what does this function do
+this function is already
+existing
+it will load persisted chunks
+from the database
+so it doesn't create database again and again
+what problem we had
+whenever we were running
+the evaluation script
+this data set was being created again and again
+so what I have done here is
+I have separated it
+and I have also put a check here
+that if my saved embeddings
+are already existing
+means I have already persisted embeddings
+available
+already available
+vector store
+and if not
+then create fresh
+so what we will do here
+we have changed chunk size and chunk overlap
+330
+so let's delete the saved embeddings
+once
+so I have deleted it
+it has moved from here
+now what I will do is
+run this file once
+by running this file simply
+so we will create chunks again
+and it will also persist
+so once again we will run this whole flow
+I will tell you what is the reason behind it
+so
+we can do this we can shift the terminal here
+and we run this particular file
+so our command will be the same
+we will write here
+uv run
+now where is our file
+now our file is inside the source directory
+so we will go inside the source
+and in the source app
+we have
+our app.pry
+we will run this
+my embeddings are created
+documents are loaded
+let it run once
+it has run
+so we have new embeddings
+created
+now whenever we run this file
+again and again
+these embeddings will not load
+now what will happen
+our existing embeddings will be used
+whenever we have to do some downstream processes
+so we have handled this
+now what I will do here
+I will create my golden data sets again
+so what we will do
+we will go to the data folder
+so what is inside the data folder
+basically
+why is it
+completely visible here
+how to take it down
+whatever it is
+let it be
+so what is inside the data folder
+inside the data folder we have scripts
+to generate our golden and evaluation data sets
+so what is the next step
+next step is we have to generate our goldens
+so what is the process of generating goldens
+here we
+will create context
+after that we will filter
+and generate golden data sets
+so we don't have to change anything
+we have to do a small change
+this context construction config
+we have to change this a little
+now the reason to change this
+is that till now what we were doing
+till now we had golden data sets
+which is this one
+now why is it
+completely empty
+ok
+here it is
+which is the data set folder
+let it be
+now we will go to
+evaluation and
+go to the evaluation data set
+so this is my evaluation data set
+and this is my golden data set
+till now what is the situation
+that these golden data sets are basically
+84 golden pairs
+now the problem was
+whenever I was going to evaluate it
+I was using my 5.4 mini model
+so the cost was very high
+when I
+rerun it to show you this code
+so while evaluating
+around 12-13 dollars
+were spent
+because what we are doing here
+on our 7 metrics we are evaluating these 84 pairs
+so multiple LLM calls are happening
+LLM as a judge is happening here
+and because of this
+our cost is sitting here very high
+so what we will do here
+instead of using 84 pairs
+we will use a subset of it
+so here we will make some changes
+in this file
+first of all we will change
+the context construction config
+so what we were doing earlier
+we were filtering two contexts from each document
+and we were generating gold on that
+now we will build one context per document
+so we have
+14 documents here
+finally we will have
+14 contexts
+after that we were synthesizing our gold
+here
+and from every context
+we were making 3 golds
+so we have
+from 2 contexts
+28 times 3 which was 84
+now what we will do here
+now we will make one golden
+from each of the contexts
+so finally we will have
+14 context filters from 14 documents
+and from every context
+we will make a golden
+so earlier it was 84
+now it will be 14
+just to save our api cost
+ok
+and now what I will do here
+now I will simply
+change this final name
+which is my golden dataset
+because we have already made this particular dataset
+there is no use in overwriting it
+we have already spent our api cost
+so what we will do
+we will create a new dataset
+we will name it golden dataset final
+you can use it by any name
+ok
+let's run this particular file
+so
+we will run it here
+it is in our source data
+and its name is
+generate goldens.py
+ok I will run it once
+see
+now how many goldens are being made
+14 goldens, why
+because from every document
+we have one context and from every context
+we have one golden, evolution and all will be same
+just we have reduced the number of golden pairs
+I hope you can understand this
+because if you run this code
+you will also get some positive
+because what we have to do now
+is to run this experiment
+and run these evaluations again and again
+so that's why I have created a subset here
+let's run it once
+see our context is ready
+now our inputs are being made
+and what will be the input
+our inputs will evolve
+concurrently everything is happening
+and I hope
+everything runs properly
+and after that we will have
+our golden dataset
+created here
+golden dataset in the name of final
+I don't know why this
+directory is there
+I will remove it once
+because it is unnecessary here
+directory made
+data sets one
+just a second
+ok now
+see here our golden dataset is
+created final
+see
+now here our golden dataset
+will be our input
+expected output
+and from which context it is made
+that is our information
+one more thing
+we had to change here
+sorry for that
+we have to generate it again
+because we had to change the context
+so let's change the context
+to change the context
+we will set the chunk size
+we will take chunk size again 300
+and here also we will take chunk overlap
+which we will keep 30
+basically we are mimicking
+our application with this
+context creation
+so let's run it again
+step by step guys
+we are recreating the whole evaluation pipeline
+so my 14 context are being filtered
+so my 14 context are being filtered
+let's wait a little
+I hope guys you are understanding
+the reason behind it
+and practically
+you can see it happening
+means all these things are
+being initiated in a sequence
+and I hope this template
+which I have created for the project
+organize all your files and folders
+I have done this manually
+I have not used any cookie cutter
+just here I have made it
+using best practices
+now we can change it
+created
+again
+let's save it
+saved
+it is writing synthetic golden
+saved at this particular
+location
+so our final data set is saved
+here is our input
+expected output which is my answer key
+and it is created on this context
+now this context is mine
+300 tokens for each of the chunk
+if I show you the word wrap
+then see
+this context is mine
+this is complete
+means you see I have 3 chunks
+300 300 so these 900
+tokens are visible here
+with overlap
+now what we have to do next
+next we have to create
+our evaluation data set
+what was the evaluation data set
+we have got the golden which is my input
+and answer key
+now I have to conduct the exam
+so for that I will go to this particular file
+which is generate eval data set
+now I have to make some changes
+here
+my golden path
+I will not use golden data set
+I will use my golden data set
+final
+I will use this new file
+my 14 goldens which I have created
+now earlier
+what was the problem here in the last class
+our evaluation was not working
+there was a problem that
+none was coming in the recall metric
+because deep eval
+was not able to bifurcate properly
+between my test data set
+and my golden data set
+so what I have done here
+I have instantiated this class
+for golden data set
+I have instantiated a different evaluation data set
+in that I have loaded my goldens
+which is my golden data set final
+I have given it through loop
+to my application
+and through my application
+I have generated llm test cases
+whereas the eval data set
+I have instantiated it with a different
+evaluation data set
+and I am saving it here
+now what will happen
+now our evaluation data set
+will be created there
+so the 14 pairs
+which I have
+will be converted in my llm test cases
+there you will see proper input
+actual output, expected output
+and retrieved context in every json
+so now let's do one thing
+let's rerun this whole thing
+I will change the file name
+instead of evaluation data set
+we are working with evaluation data set
+final
+let's run it
+and here I will write
+uv run
+I want to go to the source
+so your mind map is getting ready
+that our app is in the app folder
+all the data related scripts are in the data folder
+so you can easily
+navigate this template
+generate
+eval data set
+and run it once
+so here it will load from this particular file
+and save it
+with this name
+now you will see
+our documents will not load
+simply our application is loading
+and on the basis of that application
+we will have this
+evaluation data set
+it will be done very quickly
+because there are only 14 pairs
+it will not take a lot of time
+you can also
+put logs in between
+so that you can see the print
+and see how many are done
+let's wait
+till then if you have any questions
+you can ask
+once again we are mimicking the whole flow
+that's it
+with a subset of our boldens
+now as you have this script run
+you will have
+an evaluation data set
+in the name of final
+a data set will be generated
+it's taking some time
+no problem
+let's wait
+because next step is
+to run the evaluation pipeline
+guys any questions
+till it runs
+it will take like
+another 30-40 seconds more
+if you have any questions
+you can ask
+yes
+we will not directly
+do AB testing
+but we will
+compare our experimentations
+there will not be proper AB testing
+but there will be comparison
+before and after
+you will see in prompt
+when we do prompt versioning
+you will see that you do comparisons
+it's taking a lot of time
+but we have no option
+but to wait
+it's done
+yes it's generated
+now I will show you this file
+now you can see clearly
+what problem we had before
+we had null problem
+now we have proper input
+proper actual output
+proper expected output
+and proper answer from my retriever
+this is question no.1
+this is question no.2
+question no.3
+similarly I have
+14 questions
+and this is my final data set
+I have to do evaluation on it
+I hope you are understanding this
+finally what I have to do
+I have to run my evaluation pipeline
+where will I get its code
+in application revolves
+evaluate rag app
+here what you have to change
+here you have to change
+your path for the data set
+where you have to do evaluation
+here you have to change its path
+here we have defined our built in metrics
+with the GPT 5.4 mini model
+and let's do one thing
+we remove this tooth extraction limit
+and also remove this
+for now
+we keep it bare
+just we are testing our metric
+ok
+this is my custom metric
+answer correctness
+this is no.1, this is no.2
+here this is my root directory
+and my data set
+evaluation data set is final
+ok
+final
+and
+what I have done here
+I have made my data set, loaded my test cases
+defined my keys
+in my JSON
+which keys
+and what information is stored
+and after that
+I have passed my test cases
+through evaluate API
+passed metrics and run it
+and finally what I am doing
+I am storing my reports
+which are coming here
+in the display config
+cache config is not required
+it was required before
+basically it caches you
+so when I was running
+multiple API calls were happening
+and it was failing
+so I was caching the evaluations
+that what has already been evaluated
+you can take them from cache
+and reuse what has not happened
+but now it is not required
+finally I am getting results
+which is basically my JSON results
+after that the report generated
+is in my markdown format
+and it is saved on this particular path
+evaluation results and evaluation report
+these are your directories
+so don't worry
+nothing will be overwritten
+I will show you the files which were generated earlier
+see, what are the evaluation results
+this is my JSON results
+these are JSON results
+so these are not human readable
+if I show you
+through word wrap
+so these are the results
+84 pairs of golden data set
+this is not human readable
+this is LLM readable
+you can upload this JSON on LLM
+and ask for summary of your results
+the useful thing for you is
+your evaluation report
+this is in markdown and this is
+human readable
+if I show you by previewing
+so see
+here you have full information for every test
+how it comes
+deep eval evaluation results
+your test k0
+if you want to see the data in test k0
+you can see the data
+what data was inputted
+what was answered, what was retrieved
+after that it will tell you
+what are the metrics you scored
+what was the threshold, what was the score
+what was the reason for the score
+here you have
+pass test cases and fail test cases
+in fail, there is a cross mark
+your score
+is like 0
+and why 0 score, it is the whole detail
+so we have
+84 datasets
+and for 84
+you have all the details
+so here individually
+behind every test case
+what are the reasons
+and final if you want to see
+aggregate results
+which are your results of overall
+of your test cases
+your metric name
+its average score
+what was the pass rate
+this metric was 100 test cases
+how many of them passed
+so from 100
+let's say 87
+and rest failed
+13 failed
+and this is our total number of test cases
+I hope you understood this
+this report is human readable
+you can see
+one thing in detail
+we are going to mimic this
+but we will replicate
+our 14 dataset
+with 14 golden's dataset
+and your report
+is saved on timestamp
+so the new report
+you can see separately
+so let's run this particular
+script
+let's run this
+evaluate rag app
+let me check
+that there are no changes
+because I couldn't show you
+this last time
+so you can see
+the evaluation
+and you can see the results in terminal
+the results in report are
+your terminal results
+so what we have to do
+write uvrun in our source
+we have to go inside evals
+this is inside evals
+and evaluate rag app
+is our file name
+simply I have to run this
+this is for my 7 metrics
+here evaluation is going on
+on my 14 test cases
+so it will be done quickly
+it didn't take much time
+and your report will also be generated
+guys I hope
+you are able to understand
+how powerful deep eval is
+how easy it is to evaluate everything
+and how many proper results
+you are getting here
+I hope you are able to understand
+the benefit of this LLM as a judge technique
+you don't have to worry about anything
+you are getting your score for each of the test cases
+and its particular reason is also telling
+why that score came
+so you can directly
+go and fix that particular thing
+and I hope why it is suggested
+that your golden data set
+should not be more than 50-100 test cases
+because if there will be
+more test cases, 500-1000
+then your API calls will be more
+secondly, it will take you
+a lot of time to manually read
+and improve your application
+so see here
+I can see the full result
+if I show you
+first let's see the aggregate results
+how was our application
+so in aggregate metrics
+contextual recall came
+89%
+92% was its pass rate
+contextual precision came 94%
+which means my ranking is working well
+pass rate is 100%
+means in any
+test case, out of these 14
+my contextual precision
+did not perform bad
+so I don't need to put any re-ranker
+for this application
+I can trust my normal retriever
+on its ranking
+answer relevancy
+is around 90%
+faithfulness
+is around 97%
+means it is giving very grounded answers
+nothing is hallucinating my LLM
+it is not giving answers from outside
+contextual relevancy
+so it is a little less
+it can be improved
+means the context I am coming
+has more noisy information
+so I have to reduce the noise
+how can we do it
+by reducing chunk size and chunk overlap
+so we will do that later
+it can be reduced to top k
+answer correctness
+which was my custom metric
+it is doing low score
+means it is not giving the right answer
+and simple explanation
+is 90%
+so it is giving the right explanation
+so these are
+two particular metrics
+which are worrisome
+one is my relevancy and other one is answer correctness
+we will have to improve these
+later
+so let's see what things have failed
+like this particular test case
+its input was this, actual output was this
+expected output was this
+and this
+has failed in my answer correctness
+where it has failed is written here
+the response captures
+the basic scope distinction
+that model eval's test
+the LLM itself and app eval's test
+and LLM powered application
+but it adds unsupported
+details about application eval's
+being only end to end behavior and omits
+several expected specifics
+so here there is some issue
+here the reason is given
+and you can see that
+things are printed in terminal
+so past cases are not discussed
+the failed cases are discussed
+again
+here also something is failing
+here your recall
+is also failing
+relevancy is also failing
+answer correctness is also failing
+so we can tweak this
+better
+again here relevancy is failing
+so you can see this
+if you want to see the whole report
+then this is your newly generated report
+here today's timestamp is
+23rd
+so we have generated this
+this markdown file
+I will share it with you on github
+you can go and see it
+I will also see it
+and to analyze it
+what is a good way to analyze it
+share this markdown file with a chatbot
+upload it there
+and then you can ask about your failed test cases
+that why they are failing
+and how to rectify them
+is also an approach
+is it clear guys
+how to do evaluation through deep evaluation
+we have given a complete pipeline
+here
+and I hope you understand everything
+here
+is it clear
+now if you have any questions
+related to your evaluation
+you can ask me
+I will take your questions for 2 minutes
+and then we will move to a new topic
+that is prompt management through landfuse
+I am looking at the chat
+is this discussion clear
+is this discussion clear
+is this discussion clear
+is this discussion clear
+any questions
+regarding evaluation, regarding code
+and to do cost saving
+you can use a simple model
+but again
+if you use a very simple model
+then its judgment quality will be less
+here you can work with less metrics
+like
+we have studied in rack triad
+your 3 metrics which are referenceless
+you can work with them
+because the number of API calls is less
+because in reference base
+your reference and answer are compared
+so we can remove that
+yes we can use an open source model
+but again the problem is
+that all the open source models
+especially the weak models
+which run on your system
+for good judgment capability
+you need a multi billion
+parameter model
+or a trillion parameter model
+so that's why
+in dpval
+you will see that the default model
+is GPT 5.4
+they didn't use mini
+because in experimentation
+it is proven that it works better
+than other models
+that's why it is so tight
+they don't have any favorite
+so you have to use them
+any other question
+I will guide you towards
+the resources
+here you have to create a custom LLM
+you have to write a code
+you have to create a custom class
+but through that you can define
+your models
+there is a proper code
+you can integrate ulama model
+you can use ulama code
+is it clear guys?
+but I would not suggest
+you can use a small model
+it will save you some
+cost
+but
+if you are using
+open source model
+then use some strong model
+so
+don't use
+2 billion or 4 billion parameters
+let's move forward
+is the whole flow clear?
+I will share this updated code with you
+you have to go and
+study this evaluation report
+once
+there are only 14 test cases
+see the pass one also
+and study the fail one also
+because we will
+improve our application
+in the future
+so wherever we have this failure
+we have to improve it
+and make sure that our pass
+doesn't fail in the future
+it doesn't mean that we improve in one direction
+and our scores are getting good
+which is your regression study
+we will see that
+let's move forward
+and cover a very interesting topic
+and the topic is
+your prompt management
+with the Y principles
+we will understand
+why we are reading this particular topic
+and why we are reading this topic
+after evaluation
+what is the need for this
+we will read all the things
+just give me one second
+let's start guys
+so what is our flow till now
+so far we have this flow
+that we have
+our 14 test cases
+we have generated
+and kept
+what are these 14 test cases
+basically
+these are the test cases
+which we are going to use again and again
+for our evaluation
+so this particular API calls
+which we have done is one off
+once we have generated
+these test cases and this data set
+this is our test data
+now we are going to do evaluation
+on this
+and we have run our evaluation
+using the evaluate API
+we have done that
+and we have saved our report
+now what is the next step
+next step is
+that we have to
+our evaluation scope
+or rather than evaluation
+we have to improve
+our results
+you have tested your application
+you have got a score
+you have got a score
+on where your application is performing well
+what is the next logical step
+next logical step is
+that we have to improve it
+wherever our application is failing
+we have to correct it
+so now we have to use the
+corrective measures
+we have to apply the corrective measures
+now one of the
+corrective measures
+is your system prompt
+if you guys remember
+that this system prompt
+is a hyper parameter of our evaluation
+when I have covered wrap triad
+with you or I have covered evaluations
+in general, I had told that
+all your generator metrics
+which are
+my answer relevancy
+which is less in my case
+in my case answer relevancy
+is not good
+if I can show you
+answer relevancy
+answer relevancy is good actually
+contextual relevancy is not good
+whatever it is, answer relevancy is ok
+but answer correctness is not ok
+so here correctness is lacking
+so what is the problem
+the problem is
+answer relevancy
+or faithfulness
+these two metrics
+rely on your system prompt
+a lot
+so when you
+tweak your system prompt
+here
+it also becomes
+a hyper parameter
+I hope you are understanding this problem
+what we were doing in evaluation
+we want to reach
+our best application
+and the best application
+is that we have to
+tune our hyper parameter
+but for that hyper parameter
+we should know where we are lacking
+we have done evaluation for that
+now your two metrics
+which is answer relevancy and faithfulness
+they are very dependent
+on your system prompt
+so for these two metrics
+your system prompt
+acts as a hyper parameter
+and if it is hyper parameter
+then it is
+tunable also
+and for that
+we use prompt management
+because
+we can lock
+our hyper parameters
+we can lock
+our chunk size
+we can lock
+our chunk overlap
+but our system prompt
+is a paragraph
+it is a text
+and you can't
+compare text by
+locking
+you can lock but
+you can't compare
+so what we have to do
+we have to handle this system prompt
+in a different way
+and this
+system prompt
+which is the whole application
+is called prompt management
+so to handle this
+we use prompt management
+technique
+I hope you understood prompt management
+let's see its definition
+and I will
+explain you
+the whole why
+how we are doing prompt management
+and why
+and then you will feel
+prompt management is very important
+so prompt management is
+a systematic approach
+so this is a whole framework
+and approach
+it is not a random approach
+it is systematic
+and what this approach does
+it is used to store
+version and retrieve prompts
+for your LLM application
+so you have
+your LLM application
+and there is already a system prompt
+inside it
+now what prompt management does
+prompt management first of all
+it takes care of where you are storing this system prompt
+so its storage responsibility
+is taken by prompt management
+second responsibility is
+responsibility of versioning
+what does it mean
+you can properly lock the changes
+and you can
+switch between versions
+versioning is there
+but you can also switch between versions
+and third is
+retrieving
+you have stored
+and after that you have locked it
+after locking
+when you need it
+you have to fetch it in your application
+so to fetch it you can
+retrieve it from a storage location
+I hope you understood this point
+so there are 3 aspects of prompt management
+storage, versioning which is
+locking and retrieving which is fetching
+is it clear now
+now lets discuss
+why this system
+is so behind prompt
+why it becomes so important
+we have understood that
+it acts like a hyperparameter
+for our matrix
+but is this
+one thing because of which we are
+considering this as prompt management
+we can lock it in a log file
+what will be the problem with that
+because if we can
+lock other hyperparameters in a log file
+and retrieve it
+then we can do the same with this
+why are we giving it so much importance
+why are we giving it so much importance
+the reason is that if you understand
+the first thing is that
+your system is prompt
+it is different from other prompts
+its status
+is very important
+why am I saying this
+because your system prompt
+is the soul of your application
+your system prompt
+defines your application
+it has the whole definition
+of your application
+what all things we include
+in system prompt
+we include
+our application persona
+which makes every application
+different from other applications
+if we make it
+then we are rag chatbot
+it may be another application
+like notebook lm
+but in our campus x chatbot
+and notebook lm
+what is the difference
+or it has become Gemini
+what is the difference
+the reason is that
+system prompt is different
+we have given our application
+a persona specific to our domain
+our application is suitable
+if a student comes to our application
+then he is
+related to our video
+for this we are designing
+our application
+notebook lm is for research
+or to answer
+sources
+both are doing the work of rag
+but both have different
+ways and domains
+so first of all
+we define our application
+through persona
+persona gives your application
+a behavior
+next what do you define
+in system prompt
+you define
+what rules
+will be defined on your application
+what instructions you have to give
+instructions and rules
+let's do one thing
+first you tell us
+instructions
+how your application will work
+persona will behave
+instructions
+how it will
+process a query
+so you give instructions
+like we have given an instruction
+that you have to give
+simple explanation
+so on what instruction
+is it applied
+on llm
+it is not applied on retriever
+what we are telling our application
+that whatever retrieved context
+has come, simplify it
+or we are giving an instruction
+that add examples with every answer
+so we are
+instructing our llm
+that you have to do this
+particular work for every query
+and what we can do
+through instructions
+we can tweak our llm's responses
+we can change their output format
+right
+third is
+rules
+rules are some boundaries
+some restrictions we can set
+some guardrails
+like we have set a rule
+in our campus chatbot
+that you don't have to add
+any information related to your competitors
+in your responses
+so what is competition for us
+competition is for us
+and platforms that teach AI
+in EdTech space
+so you don't have to add
+any information related to
+their courses
+or their teaching methodology
+or fee
+so what we have done
+we have added a rule in our system prompt
+I hope you are getting this
+and fourth
+what we do
+fourth we add a fallback
+we add a fallback
+if our application
+didn't get
+that particular answer
+our context is incomplete
+or our API call may fail
+some error comes
+so what we have to do in that case
+is to show error to the user
+the answer is no
+we apply a fallback message or fallback mechanism
+inside the prompt
+that if our application fails
+if there is a problem
+so we basically
+include the soul
+of our application
+inside our system prompt
+and whatever things we are
+including like persona
+instructions, rules, fallback
+and other things
+how are we defining them
+it is simply a text
+and you know
+that inside your prompt
+words matter
+and not only
+words matter
+their order also matters
+their order also matters
+you must have experienced
+you simply open a chat session
+give a particular input
+you will get a particular type of output
+you change the order of words
+there you will get a different type of output
+why is this?
+because your
+attention mechanism
+not only focuses on words
+but also on orders
+if you have read transformer mechanism
+or transformer model
+then you will know about positional encoding
+so position also matters
+so our system prompt
+is basically
+the soul of our application
+if we have made any changes
+abruptly then the soul of our application
+will change
+so what we have to do here
+using proper prompt management
+we have to safely store our system prompt
+this is point number one
+so what prompt management does
+it stores
+so we have to store every
+prompt iteration somewhere
+second we have to do
+version properly
+what I mean by versioning
+we have to lock every change
+what has changed
+how much has changed
+when has changed
+we have to make sure that
+we can differentiate between
+every version
+what has changed
+particularly
+we have to lock and tag that
+and what is the final?
+we have to retrieval
+whatever I have stored
+I have to fetch that
+I can fetch
+any version
+any particular prompt
+which is available in my storage
+I can access that in my application
+so I need this functionality
+I hope you have understood
+what is prompt management
+and what prompt management does
+why are we focusing so much on system prompt
+why are we not focusing on
+our user prompt
+which we give in our chatbot
+because user prompt is dynamic
+in every session
+you have multiple user prompts
+as soon as your session changes
+user prompts change
+as soon as your user changes
+the style of prompting changes
+so that is your dynamic process
+whereas your system prompt
+it remains same
+it is a static prompt
+and even if you change
+a little bit in it
+it changes in your application
+so that is why it is important to track it
+I hope you have understood this
+is this concept clear?
+around your prompt management
+and system prompt
+why is system prompt important?
+we have not read
+the perspective of LLM Ops
+we have read
+what is system prompt and what can be
+the effect of changing it
+is it clear?
+now let's move forward
+now let's understand
+if we change system prompt
+in our entire LLM Ops pipeline
+then what issues can be there
+why this entire prompt management
+matters
+and why it matters
+so here I have written 3 points
+the first point is
+prompts change constantly
+prompts change constantly
+whenever you talk about prompts
+be careful
+this is about system prompt
+not about user prompt
+this is about static prompt
+just a second guys
+so during development
+whenever you are developing
+your application
+as we are developing
+our application
+so during development
+we regularly tweak
+our system prompt
+and change it
+as we have run our matrix
+we have found out that
+our matrix is not working
+so we have to change it
+so we have to change it
+so we have run our matrix
+we have found out that
+our matrix is not performing
+well with prompt
+so what we will do
+we will tweak our prompt
+but the problem is
+that most of the LLM based
+applications prompt
+is as a string
+now if I show you in our application
+so let me close these files
+if I can show you
+our application
+see in our application
+where is our prompt
+in the documentation step
+this is our system prompt
+this is our user prompt
+it will change constantly
+context will change with every invocation
+query will change
+but this will be our static
+in every run
+this particular system prompt
+will be available to our LLM
+but what we have done here
+we have added it directly as a text
+now tomorrow
+delete it by mistake
+or I can write something else
+this is also possible
+so how will you track it
+it is not possible to track it
+so what we have to do here
+we have to separate
+this particular prompt from our code
+what does it mean to separate
+here I have to
+hard code it
+and save it in our code
+as a text
+instead of text
+I have to persist it properly
+store it
+and I have to develop a mechanism
+that whenever my application
+needs that storage location
+I can faithfully retrieve this system prompt
+and in the prompt
+because it is vulnerable
+to changes
+if a typo happens
+words order changes
+I have to save my system prompt
+from this change
+and if there is a change
+I have to record it properly
+and lock it
+it should not be missed by my eyes
+now generally
+when you work in the teams
+in the industry, develop applications
+then this rag application
+development work
+will be done by an AI engineer
+who will develop this application
+which is known as
+Lanchain Landgraph
+how to make a rag application
+whereas many times
+your system prompts
+are designed by proper prompt engineers
+or your managers
+who have more domain knowledge
+your managers define this system prompt
+and your managers
+define this system prompt
+and your managers define this system prompt
+so what is the problem
+the problem is
+the person who writes the system prompt
+is another person
+the person who develops the application
+is another person
+and you don't know when your system prompt
+changes, your application's root changes
+and your evaluation results
+completely change
+so what you have to do is
+bring a proper mechanism
+so that you know when the changes
+happened, where they happened and who did it
+next point is
+prompt changes
+and code changes
+get tangled together
+now this is a big problem
+and this problem is also in our code
+see this problem is also in this code
+we have our system prompt
+and our other
+application code is also here
+now what I did is
+I changed the chunk size and chunk overlap
+and also
+I changed the system prompt
+because I had to update some things in my application
+and I did
+commit this whole thing
+and pushed it on the getup
+now
+after that I evaluated the application
+again
+and I got different results
+now
+if I see these results
+then I will not know
+that these results are happening because of
+changing my chunk size
+or because of changing my prompt
+why my results changed
+good or bad
+that is not a concern
+but if my results changed
+then what parameters did they change
+because now our system prompt
+is also a hyperparameter
+so what we are doing here
+we are recording
+this whole thing properly
+through prompt management
+code changes will behave differently
+code changes are different
+and our prompt changes are different
+whenever there is a change in the prompt
+we are recording it properly
+and one drawback of this
+when you take code and system prompt
+together
+it comes in your deployment or production
+also
+in production also
+I mean post production
+when your application is actually deployed
+then this problem comes
+now your application is totally ok
+and
+your parameters are ok
+you have evaluated it properly
+all the results are working properly
+now what happened
+your prompt engineer thought
+I will do a small tweak in my system prompt
+maybe a small tweak
+maybe of one word or sentence
+maybe of 3-4 words
+so that your application behavior
+is not changing much
+but your system prompt changed there
+so system prompt changed
+so how will GitHub take it
+it will take it that your code changed
+let me show you
+here your code file
+in that
+this particular line is your code
+your parameters are there
+and this particular line is also your code
+if I add a comma in it
+see if I add a comma
+then here this change of code is reflected
+now what will be the problem
+when I will
+push this updated code
+to my GitHub
+then here CICD will run again
+which we will read later
+basically what will happen is
+if code changes then my environment
+will think that I have done some tweaks
+in my application
+so here version 2 of my application
+will be created
+and now it will push for deployment
+you can understand the problem here
+what is the problem
+I haven't changed much
+in my system prompt
+my system prompt was almost same
+actually if I add a comma in it
+then again my
+entire deployment pipeline was triggered
+and my application
+v2 was deployed
+which didn't change anything
+why because here
+I had entangled my system prompt
+with my code
+so what I have to do here
+I have to show separation of concerns
+using prompt management
+I have to keep this code and
+system prompt separate
+even if I make changes in system prompt
+then my application
+should not be redeployed
+I have to bring a mechanism
+that if I change in system prompt
+then it will reflect in my answers
+but my application should not
+be redeployed again
+I hope you understood this point
+this is a very important point
+why prompt management is required
+and third point is
+you don't have a clean way
+to do the comparison
+you have a v1
+of system prompt
+you changed it
+and you have v2
+if you are not logging them
+or saving them
+then how will you compare them
+as soon as I changed system prompt in my code
+and get pushed
+I have v2
+this is my truth
+what was before, how much it changed
+what was changed, what was the difference
+everything is overwritten
+this point is getting clear
+and here you can't
+do any comparison
+what was changed, how much
+where was it changed
+who did it, you don't know
+so this particular diagram
+shows this very well
+what is the first problem
+the first problem is
+in my app.py
+which is our current scenario
+I have included system prompt
+in my application
+the pipeline is running
+and if I do anything
+if I edit the code
+then a new pull request will be opened
+and redeployment pipeline will run
+and I am not maintaining
+the versions of my system prompt
+so I don't know if the change in the scores
+of the evaluation is due to my code
+or my prompt
+or any other third reason
+I don't know
+now what you have done
+you introduced prompt management
+what is the benefit of that
+first of all you have the version of system prompt
+you are able to maintain
+and log properly
+which system prompt was there before
+which version came after update
+which version came after update
+and you are categorically
+labeling everything in chronological order
+second thing you are doing
+instead of hard coding
+here you are retrieving
+your system prompt
+from the API call
+you are fetching the prompt
+and then
+integrate it in your rag pipeline
+what is the benefit of this
+the benefit is that
+the fetching code
+will remain static
+and because your code will remain static
+then you have to change
+whatever you have stored in your system prompt
+but the latest version
+will be loaded
+so there will be no redeployment
+again
+you have changed your system prompt
+your system prompt
+let's say
+was stored before
+in a database
+ok, what was stored in this database
+was version v1
+what you have done
+here you have made some changes
+in this version v1
+and now where is v2
+it is in this database
+and you have simply written
+a code in your code
+and then you have to import it in your application
+ok
+so automatically v1 was loading
+now v2 will automatically
+load in your application
+and you will not have to
+redeploy your application again
+because you have not changed anything here
+but your updated system prompt
+is now reflected in your application
+behavior
+is this clear
+is this point clear
+this is a very important point
+I hope you understood
+what I was trying to explain
+ok, we have not read
+CI, CD redeployment
+but if you have read the MLOps
+and you know what retrain is
+CI, CD then you will be able to understand
+this thing
+is it clear
+so we have covered 2 perspectives
+first, why is prompt management important
+in system prompt
+why is system prompt as an application
+so important, why is it important for your application
+second, why is system prompt
+so important in your LLM Ops pipeline
+why is it important to manage system prompt
+why is it important to version it
+I hope both these points are clear
+ok
+so now what we have to do
+we have to
+bring a mechanism
+through which
+we apply a thing
+where the code of our application
+should be static
+should not change
+if we don't change then we will change for code
+now we will not change for system prompt
+whereas we have to
+properly manage our system prompt
+somewhere
+we have to take care of storage, versioning
+and retrieval
+so now
+let's understand how this whole thing
+happens in LangFuse
+so
+for a while we will assume
+that you and I
+we are basically designing LangFuse
+and we have to design
+this whole mechanism
+now let's
+discuss
+what are the prerequisites
+we have
+ok
+what are the requirements
+what we have to do
+and what is our criteria
+for prerequisites
+we have
+first
+we have to
+have a system prompt
+which is
+a system prompt
+and second
+you should have your application
+do we clear our prerequisites
+do we clear our prerequisites
+do we clear our prerequisites
+what are the requirements
+the requirements are
+that we have to properly
+manage our system prompt
+and third
+we have to take care of storage
+versioning
+and retrieval
+and
+while taking care of all these
+we have to make sure
+that there are no changes
+in our code
+we don't have to redeploy our application
+we have to take care of this
+at all times
+and what are the criteria
+for passing
+successfully building the application
+the criteria is
+that whatever changes we make
+in our system prompt
+listen carefully
+whatever changes we make in our system prompt
+should be stored properly
+in my storage location
+not like the initial one
+changes are lost
+changes should also be properly stored
+changes should be
+properly versioned
+and whenever I want
+I can easily retrieve
+those changes in my application
+making sure
+that the whole mechanism
+that I am defining
+that I don't have to make any changes
+in my application
+at any time
+clear?
+these 3 concepts are clear
+prerequisites, requirements and criteria
+so now
+we will
+design
+and define
+how we will do this
+so first of all
+we will focus on point number 1
+that is our storage
+we
+first of all
+have to build a storage
+so for storage
+we have multiple options
+what can we do here
+we can include
+cache layer
+cache database
+or cache storage
+and second we can include
+a database
+so what did
+the developers of langfuse do here
+they have provided caching
+using redis
+and here you have
+a
+database
+available
+both these things are available
+so now
+basically
+in langfuse
+you have
+caching layer
+so whenever
+you have a system prompt
+or in general
+any prompt that you have to save
+whenever you send it to langfuse
+through the API call
+it is stored inside the caching layer
+and
+what is the benefit of caching layer
+that in caching layer
+whatever system prompt you have saved
+you can quickly retrieve it
+what is the benefit of cache
+the benefit of cache is that
+you have fast storage and fast retrieval
+benefit
+so you have to retrieve this system prompt
+anytime in your application
+when you have to retrieve it
+when you run this graph
+you will run the augmentation step
+and integrate it
+so during prompt integration
+you will retrieve this prompt
+so it will be picked from caching layer
+and
+you have permanent storage
+because caching layer
+generally works in ram
+because ram is fast
+but what is the problem of ram
+the problem of ram is that
+as soon as your server crashes
+system restarts, the stored data
+in ram will be erased
+because it is volatile memory
+so you have to save it in a non volatile memory
+so what you will do for that
+you will use a persistent location
+that is your database
+so generally
+whenever we work in our application
+in retrieval
+or storage
+it is stored in caching layer
+it automatically dumps from caching layer
+to the database
+but whenever we query this storage location
+for our system prompt
+we call the lanqueuse
+to retrieve this system prompt
+so it never directly
+connects with the database
+because the problem in databases
+is that these are slow
+they are persistent
+but interacting with them
+is slow
+now the problem is
+if we make a location there
+which is slow to work with
+whether it is to write or read
+then it will add latency to our application
+do you think that if we
+add any added latency to our application
+then that application will work well
+or someone will want to use it
+the answer is no
+everyone will think that I directly include
+this system prompt in my app
+if I wanted to add latency
+then why did I create so much of trouble
+because at the end of the day
+if your application
+will have any negative impact
+from this
+then you will not use that in your application
+so the first thing we have to make sure
+is that we can minimize
+this latency
+and the way to minimize it
+is that you will use a two layered system
+first comes your caching layer
+what is the benefit of caching
+fast reads, fast writes
+but the drawback is
+that it is very less
+cache is generally less in RAM
+you can't store too much volume
+and the second problem is
+if something crashes or breaks
+then whatever data is stored in it
+will be deleted
+the information of the versions you have maintained
+will be lost
+so what we have to do
+we need a persistent layer
+which is your database
+is this clear
+is it clear guys
+that how will the storage handle
+no requirements and criteria
+are not the same
+the requirement is that we have to develop these three things
+criteria is that
+we have to develop them in such a way
+that we don't redeploy
+ok
+as a developer
+our client is asking us
+to make these three features
+storage, versioning and retrieval
+criteria is that
+a successful framework
+that should be made in such a way
+that we don't have to redeploy
+if we have to redeploy then it is not beneficial
+caching is for
+current system problem
+whatever you are doing there
+reads and writes, caching is for all
+obviously because you will work with a particular version
+then it is current only
+but current can change
+now we will discuss further
+did you understand storage
+how should the storage layer be
+so it has to be multi-layered system
+where one is your caching layer
+and the other is your database
+ok
+so it automatically dumps your information
+in the database
+ok
+so you don't interact with this
+you interact with this in the APIs
+it automatically dumps your data in the backend
+second is your versioning
+for versioning
+what are the main criteria
+for versioning
+it should be automatic
+think about it
+you are making a prompt management system
+now you have to manually track
+which version I made before
+was it the first version
+second version
+what should be the number of the next version
+what will I add
+what number will I add
+if you do all these things manually
+in versioning
+do you think someone will use your application
+someone will use your framework
+the answer is no
+what you have to do here
+is to do a versioning which is automatic
+and automated system
+neither my developer
+has to take tension of version numbers
+nor
+he has to make changes in the code
+where he has to make changes
+he has to make changes in his system prompt
+which he has to version
+what I did here
+I made changes in the system prompt
+and automatically
+the changed system prompt
+will be added
+there
+into the database
+all this should be automatic
+and my system
+framework should automatically track
+which version is my latest version
+which version I am on
+which version is in my production
+which version is in my development
+which version is running
+all these things should be available
+there
+not only this
+here I can log more additional metadata
+this feature should be available
+and I should have
+a diff feature
+so that I can see changes
+from one version to another
+what changes are there in my prompt
+so all these things
+should be automatically handled by my framework
+which is versioning
+third is
+just a second
+third is my retrieval
+so
+I have figured out storage
+it will be 2 layered
+I have figured out versioning
+now I have to do retrieval
+in retrieval
+I don't always say
+that you have to retrieve latest version
+maybe latest version is not that good
+I have to roll back on previous version
+so here I have to choose
+which version to load
+but again the problem is
+which version is better
+it is very difficult to keep in mind
+so here also
+apart from versioning
+there should be some other mechanism
+through which I can label my prompts
+so that I don't get confused
+with version numbers
+that I am on 10th version
+it is not working well
+let's go to 8th version
+so I don't have to put pressure on my mind
+if I have
+a framework
+and my first best
+was version 8
+and my current
+is version 10
+I simply tell my application
+that I have to go to previous best
+so automatically
+it will roll back to previous best
+I don't have to play with version numbers
+so retrieval will be very good
+and second
+if this retrieval is done
+with cache then how good it will be
+and
+if more than cache
+if it can be done with a local cache
+it is even better
+because what are you doing here
+here you are importing your system prompts
+retrieving them
+so do you change your system prompts
+in every 2 minutes
+the answer is no
+whenever you do alterations
+then you change your system prompts
+in different versions
+so it doesn't happen very regularly
+so you want to develop
+a mechanism here
+that you have 2 types of caches
+one is your local cache
+which is on your local system
+and the other is
+your framework or
+line fuse cache
+both are caches
+and both are radis database
+but one is locally available
+and one is on line fuse
+what are we doing
+we are currently working with
+and we are importing it in our application
+we save it on this local cache
+let's say it is version number 10
+now what will be the benefit
+it is available on local cache
+and it is working locally on our system
+so there is no API call here
+you don't have to send any request
+on the network
+there is no latency here
+although there is latency of your database
+but it is a radis database
+it is very fast
+and you are literally retrieving
+the information from the RAM
+and since you are doing this
+again and again
+every time when you are doing
+an augmentation step
+you are retrieving this
+so if you are doing this locally
+you can understand that it is basically
+zero latency
+so as a developer
+I am able to do prompt versioning
+and store and retrieve the prompt
+but I am not able to see any added latency
+and here
+along with this local cache
+I have also cache available on the API
+and why is cache available on the API
+because I have saved version 10
+in local
+let's say I have changed it in my system prompt
+and now on my API
+here version 11 is available
+now I can load this version
+in my application
+and bring it
+this feature should also be available
+and this
+is the way to load or retrieve
+this is a little slow
+than my local cache
+but not that slow
+that things get broken
+maybe earlier I was getting
+0 ms latency
+so maybe I got 5 ms
+latency
+but not 1-2 seconds
+again I am dealing with my cache
+so in retrieval
+we are adopting two mechanisms
+number 1 is that
+we don't want to play with versions
+versions are a pain in the ass
+I don't want to go on versions
+what I do is
+tag or label
+important prompt versions
+and I can switch between them
+easily without making any code changes
+I simply switch the label
+and automatically
+that particular label prompt
+gets imported in my code
+and second, I use two cache mechanisms
+local cache
+so that the version I am working with
+doesn't get imported again and again
+and if I change
+in my version tomorrow
+and push an update
+then that update will also be retrieved
+in my app properly
+not that I am working with the old version
+and my app doesn't know that a new version is pushed
+so I have to apply
+these three systems
+is this clear?
+now what will be the benefit of this
+if I can properly apply these three systems
+then I will never
+have to redeploy my app
+while changing the system prompt
+because I have never
+changed anything in the code
+I am doing all this
+in my Langfuse
+dashboard, storage location
+ok
+what is the second benefit
+because here I am using
+cache, there are two types of cache
+local and
+server based
+so here I am getting regular updates
+and I have not
+added any latency
+just called it zero
+so there is no difference in
+the functioning of my application
+is this clear guys?
+is this clear?
+great
+if you have any questions then you can ask me
+because now we are going to
+read how Langfuse
+makes this whole thing, how it implements it
+we will cover that later
+these three concepts are clear
+that what all things we have to implement
+why are we using multi-layer cache
+why are we not
+focusing on versioning numbers
+because these are your pain points
+what about the sub-agent prompt
+as there will be a lot of other prompts
+so how to lock that too
+I will tell you
+it is very easy, you just have to
+change the name of the prompt
+every one of your
+prompts is a different entity
+so you are versioning every one
+and storing it
+the mechanism is the same
+you have one agent
+ten agents, doesn't matter
+you are managing the prompts
+of ten agents
+if you have system prompt or
+other prompts, you can manage all
+but because in our application
+system prompt is a hyper parameter
+so we are focusing on that
+for this rag application
+we are only going to
+version our system prompt
+because the rest
+is our dynamic part
+this part is our user prompt
+this is dynamic, it is changing with our query
+there is no point in versioning
+is it clear guys
+let's move ahead
+is this concept looking interesting
+prompt management
+and why is it important
+because you should understand
+why are we reading this
+you are reading, I am teaching
+we are spending time here
+you should get the answer why
+so why can you get the answer
+yes, ok
+let's move ahead
+let's move ahead
+now
+let's discuss about
+the core concepts
+but before going to the core concepts
+I will give you a little
+overview
+about linefuse documentation
+let's explore the documentation
+because we learn a lot
+from documentation
+so this is the documentation of linefuse
+linefuse is an open source agent evalzen
+observability tool
+and here you can do prompt management
+so in this particular
+course
+we are going to use linefuse for two things
+first is our observability
+which is basically
+line smith equivalent
+it is better than that
+so we will use the observability
+for tracing and the second is
+for prompt management
+so observability and prompt management
+for evaluation we have already used
+dpval and for experimentation
+we are going to use
+mlflow
+so we are going to
+explore this prompt management
+side
+so I clicked on it and its documentation opened
+now let's read it a little
+here are the installation
+steps, if I go to overview
+here is the whole thing
+I have taken this definition from here
+here it is clearly written
+instead of hard coding prompts in your application code
+you manage them centrally
+in linefuse
+so what is the work of linefuse
+instead of hard coding your system prompts
+you can manage them through linefuse
+and this is the image
+how you manage them
+clearly you can see
+that you can see the version numbers
+of your prompt
+69, 70, 71
+so after reading it I can understand that 71 is my latest
+because it has been pushed
+so the latest is top
+in the numerical order
+and these are old
+everything is given in detail
+when, who pushed, what was the update
+everything is coming here
+and you can see
+labels also like production, experiment
+one, latest
+so what I have told you is that we have to define a system
+where instead of focusing on
+the version numbers
+we get a system where
+we can pull our prompts through labels
+and retrieve them
+and what is the benefit of this
+we are decoupling our prompt updates
+from code deployment
+in most LLM applications
+prompt iteration and code deployment
+are managed by different people
+product managers and domain experts
+iterate on prompts
+while engineers like us, manage deployments
+with prompts in code
+if your prompt is
+hard coded in your code
+a simple text change
+full stock also changed
+requires the engineering involvement
+code review
+because you will push changes in the getup
+so after code review you will have a merge
+and a full deployment cycle
+a complete redeployment cycle
+will run again
+turning a 2 minute update
+because you have done a small update
+but now you have to
+complete redeployment
+and not only you will push a new version
+but you will also get the cost of infrastructure
+so you will have to pay the cost
+of servers and applications
+that you are using to do redeployment
+so you want to stop this
+so whenever your prompts
+are in LangFuse
+non-technical team members
+can update them directly in the UI
+we will not do it through UI
+we will do it through code
+but your application automatically
+fetches it
+and automatically retrieves the version
+that you define
+so if you have done an update in prompt
+then you don't need to redeploy
+the application
+it will automatically reflect your update
+without needing to involve engineering
+or re-triggering the deployment
+is it clear now?
+now let's move towards the core concepts
+we will cover these core concepts
+now
+so let's cover
+the core concepts
+what are the core concepts
+available in LangFuse
+you can understand these core concepts
+as these are your LangFuse primitives
+you can't do verging without them
+so you should know this
+the first core concept is
+prompt name
+prompt name means
+it is basically a unique name of your prompt
+unique name of prompt
+like someone's question was
+how to do verging
+if you have sub-agents
+and their own prompts
+how to retrieve them
+so simply if you have 10 prompts
+then you have to give unique name to 10
+and you can easily store them
+in different ways
+you can retrieve them in different ways
+and you can also do verging
+so every unique prompt
+will have a different area in the database
+it is basically
+unique identifier or index
+is it clear?
+now second comes your prompt type
+prompt type means
+LangFuse supports your two types of prompts
+first are your
+text based prompts
+text prompts
+like in our case
+our system prompt is
+a simple text prompt
+that's it
+and if you define it
+in your line chain
+how do you define it?
+one text prompt inside your prompt template
+so prompt template
+gives you an option to define
+one text prompt inside your line chain
+and second prompt type
+in your line fuse is
+chat prompts
+how do you define chat prompts
+in your line chain?
+using chat prompt template
+so text based prompts
+are your simple prompts
+generally your text is in them
+and you want to
+version, log, store this text
+what happens in chat prompts?
+chat prompts is basically
+a group of prompts or a list of prompts
+in which your system prompts are different
+your AI prompts are different
+user prompts are different
+and also different prompts
+like in our code
+this is a chat prompt template
+because in this our system
+and user prompts are different
+but we want to
+use this particular string
+which is a text
+so we will use text prompt
+is it clear?
+if I show you
+see, there are two types
+chat vs text prompt
+so line fuse supports two prompt types
+first is
+text prompts
+these are single strings
+and when you only need a system
+message
+what do we need to version?
+only our system message
+so we will use text prompts
+whereas if you want to
+version the whole message history
+or many grouped messages together
+then you use chat prompts
+which is an array of messages
+with rules
+system prompt, user prompt, AI prompt
+you can version them like this
+so you see
+the method of text is same
+if you have defined text
+then you have to save
+your string prompt
+whereas if you have defined chat
+then you have to define
+your chat prompt template
+in the same form
+nothing is different
+same role, same content
+now it is written
+when you should use chat prompts
+so most applications start with a text prompt
+like we are starting with text prompt
+as you build more complex logic
+that requires managing multiple messages
+which is not applicable
+for our use case
+so we are using text prompt
+instead of chat prompt
+it makes more sense
+to switch to chat prompts
+if you have a role based structure
+chat history, we don't have
+so we will use text
+it is written clearly
+this allows you to manage the
+complete conversation structure in your
+management system
+we have system prompt
+so we will use text prompt
+I hope this point is clear to you
+now
+let's discuss the next primitive
+next primitive is your variables
+but before discussing variables
+let's discuss
+how our prompt
+looks like in LangFuse
+our prompt is not just
+the text
+it is not just the text
+in LangFuse, it is called
+a prompt object
+it is basically a class
+or an entire object
+which has different attributes
+now let me tell you
+what are the attributes in it
+the primary and main attribute
+in prompt object is prompt attribute
+prompt attribute is
+your actual textual prompt
+so your text prompt
+is in this attribute
+ok
+the second attribute is
+your config
+this is also a primitive
+you will see that config is also a primitive
+what is config?
+config is basically your metadata
+so if you want to
+store additional metadata with your prompt
+as a dictionary
+then you can store it in config
+ok
+and there is one more thing
+that is your version
+what is in version
+you can understand from the name
+your version number of the prompt
+any particular prompt
+what is its version number
+that is defined here
+and here there is one more thing
+that is called as your variables
+what are variables?
+variables are those things which make
+your prompt dynamic
+means you fill these things
+in runtime
+and this is not a new concept
+you have seen it thousands of times in LangChain
+actually there are variables in our code
+here
+context and query
+what are these? these are your variables
+these are called input variables in LangChain
+if you want to define explicitly
+then you can define
+input
+ok
+let me see
+yes
+here I can show you
+input
+variables
+here I can't see it in suggestions
+but here there is a parameter
+ok so you define input variables
+here
+I hope you know this
+ok
+so you define this in runtime
+and you get the same thing in LangFuse
+what is the difference
+the difference is
+that the variables in LangFuse
+are defined in a different way
+how are the variables defined in our LangChain
+like I want to define context and query
+so they are in single curly braces
+ok
+I want to define context so I do it like this
+I want to define query so I do it like this
+and now what will happen
+when I invoke and send my context and query
+so in my prompt template
+in runtime
+these things will be filled
+the value of these variables will be filled
+whereas in LangFuse
+instead of single curly braces
+you have double braces
+that's it
+ok so variables are nothing but
+your dynamic elements of your prompt
+dynamic elements
+of prompt which you fill in runtime
+after it is cleared
+if I show you
+in documentation
+so first of all
+here is prompt object
+what is prompt object
+LangFuse considers prompt to be a combination of both
+instructions
+in which you get text or array of text
+plus your additional config
+ok
+so your text plus config
+is your prompt object
+but it has different attributes
+prompt object also has other attributes
+like your version, variant
+deployment
+different things are available in it
+one of them is
+your dynamic rendering of prompts
+in which variables are a part
+ok
+if I show you variables
+so how is your variable
+variables are placeholders for dynamic strings
+in your prompt
+they allow you to create flexible prompt templates
+that can be customized at runtime without
+changing the definition itself
+and how is it supported
+supported by this particular syntax
+ok when you fetch a prompt
+from LangFuse and compile it
+you provide values to the variables
+that get inserted
+now here
+through this particular
+syntax
+a problem is coming
+the problem is that
+it is not supported in your lang chain
+so this is a big problem
+now you are saying that sir
+we have made the whole application
+in the lang chain and evaluated it
+now you are saying that for a small task
+which is prompt versioning
+we have to change the code
+the syntax
+the answer is no, it is not like that
+you cannot use this particular
+function in your lang chain
+double curly braces
+but LangFuse gives you a method
+basically
+there is a function in your prompt
+and that function is called getLangChainPrompt
+if you invoke that function
+then any prompt
+in which you have variables
+inside double curly braces
+they are converted into single curly braces
+although we don't have to use this functionality
+for this particular application
+because here
+even these variables are not included in our system prompt
+our system prompt
+is completely static
+and we are not adding any dynamic information
+but I have just told you
+that this possibility is also available
+I will show you
+see
+if you want to fill values
+then what you do is
+you use prompt.compile and input your values
+but because we are using
+the lang chain
+you can see the integration of the lang chain
+simply what you have to do is
+whatever prompt you have
+from langfuse
+you have to call getLangChainPrompt
+and your prompt will be converted into
+LangChainCompatiblePrompt
+simply put that in your prompt template
+and use whatever you were doing in your application
+as usual
+is it clear guys?
+it is clear
+just I have shown you
+we will not use this particular thing
+but we can use it in the future
+but I have told you
+functionality is available
+clear
+let's move ahead
+and discuss
+this is all practical
+you will understand practically
+we will go through some terminology
+we have understood variables
+we have understood config
+additional metadata
+now let's understand about versions and labels
+so as I told you
+that inside langfuse
+inside langfuse
+when you will go for versioning
+you will get to see two things
+first you will get your versions
+ok
+what are versions?
+basically your numbers
+as we have seen 69, then 78
+then 71st version
+so you maintain versions like this
+now what are versions?
+versions are basically immutable
+means you can't change anything
+inside the version number
+if the version goes above the langfuse
+then it will stay static
+fixed
+you can't change anything
+it is immutable
+and this is auto increment
+means as soon as
+you update something
+inside your prompt
+carefully listen
+as soon as you update something
+inside your prompt
+you have added a space
+a comma, a full stop
+after updating a single
+you have created a new version
+of your prompt
+means you have updated
+added a space bar
+simple white space
+and you have said that you have to push this version to langfuse
+as soon as you push it
+automatically version 71 will be made
+even a slight change
+will be reflected in your new version
+basically what I mean to say is
+that a simple change
+in your system prompt
+will lead to a new iteration
+or new version in your langfuse
+and it is auto incremented
+it is immutable, you can't change anything
+inside it and it stays static
+and generally you don't have to
+worry about versions
+which version is running now
+you don't have to worry about it
+langfuse
+basically the option
+which gives to handle the whole thing
+are your labels
+and what are these labels?
+labels are basically
+some of your labels are built in
+and some of them are
+custom, means mostly your
+labels are
+basically your tags
+name tags, you can give
+your versions
+unique names
+like now we will
+do versioning here, our version 1
+so we can say that this is my
+baseline version
+so what is this baseline? this is my unique name
+maybe tomorrow I will give
+some other name, production
+test version, anything
+I can give you any name
+but these labels
+will be attached with my versions
+as tag names and now
+whatever I have to store
+whatever I have to retrieve
+I will do through labels not
+from my versions
+so I will simply tell langfuse
+go to my storage
+go to database and fetch
+whatever test label
+prompt is there
+I don't know its version number
+I will not tell you to fetch
+version 70
+simply fetch whatever test
+is there
+so now what happened, I have written
+code in my application
+for a particular place
+like this system prompt
+this box is system prompt
+and I have said that this system prompt
+is basically my
+baseline
+prompt
+so now in storage
+whatever version the baseline is written
+automatically it will be integrated
+yesterday I wrote baseline
+first my version 70
+I attached it
+near 75
+removed from here and attached here
+so automatically in my application
+now this version will
+start to pull
+I don't need to change the code
+I don't need to tell
+langfuse now pull version 75
+I don't want to do that
+label will be intact
+I will just shift the label
+and according to that
+here my messages
+will be pulled, prompts will be pulled
+is it clear now?
+ok, one is
+your
+caching, we will read it in detail
+already we have taken some idea
+but it is a very important concept
+we will cover it in detail
+and finally
+is your promote and rollback
+this is also a practical concept
+so when we will do this in code
+then we will understand it
+these core concepts are clear to you guys
+of langfuse
+great
+so let's do one thing
+before going to the versions and labels
+let's see in the code
+how the whole thing works
+so before moving ahead
+let's implement some code
+here
+let's do some version
+of our system prompt
+inside langfuse
+let's see how the whole thing works
+now whenever you want to use
+langfuse in code
+there are some prerequisites
+from where you will get those prerequisites
+from this get started tab
+ok, first of all
+you have to install
+pip install langfuse
+so
+if you go here in python SDK
+then you have to
+pip install langfuse
+so let's follow this step by step
+so
+I go to my requirements.txt
+and here
+simply add
+the langfuse
+add
+go to terminal
+here I wrote
+uv
+it doesn't get installed
+uv add
+hyphen r
+requirements.txt
+it is running, langfuse is added
+ok, so we have added
+langfuse
+now what we will do is
+create a new file here
+so let's go inside the app
+and create a new file here
+we will keep the file name
+system
+prompt
+versioning.py
+ok
+this is my file
+I have brought it here
+ok, now there are two files
+here is my rag workflow
+and this is a new file
+now what we have to do is we have to version this particular prompt
+so how will we do inside
+langfuse, first of all what we will do is
+we will take a small import here
+so we will import here
+from
+langfuse
+we will import our
+get client
+we have imported this function
+and along with that
+we will load our api keys
+so from
+.env
+I will import
+load
+.env
+now next what you have to do is
+let's go to documentation again
+so after you will install langfuse
+you will need some credentials
+some environment variables
+specifically you will need three environment variables
+secret of langfuse
+public
+and base url
+now you must be thinking
+where will you get these things
+I will switch off the camera
+so that you can see the code
+you must be thinking
+where will you get these things
+so what you have to do is
+after you come here
+you will get this launch app
+button
+you have to click on it
+it will ask you to select your region
+so you select us
+done
+and it will ask you to login
+you can
+authenticate through gmail
+I was already logged in
+so I came here
+but you will come here
+and you will see a dashboard
+in the dashboard
+I have
+an application
+LLM of SRAC app
+this is my project
+you will see this particular dashboard
+you will see a default project
+now what you have to do
+you don't need anything else
+you have to go
+towards the prompt section
+you can manually add
+prompts through UI
+you can add new prompt
+create prompt
+you can do everything in this UI
+but we will do it programmatically in python
+now you need environment variables
+you will see them
+on this screen
+because when you create a new project
+you will see the variables
+we are not seeing them
+because I have already made this project
+so I will tell you where you will get them
+let's do one thing
+let's create another project
+let's go
+I will show you
+how your environment variable will look
+here
+new organization
+new project
+I will name it test
+I will delete it
+so you will get a project
+you will give the project name
+you will create
+you will see this
+create API keys
+you will click on this button
+you don't need to copy any API key
+you have all these
+API keys
+in this particular .env file
+simply copy this
+and paste it
+in your environment file
+as it is
+I hope this thing is clear
+with this
+you will create your prompts
+you will create your prompts
+and you will be able to log them
+I will reload it
+why is it telling me to create
+API keys
+I don't know
+I am back in my old project
+I hope you understood how to create
+API keys
+so we have loaded
+our API keys
+let us load the
+API keys
+we have loaded
+the Langfuse API keys
+now what you have to do
+first of all
+create a version of your prompt
+if you will see
+you don't have
+any version available
+no prompt is available
+the whole dashboard is empty
+so first of all we will create a variable
+system prompt
+and
+we will bring our system prompt
+so I simply copy
+this whole thing
+copy
+and paste it
+paste
+I will fix it
+I have pasted this system prompt
+ok
+now what I have to do
+I have to add
+system prompt to
+Langfuse
+what I will do for that
+I will create my client
+so we will name the variable
+Langfuse
+you generally keep it Langfuse
+because it is recommended
+and you use get client
+you don't have to pass anything in it
+you have already loaded the API keys
+so it will automatically load
+after that you have to write
+here Langfuse.
+create prompt
+ok
+and you have to pass
+some things in create prompt
+so here we work
+we will store it in a variable
+we will keep its name
+we will keep created prompt
+we will keep it
+you don't have to save it
+but I want to print some things
+so I have saved
+its output
+so we have to pass a name
+what should be the name
+unique for your prompt
+so we will give a proper name
+like our
+rag app
+system
+prompt
+we have given a proper name
+after that you have to tell type
+so what is type
+you have two options in type
+chat or text
+our system prompt is text
+after that you have to tell your prompt
+which you want to save
+what is our prompt
+system prompt
+after that you have to tell
+one label
+you can pass one or multiple labels
+here
+for now we are passing one label
+and we will keep its name
+we don't keep test
+we keep its name baseline
+because it is our baseline prompt
+and if you want along with these labels
+you can add a configuration
+what is configuration
+configuration is basically your metadata
+you can pass anything
+in a dictionary
+now generally
+why configuration or metadata is passed
+I will tell you
+what are you doing here
+you are doing different prompts
+so while doing version
+you want to see if there are changes in your evaluation
+are they coming because of the version change
+or because of prompt change
+or because of hyperparameter change
+so what we do here
+we lock some hyperparameter values
+although we are going to do this in MLflow
+but you can easily compare
+by locking here
+that the changes are coming
+because of our system prompt
+not because of our hyperparameter
+so let's do one thing
+we bring some parameters from our rack workflow
+like output dimensions
+and size chunk overlap
+so I will
+copy these
+exactly
+paste it
+and we make one more
+output
+dimensions
+which is for my embedding model
+and we keep its value
+I think it is 1024
+and we also set the value of k
+k is our 3
+you can add anything here
+or leave it empty
+it is just metadata
+just for the sake of completion
+how it looks
+that's why we are including this information
+so we added chunk size
+chunk
+overlap
+so this metadata
+will be attached with every version of prompt
+so I will know
+that here I have only
+changed my prompt
+not this particular
+information
+I have set k as k
+you just have to add
+this much
+and your prompt
+will be versioned
+I will show you
+here we are printing
+some things
+so we can bring some attributes from created prompt
+like one attribute
+here
+prompt
+prompt will tell you
+what text you have saved
+your original textual prompt
+then you can
+bring your
+version
+then you can
+print your
+labels
+so we will know
+these things here
+so let's run this particular file
+so let's go
+here
+let's do clear
+and run this
+we will go to source
+app
+and system
+prompt.py
+see
+what all things
+I had asked to print
+and see how fast it is
+it didn't take much time
+in an api call
+what all things I asked to print
+that my prompt will be versioned
+and it will tell you
+what all labels are attached
+so let's see
+see
+this is my original prompt
+exactly what I had saved
+what is the original number
+because
+I have pushed this prompt
+and here
+what I can see in labels
+in labels
+baseline and latest
+now
+I had added this in code
+I had given this
+how did this latest come
+so latest basically is
+whatever your latest version is
+automatically
+langfuse
+type latest
+means this is the latest version
+so you have to find out
+or pull to see your latest version
+so simply tell me
+to pull latest version
+so you don't have to take care of version number
+now how is this reflected in your dashboard
+I will refresh it
+so see
+what you can see here
+your prompt name
+which we had passed in code
+rag app system prompt
+how many versions are there
+only one is there
+type of this prompt, text, when it was created
+everything is visible here
+you have to simply open it
+see here version number 1
+two labels are attached
+latest and baseline
+but what is saved in it
+this particular prompt is saved
+and this particular
+configuration information
+we have saved
+and if you want to use this prompt
+in your application
+then its code is also available
+you simply have to use
+langfuse.getprompt
+you can import this prompt
+in two ways
+you can import it either through label baseline
+or through label latest
+these are basically your tags
+tags basically tell you
+which version to pick
+you can also pick it through version number
+but this is not recommended
+because it requires code changes
+you have written in your application
+langfuse.getprompt
+version 1
+so always version 1 will go
+tomorrow latest version 2
+or version 3
+in case of this you have to define version 2 and version 3
+in the code
+hard code
+problem is redeployment
+we used langfuse to save from this
+we used prompt management
+if you have
+clearly defined
+that you have to pull only latest version
+then this latest version
+will automatically pull
+is it clear guys?
+is this the whole aspect
+that you are understanding?
+yes
+these are part of the code file
+we will match with it
+but I just wanted to show you
+what all things you can add in config
+basically you can compare
+that is config same or not
+in each of your version
+so we will know that config is same
+if different versions are being made
+then if there is some change in the application
+or in the evaluation
+then it is changing because of our prompt
+not because of our configuration
+just this is the testing code
+we haven't done anything
+in this yet
+anyway we will do
+this entire logging
+of hyper parameters or MLflow
+just I want to show you
+the whole UI
+is it clear guys?
+is it clear?
+now you might not be interested
+you might think that we pushed a prompt
+and made version 1
+nothing special happened
+so we will load it
+now we have
+pushed it in system prompt
+let's make a new file
+and
+let's write the name of this file
+load system
+prompt dot
+and now
+let's load it
+now let's code it here
+side by side no problem
+so I will
+exactly
+copy it from here
+copy
+paste
+now what I have to do
+is first of all
+make our client
+again we will name it
+langfuse
+and we will call
+getClient
+client is made
+client basically handles all API calls
+now what I have to do
+is load our prompt
+I will make a variable prompt
+let's do this
+let's name it system prompt
+ok, where is our system prompt
+now it is not in our code
+now it is on our
+langfuse
+so we will retrieve it from
+langfuse
+so I will simply write langfuse dot
+like create prompt
+so this will be get prompt
+get prompt
+you have to tell some things in get prompt
+first of all you have to tell the name of your prompt
+which prompt you are going to bring
+so the name of the prompt is
+ragapp system prompt
+I will say this prompt from database
+pull it
+now if you want you can tell version number
+which will be defined through version
+but defining through version is not a good
+practice because here
+you are hard coding versions
+so if you update it in your prompt tomorrow
+then you will have to change it in the code
+your hard work will be ruined
+so here we will tell type
+the prompt which we have to pull is
+text type
+and we will tell here
+what is its label
+which one we have to pull
+so what is our label
+our baseline
+let me see
+no, not baseline
+so our baseline is
+latest
+so we have
+added 3 things
+you have to tell simple
+label, type
+and your name
+that's it
+after that what you have to do
+you have to print some things
+we will print
+from our system
+prompt we have to take out
+some things like our
+version
+so first we will print which version
+is coming to us
+then we will print
+what is prompt
+then we will print
+what is config
+config
+what is saved
+inside config
+and what we can pull here
+we can print
+label
+dot
+labels
+now let's run this file
+so I will write
+run
+instead of system prompt versioning
+this load
+what is its name
+load
+it is not complete
+now it is done
+I have run this
+see which version number is loaded
+1 this is my prompt
+this is my whole config
+see as it is loaded
+these are my tags or labels
+everything I
+have loaded properly
+now you will say sir we have
+pushed and pulled
+nothing interesting is happening
+now I will show you something interesting
+interesting thing is
+now what I will do here
+this prompt
+I am not changing in code
+code is as it is I will not disturb it
+I will change something in this prompt
+and change also you know what I will do here
+I will put a full stop at last
+just a little change
+so will this small change
+affect my application
+guys
+it will not, obviously I have simply put a full stop here
+but if
+I had done this whole thing in hard code
+and I had done it in version
+then in my code
+this version change would have been visible
+I will show you how
+ok let's do one thing
+once let's go
+towards
+this particular thing
+this is my get up
+here we will push
+all these changes
+commit message
+update
+update the
+final eval
+pipeline
+ok now I
+am doing this through
+ps code just I want to show you
+I will sync it
+although I should have seen it once
+nicely
+password is asking
+login keychain password
+which password is asking
+let's wait
+ok push is done
+now this whole code
+I have pushed on get up
+now assume that I have pushed a version of my application
+and there
+deployment is automatically triggered
+now
+at next moment I remembered that
+there was a full stop in this prompt
+now I have added
+now with this full stop
+nothing will change in my system prompt
+functioning
+but get up has tracked it
+that something has changed in the code
+now you can understand that
+when I will push this code
+again
+then it will trigger the whole deployment
+and this is a problem
+so what am I doing here
+I have made a different file
+which is handling my versioning
+I am handling this
+separately
+it is not going to get up
+now I have changed in this
+in this particular code
+this is the code below
+nothing will change in it
+let's rerun this file
+ok
+let me rerun this particular file
+so
+let's rerun it
+so
+guys have I changed something in the code
+have I touched anything
+in the code
+everything is happening
+live in front of you
+guys
+reply in chat
+did anything change in the code
+from my end
+no, nothing changed
+only in the system prompt
+what did I change
+I added a new code
+automatically
+it registered this new change
+what is the version number
+I didn't tell the version number
+what was the first, what was the second
+what did I change
+and automatically tags were added
+now
+I will rerun this file
+which was loading in this file before
+which was not full stop
+now
+now
+even in this code
+I am showing you clearly
+nothing has changed
+because all this is getting get tracked
+getup will catch me
+if I cheat
+let's load
+which load was it
+version number 2 automatically
+full stop
+if I have put this mechanism
+in my code
+then how easily
+if I have triggered the system prompt
+I can change my system prompt
+isn't it guys
+interesting thing
+simply I told you to pull the latest one
+now latest version 2
+if I refresh it
+so this is version 2
+first which was the baseline
+and latest one
+automatically it shifted up
+why, because now I said
+this is the latest and this is the baseline
+and
+you can see your updated prompt
+if you see
+config, it is still the same
+the code to use it has changed
+and the good part is
+the code to use it
+changes with your label
+tomorrow I will change this label
+or add a new label
+so a new line will be added
+now I will show you
+how you can do comparison
+simply this is your latest
+this is your old one
+you will click
+you can see the difference
+between this particular thing and this
+this line is removed and this line is added
+and what is added
+you can see it in dark green
+and what is the change in the configuration
+clearly written
+there is no change in both the versions
+configuration was same to same
+if I had changed the configuration
+then that change would also
+be reflected
+now I will show you
+by changing both the things
+I hope you can understand that
+this change I am doing in this file
+this file is not related to my main code
+I am developing this separately
+I am a prompt engineer
+who is handling prompt versioning and prompt
+and you are
+pulling this prompt in your application
+so
+in your application
+this particular change that I am doing
+on my system, it has no effect
+although we are doing all the work
+so we have to manage all these things
+but this file will be different from your project folder
+is it clear now
+now let's do some changes
+what we will change is that I will keep
+the value of 5
+now don't say that you didn't use 5 there
+I am showing you the change
+done
+I will change it in the label
+there is no baseline, I will do this
+staging, what does staging mean?
+it means development
+I have done staging
+and you can change something else in prompt
+here it is written
+you are a helpful assistant, answer the query based on the given context only
+if you do not know the answer
+say I don't know, do not add any variable to the response
+let's add something else
+address
+want back in
+simple
+language
+and
+keep
+a persona
+of
+a mentor
+that
+is solving
+doubts
+of his
+students
+your
+answers
+should have
+a
+persona
+feeling
+I added random
+here
+although it is relevant but I added
+now what am I doing here
+I changed it in prompt
+changed it in code
+no, my code is the same
+I changed some configs but I can
+define configs up here
+so here
+internally I don't need to change
+any of the things
+simply I changed the label
+ok
+now see what happened
+if I can go back
+see
+if I run it
+this prompt is saved
+exactly here it is printed
+what is the version? version is 3
+what is the label?
+it is the baseline and latest
+latest will be with every version
+the latest will keep moving
+what is the version?
+staging and latest
+ok
+now what am I doing here
+I am loading the latest
+let's see if the latest load is there
+I hope you are getting it now
+yes, latest load is there
+latest load is there where k value is 5
+ok, my new prompt is version 3
+and its labels are there
+ok, if I show you in UI
+if I refresh the UI
+see
+my baseline is there
+latest is up
+and it got a new label staging
+now if I
+compare here
+I will click on it
+I have added these things
+I can see the changes in UI
+what is the change?
+k value was 3 and I made it 5
+so now clearly
+you can track the changes and retrieve them
+now let's say
+I pushed this application yesterday
+ok
+and this system prompt
+I told you to give some personalized feel
+so my rag chatbot
+started to talk too much like a lion
+its answers were completely useless
+here it got too clingy
+it got too personal with my user
+it started showing too much attachment
+I didn't want such an application
+my users said
+what a bad application
+what an application is made
+I thought I made the application right
+I wrote the code right
+I was getting the results right in testing
+why did this problem come?
+this problem came because
+I changed it in the system prompt
+now what I have to do
+I have to go back to the same prompt
+which was working properly on my application
+so what I will simply do
+here
+I am loading my system prompt
+ok
+there I will change the label
+of this particular thing
+what I will do here
+I will do it
+baseline
+but what is the problem in doing this
+the problem in doing this is
+that here as you do the baseline
+your whole code will be
+re-run
+so this is a big problem
+so this problem is happening here
+because we are in development
+whenever you are in production
+then your main
+prompt
+you label it production
+and if I remove the label
+here
+then by default its label will be production
+so now I am showing you
+I haven't changed any code
+I am simply removing the label
+for now
+think I have never added any label here
+now instead of changing in this code
+where will I have to change
+I have to change in my prompt
+which I have to go back to
+on number 2
+so I can change it in UI
+or I can change it in my code
+how
+I will show you
+here comes another functionality
+that functionality is called
+update prompt
+which is called landfuse.updateprompt
+update prompt
+seems like we are updating prompt
+but we are not updating prompt
+we are updating prompt labels
+so if you want to go back to
+any version
+or give another label
+if you have missed something
+or want to tweak something
+then you update prompt
+so here you have only 2 options
+name, version
+and in version you have to tell
+which version you want to tweak
+so here you have to tell version
+it is necessary
+otherwise you won't be able to tell
+where to make changes
+in version 2
+so I will put version 2 here
+and in new labels I will tell
+which new labels I want to add
+so the new labels are append
+not overwrite
+so here it is written
+that you can use any other label
+as you can see latest is reserved by landfuse
+so here we will use
+new label which is production
+so your main prompt
+version is always
+production only
+production is done
+now I will simply run this code
+I will comment out this code
+so that a new version doesn't get created
+and I will simply
+run this code
+so let's go
+again
+I will comment out this code
+again
+and
+now
+you will see
+some interesting things
+if I can drag this
+then yes
+here it is created, let's clear it
+let's run it once
+ok, now nothing will be printed
+but you will see this change in UI
+what I did
+I added a label which is production
+let's see if it is reflecting
+it came automatically
+and how production is showing
+green and heartbeat
+it means that this is a very important label
+which we have added
+production
+this is a very important label
+so by default if you
+don't add any label
+then production is a label
+which will be served by default
+means if you have
+left the field empty
+then what is the default label
+your default label is production
+so your production
+system prompt will always
+be pulled
+so generally your main prompts
+are production labels
+and in every version
+there is only one production label
+so we had version 3 production
+you assume like this
+but it was not working well
+it was giving a lot of personalized
+so we made it production
+we are basically rolling back
+and now you will see
+when I load
+then which one will be loaded
+number 2
+ok, I came back
+and here the same config
+and everything is loading
+I hope
+you understood this whole thing
+is it clear guys
+is this prompt
+you understood this prompt versioning concept
+you understood why we are doing this
+what is the reason behind this
+and you can stick to the reason
+basically
+you don't have to make any changes
+in the code
+so that you don't have to do this deployment work again
+clear guys
+so what do you do in development
+you have a baseline
+in development
+so you have an initial prompt like we have
+after that you keep improving
+your versions
+keep improving and evaluating
+and every new version
+you keep labeling as staging
+and as soon as you get a perfect prompt
+you productionize it
+and it is
+imported into your production
+so if you change
+in your prompt
+it will automatically reflect in your production environment
+is it clear
+ok, I will take your questions
+for 5 minutes
+and then we will close off the session
+we have to cover more things here
+like caching in detail
+so we will do that in the next session
+some concepts are remaining
+of the tankfuse prompt versioning
+we will do that in the next session
+because I think if I discuss it now
+it will overload with information
+caching is very important
+just a second I will turn on the camera
+how was today's class
+why did you understand
+how to do prompt versioning
+I understood
+the code was simple
+how is this whole thing
+being made
+evaluation, versioning
+what is going to happen next
+do you have an idea
+that we will lock all these things
+and while making improvements
+we will do evaluation
+we will tune our hyperparameters
+and as soon as our experimentation is complete
+we will have a good application
+which will shine
+on our every evaluation
+after that we will move to guardrails
+how to make your application
+a little restricted
+how to make it safe
+and there you will see important guardrails
+concepts
+that's great Saurav
+that you have used Lankfuse for observability
+and we will do it too
+and you will see that prompt versioning
+will work like an add-on
+so when you do traceability
+and observability
+then the prompt version
+automatically tracks
+Lian graphs, each node, system, prompt
+this has to be maintained for each node
+yes, you have to do that
+you have to do a separate version
+but you are able to understand its power
+and the advantage of system prompt
+is that you get out of the development phase
+and you don't have to update it again and again
+you have to update it very rarely
+system prompt is not something
+that you update every day
+system prompt versioning file is not pushed
+there is no reason for push
+what is the difference between push and push
+you are doing your code version
+what you did
+you sent your system prompt
+on the server
+on the Lankfuse server
+it was saved in the database
+of Lankfuse
+these 3 versions were saved
+now what are you doing from here
+you are sending your system prompt
+on the server
+now what are you doing from here
+you are loading it
+in your code
+that's it
+so this is the saving code
+where you are pushing your system prompt
+to Lankfuse and this is the loading code
+you have to add a small code
+basically you have to make a client
+and you have to add this particular thing in system prompt
+we will be using guardrails here
+we will read guardrails very well
+as we have read the evaluation
+we will read an important concept of guardrails
+people think that guardrails
+restrict your application
+but it is not like that
+guardrails restrict your application
+when you have malicious intent
+or some wrong intent
+your application
+answers from outside its boundary
+for normal working of your application
+you will not even know if guardrails are there
+that's why it is very important
+to use guardrails
+and in this way
+end user will never know
+that guardrails are there
+being asked for guardrails
+yes, guardrails are very important in interviews
+and we will read multiple guardrails
+again I made a meticulously
+list of the tools
+we will be using in LLMops
+from this perspective
+there are many tools here
+so code should be simple
+DPval code is very simple
+everything is happening
+we didn't have to write manual code
+prompt versioning is simple
+observability code is also very simple
+guardrails code is not that tough
+so we have kept it intentionally
+that it is famous
+and it is used a lot in interviews
+and secondly you can implement them
+and you should not focus on tooling
+you should focus on Y
+so this was my intent
+till now things
+might seem simple, it is easy
+it seems simple from MLops
+it seems because
+you are not training model here
+training model is a challenge in itself
+it is a challenge
+here you have trained model
+this is a benefit
+and the application
+we are building is not that fancy
+so you are finding these things simple
+but if you are going to build
+a proper application
+then you will have to do multiple iterations
+to build the application
+we have already discussed
+the list of tools in module 1
+so we will stick to those tools
+because we have to stick to the curriculum
+so there are many tools
+I can discuss Kubernetes
+but then this course will be very long
+we have to do a project
+where we have to apply all these steps
+on an entire agentic application
+so it will take time
+CI CD will come, get up actions will come
+how you write the entire yaml file
+I will explain the whole step by step
+you will get the why of every question
+if you go to the interview
+to explain your project
+that we are building
+then if the interviewer asks you
+why did you do this step
+give the reason behind it
+then you will have the reason
+it will take some time
+it will be slow and steady
+and will clear your doubts
+we will start
+how was today's session
+clarity
+if you can give rating out of 5
+5 out of 5
+very nice
+some more feedback
+with which I can improve
+thank you
+thank you sir
+so in the next session
+we will study caching
+some important concepts
+you will understand
+how the lang fuse works
+although it is not necessary
+for implementation
+but if you know
+then you will be able to integrate
+the lang fuse
+and then we will move towards experimentation
+so we will understand the entire framework
+but we will be restricted
+to our LLM ops
+we will not discuss
+ML ops concepts
+I have 2 more minutes
+if you have any questions
+or feedback
+sure
+if you have no questions you can leave
+for deployment
+which cloud platform
+will be used
+we will use AWS
+again there is no
+difference in cloud platform
+there is a little
+implementation difference
+your components are different
+there is a little UI difference
+the concepts are the same
+if you have picked the concept
+then the same implementation
+you are learning in AWS
+you can do it in GCP or Azure
+you will not face any problem
+simply you have to see
+the equivalent component
+of this component
+that's it
+its tweaks and configs will be different
+you can find that by doing
+chart jpt
+your compute
+your AWS EC2
+what happens in compute hardware
+it is basically a server
+a computer, a hardware
+its CPU, GPU, RAM, storage
+OS, all these will be there
+like in your laptop
+or desktop
+it will be the same
+I want to give you
+a little disclaimer
+that as I said
+I told you in the beginning
+that there is a lot of cost
+going forward
+whatever evaluations you will do
+you have to do it on this new dataset
+I have updated the code
+so you also pull this updated code
+you can try it on this
+there is no point in doing it on all
+because of this
+you will face a lot of cost
+any more questions guys
+I am one more minute
+I think
+that's all for the day
+no questions
+so guys see you
+today is Thursday, see you on Monday
+we will complete this thing on Monday
+we will understand caching
+and then move to MLflow
+good night guys
+I will see you on Monday
+good night guys

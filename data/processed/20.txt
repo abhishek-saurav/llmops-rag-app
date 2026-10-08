@@ -1,0 +1,3370 @@
+WEBVTT
+So guys if you have any questions you can ask me. I hope you have cleared your backlog and you have to run everything we have covered on our system.
+We are meeting after one week.
+Great. Any questions?
+Any questions?
+I am looking at the chat. If you have any questions regarding anything.
+We will start in 5 minutes. People are still joining in. Till then I will take your questions and then we will start.
+Any questions? Any doubts?
+Any issues while running or executing? Any problems inside the code you can ask.
+Anything guys?
+From today this whole month which will be in LLM Ops will be on our deployment.
+We will learn all the concepts.
+No questions? If not then write clear in the chat.
+Let's wait for 2 more minutes and then start.
+Yes we have covered regression testing.
+And we will use it heavily in today's lecture.
+Yes generally that happens. Front end development does not work for you.
+Your main focus is around the Rack App only. And building APIs.
+Yes we are doing this for this project because we are developing everything here alone.
+Everything.
+Some questions are coming. I will take the questions.
+All the evaluations are done in their context only.
+So nothing will come from our context.
+Although our retriever is not able to fetch it. So that is the lack of retriever.
+But the information is available in context.
+So our evaluation is well grounded.
+You can see that some of our evaluations are getting good results in some metrics.
+Like 100% are also coming. That is because our evaluation criteria is grounded.
+Faithfulness I think is 99% or 100% coming. That is the reason behind it.
+Any more questions?
+Let's start.
+Today's lecture is going to be very practical. So stay along.
+We are going to discuss a lot of codes.
+And you will see the whole workflow running.
+So you will see a beautiful picture of how you run CI.
+And we will see everything practically today.
+So let's start the lecture once.
+And after that I will take your questions.
+Let's discuss what we did in the previous lecture.
+Can anybody tell me is recording working?
+A quick yes if you can see the recording tab.
+Ok fine.
+Let's start.
+So in the previous lecture we discussed about APIs.
+We are discussing about APIs from the last two lectures.
+And we built routers for different routes.
+We built a chat router.
+We built an internal router.
+Which was for our vector store.
+And we built an additional router.
+That was for the health.
+Now while I was improving the code.
+I added an additional router.
+Just for my understanding.
+This router is called debug router.
+Now what we are doing is.
+This health router or this vector store router.
+This is not giving us the final state of the whole rag application.
+Means whenever we are running our rag application.
+So we are not getting the final state anywhere.
+What we are getting from this chat.
+We are getting our response here.
+Again validated and non validated is not our concern.
+We are getting our output here.
+But sometimes when you are developing the application.
+Then there can be some issues in your state.
+Means you want to see what was your retrieved context.
+You want to see how context and prompt were augmented.
+All those things which are intermediate states.
+You want to see them.
+So for that I have built another router here.
+Called as a debug router.
+The purpose of this is simply.
+That you will give a query in this debug route.
+Input.
+And it will give you the complete final state of your application.
+It will give you the complete final state of your application.
+And the application we are using here.
+That is our rag application with guardrails.
+So the guardrails state we implemented inside the code.
+If I show you.
+If I go to source.
+I go to app.
+And this is my file.
+Rag workflow with guardrails.
+So this is the complete state.
+This whole state is returned by the API.
+It returns the endpoint.
+That's it.
+I have made this here.
+If you see here.
+Inside the router.
+So here it is debug.py.
+And inside this debug.py.
+We are simply.
+We are calling the debug rag function here.
+We are giving a query to it.
+And it is returning our state.
+Here I have kept two endpoints.
+One is for our normal app.
+Without the guardrails.
+And one is our with guardrails.
+So the normal one.
+The endpoint is only rag.
+And the with guardrails.
+The function is very simple.
+Here we are simply.
+Invoking the guardrail rag.
+And in return we are getting the complete state.
+We are just returning it here.
+For that I have to add some schemas.
+Here you can see.
+Debug rag state response.
+And debug guardrail rag state response.
+I hope this thing is clear to you.
+I have just tweaked one minor thing inside the code.
+Here we have developed a front end.
+And we have developed this front end inside streamlit.
+And you have seen all this functioning.
+You have also seen that.
+You have also seen that.
+When we gave our query in this streamlit front end.
+Then automatically our session was being renamed.
+What was happening here?
+We were able to maintain our session history.
+Means a single user can hold multiple sessions.
+And switch between them.
+And third.
+We have also seen that.
+Our proper guardrails were also being implemented.
+Means there was a question.
+Where we needed to give an error fallback.
+So we were giving error fallback.
+And if there was a question where we needed to give soft fallback.
+So we were returning soft fallback.
+And these whole things were working correctly.
+We have seen all this in the code.
+Now what are we going to do in today's session?
+In today's session our application building work is complete.
+We have completed our application.
+By building our application.
+What I mean by building application is.
+That we have the backend of our application.
+Which is our API.
+And front end.
+Which we have built in streamlit.
+This is available to us.
+Okay.
+What we will do today.
+Today we are going to implement CI pipeline.
+Means we are moving towards deployment.
+So from today's lecture we are going to move towards deployment.
+Is this point clear guys?
+You don't take much tension about the code.
+I will show you that.
+But this point is clear to you.
+Great.
+Let's discuss once that what is this CI pipeline?
+Or the need to build this CI pipeline.
+Okay.
+So let's move forward.
+Now let's discuss that what is this CI CD?
+You have heard the term CI CD in MLops, DevOps and LLMops.
+You must be wondering why we are reading this.
+So basically your CI stands for.
+Continuous Integration.
+And your CD stands for.
+It has two meanings.
+Either it is called continuous delivery.
+Or it is called continuous deployment.
+So if you are implementing any software through CD.
+Then it generally comes in continuous delivery.
+Whereas if you are doing any application.
+Then it comes in your continuous deployment.
+Okay.
+So we will call CD as continuous deployment.
+Okay.
+But you can interchangeably use these two terms.
+Right.
+Now let's discuss what is this continuous integration?
+It seems very heavy to hear words.
+But let's understand the main purpose of this.
+What are we doing in continuous integration?
+See what are we actually doing?
+While developing our application.
+What is our flow?
+Our flow is that we have a params.yml file.
+What is in this yaml file?
+In this yaml file, all the configurations related to our application are listed.
+Okay.
+We have already listed all the configurations in this params.yml file.
+And not only we have listed them here.
+We are also validating it properly.
+So validation is also being done here.
+Now what is our job?
+Our job is to make our application better.
+And while doing better, we have to run multiple experiments here.
+If you see here.
+Inside this yaml flow.
+We have already done this.
+So what are we doing inside the yaml flow?
+Whenever we are running a new experiment.
+With some changed configuration.
+So we are saving the details related to that experiment.
+Like our metrics.
+Here we are storing the information of our seven metrics.
+What are the parameters of our application?
+From the params.yml.
+We are storing that.
+And we are also storing our artifacts here.
+Like code related artifacts.
+All our code files.
+Our evaluation dataset.
+Our golden dataset.
+Our results and reports.
+And also our system prompt.
+So all these things we are locking here inside the yaml flow.
+And I hope you already know why experiment tracking is done.
+So what you do in development?
+You improve your application in multiple iterations.
+Now what are you doing?
+Right now you are going to params.yml.
+Here you are changing some configuration.
+After that what are you doing?
+You are running this evaluation pipeline manually.
+And internally what is happening in this evaluation pipeline?
+First of all your evaluation dataset is being made.
+We have discussed this many times.
+That when your application changes.
+For that you pass your golden's in it.
+And create a new evaluation dataset.
+On which you will go ahead and do the evaluation.
+So manually you run the evaluation pipeline.
+So the first thing is the data set is created.
+After that your evaluation is done.
+In the evaluation, your results are stored as JSON and as a markdown file.
+Right?
+After that what are you doing?
+After that you are locking your parameters.
+After that you are locking your metrics.
+And along with that you are locking your artifacts.
+That is code files and reports etc.
+You are locking all these.
+But you are doing all this process manually.
+While going inside the terminal.
+Here you are going inside the terminal.
+By opening the terminal.
+Here we are running UV run.
+And running our files individually.
+By running UV run.
+Now what we will do in continuous integration.
+We will automate this whole thing.
+Right?
+What are we doing next?
+Next step is we are performing some tests.
+We are performing two types of tests.
+First test is our regression test.
+We call this regression testing.
+What are we doing in this regression testing?
+In regression testing we are seeing that our new version of the application.
+Which has come from our changed parameters.
+Is it useless from our previous best?
+Basically we are seeing here that is our new version.
+Is it worth competing with our previous best?
+Is it not that it is very bad?
+So regression testing is not good.
+It is not good.
+It is not that it is very bad.
+So in regression testing we are checking that how bad it is.
+And second is our testing.
+That is our promotion testing.
+Right?
+In regression testing we are checking that is it bad or not.
+Assume that it is not bad.
+That means our previous and current version are comparable.
+In promotion testing what we do is.
+We check that how much better it is.
+If it is not bad then it will be better.
+Or similar.
+How much better it is.
+If it is better then what we will do is.
+We will tag our new version as our best version.
+And from the previous best we will remove this tag from the best version.
+I hope you understood this point.
+Now what is in our case situation?
+I will tell you.
+If I go to my MLflow.
+And I will show you all the runs.
+Now we have the best version that is labeled as champion.
+Now this was the first staging label.
+Now I have renamed it as champion.
+I will tell you the logic behind it.
+But you should understand that the current best version is.
+This is resilient mid.
+And we have tagged it as champion.
+Now we are running a new iteration here.
+Like I have run a new iteration here.
+Now I will compare this new iteration with this old champion.
+And I will test two things here.
+First.
+That the new version that I have created.
+Has it not decreased from the old one?
+Then I will stop my testing here.
+I don't need to test anything further.
+Because if it is decreased.
+Then it can't be better.
+So I will stop my testing here.
+And if it is not decreased.
+Then I will move to the promotion test.
+And I will test that.
+Is it better than this particular champion?
+If it is better.
+Then I will take this champion tag.
+And I will put it here.
+And I will remove it from here.
+I hope you understood this point.
+Is this point clear?
+Is it confusing?
+Is it confusing?
+If it is confusing then you can tell me.
+Is it clear?
+We have already discussed this whole flow.
+So I am reiterating that.
+Yes.
+Let's discuss further.
+So we have tested this here.
+Now how are we doing testing?
+Again we are doing this testing process manually.
+Till now we were running the test manually.
+And doing the testing procedure.
+After the testing procedure.
+I have to switch the tag here.
+Okay.
+What am I doing now?
+I am comparing here.
+I am doing testing.
+And manually creating the tags.
+But do you think this is a proper way?
+What should be the proper way?
+That automatically there should be comparisons.
+Automatically there should be testing.
+Automatically there should be tag switching.
+Now in the tag switching.
+I have to do 3-4 things here.
+First of all what I have to do here.
+Previous best.
+What is its name?
+Its name is champion.
+Like in a cricket world cup.
+If your new world cup is running.
+Then what are your previous champions?
+Who won in the first world cup.
+So we are also labeling our previous best as champion.
+Now what will happen is.
+As soon as a new version is created.
+We will tag it as challenger.
+Means it has come to challenge our champion.
+Okay.
+Now here.
+There can be 3 scenarios.
+First scenario is.
+That this challenger challenged the champion.
+And it passed in regression testing.
+Okay.
+So it will maintain its challenger tag.
+Then it went ahead towards promotion testing.
+And it failed in promotion testing.
+Means it is not better than my champion version.
+Okay. It is a proper score.
+So what I have to do.
+I have to remove this challenger version.
+Because now this challenger is not there.
+Because it has failed in promotion testing.
+So now it is out of the race.
+Now what I have to do.
+I have to bring a new iteration.
+And a new challenger.
+Again it will compete with this champion.
+Okay.
+And this competition will continue.
+Between challenger and champion.
+Till this challenger.
+Which is a new version.
+It doesn't become a champion.
+If my new version clears regression testing.
+And also clears promotion testing.
+Then I will label it as champion.
+Now you know that in any game.
+In any sport.
+There can't be two champions.
+There can be either team A that can be champion.
+Or team B that can be champion.
+If team B becomes champion.
+Then I will give this title to team B.
+From team A.
+And what will happen in team A.
+Team A will be my previous champion.
+Which was my first champion.
+Okay. So I will label it as archive.
+Archive means it was my previous best.
+But now my current best is champion.
+Okay.
+So how is this flow happening.
+I will tell you.
+This whole flow is happening between three tags.
+Now you must be thinking that why are we using these tags.
+Basically we are using tags as labels.
+Okay.
+So this whole CI flow is on the movement of this label.
+What do we have?
+What do we have?
+We have a champion available.
+Listen to the whole flow.
+What did we do?
+We thought that we will improve our application.
+Where will you improve?
+You will improve from the params.yml file.
+Okay. You went inside the params.yml file.
+And you changed some configuration here.
+Let's say you want to improve a particular metric.
+That is contextual relevancy.
+So we know that we have to improve contextual relevancy.
+So let's change the chunk size.
+So we will have 270.
+You have made it 250.
+Your parameter has changed.
+What did you do?
+You ran the evaluation pipeline again.
+What will happen if the evaluation pipeline runs?
+It will be re-evaluated again.
+And the results will be saved in an ML flow run.
+Okay.
+Now you have two versions.
+One was your previous best.
+That was your champion version.
+One is new.
+That is your challenger.
+Now we will check the future by testing.
+That is it is it is worth to maintain this challenger tag or not?
+So the first test will be.
+The first round will be our regression testing.
+Okay.
+If it passes, then it will maintain the challenger tag.
+And if it fails here, then we will remove the challenger tag at that time.
+We don't need to go ahead.
+If this step passes, then we will go to the next test.
+That is promotion testing.
+If this is cleared in promotion testing, then what is now?
+The two tests that we had kept here, they cleared in our next iteration.
+So now this new iteration will be our champion.
+And because the champion can be one, then our previous champion.
+We will have to remove this champion tag from it.
+So we will not directly remove it.
+Because sometimes what happens is that your new version.
+It may not work as good in production.
+So what you have to do is that you have to come back to your old champion.
+This happens sometimes.
+It is called rollback in technical terms.
+Means when you did this CI, then your version was also performing very well.
+But when this version was also in production, when it faced real users.
+Then this version was not performing as good as it was in comparison.
+So what happens at that time, at that time you will go to develop a new version.
+Let's say there were versions.
+It will take time.
+Till then you will keep serving your old version to your users.
+The answer is no.
+If this happens, then what you do is that you roll back to your previous version.
+Means that this was doing good work in production.
+So let's deploy this version back to our servers.
+So this is called rollback.
+So we will not remove the champion tag here.
+We will give it another tag that is your archive.
+Means that you can say that it has become a legend type.
+It has gone inside the archive.
+You can switch it again.
+Is this process clear guys?
+This version is playing the whole game.
+You are getting clear.
+Now we will stop here for a minute.
+If you have any doubts, then you can ask me.
+Clear.
+If you have any doubt.
+Because it seems a little tricky to listen for the first time.
+Again, now when we see it flowing completely, then you will understand it better.
+Continuous delivery ready to deploy continuous deployment automatically deployed.
+No, you can use it interchangeably.
+Again see these are terminologies.
+Both terminologies work.
+Continuous delivery is also correct.
+Which one do you use that depends on you.
+Generally, it is called CICD.
+No one expands it completely.
+How does noise cancellation work here in CICD?
+And it needs several trials.
+Harry, we are not doing the calculation here.
+We have already done the calculations.
+We are testing on them here.
+We will definitely use those files.
+We will use the threshold values.
+But here we will not do the calculation again.
+Because the sample size that we were doing at the time of development, we have collected it.
+Now there will be no use of putting one or two new samples here.
+It was a one time activity.
+We have done it and now we are going to reuse those values.
+Now see here.
+We have added one run here.
+We have already done calculations on these.
+These were our previous runs.
+So we have their calculation.
+What will be the benefit of doing an extra calculation of one run from now?
+Is this point clear guys?
+Questions, questions.
+We will stop here for a minute.
+You can understand this flow with confidence.
+Internalize it.
+And then we will move forward.
+Knowledge base changes.
+Yes, if knowledge base changes, then all your previous iterations will be useless.
+But that too will change massively.
+Now we are working on transcripts.
+So adding one or two transcripts will not make much difference.
+If you add a whole new course, then obviously it will drift.
+Anything else?
+No, no, no Tusha.
+Now we don't have to remove anything.
+We just have to play with these tags.
+And what is the purpose of using tags?
+Because we have the helplessness that there is no such mechanism in MLflow.
+With which you can add labels here.
+Which is your best run?
+Which is your new run?
+Through which you are working here.
+So we are managing this whole thing through the tags.
+That's it.
+We are labeling.
+Because there is no other way.
+Is this point clear?
+If knowledge base changes drastically, then old noise will also be not relevant.
+Right.
+Yes, if it becomes too much, then yes, we have to recompute.
+See, if your entire knowledge base changes to a great extent, then you will have to do this whole development step again.
+Whatever our journey so far has been, we will have to re-implement it.
+Because the chatbot we have developed now, we will have to build multiple iterations of it.
+Updates will also come in this.
+Let's say 6 months down the line, the courses that are now in this chatbot will obviously have updates.
+So we will have to do the development again.
+We will have to do the evaluation again.
+So always development production runs in cycles.
+These cycles are there.
+Anything else?
+If not, then write clear in the chat.
+Let's move ahead.
+Again, this is very practical thing.
+I know you may be confused in theory.
+Things are not understanding.
+But when we will actually do it, then you will understand things.
+Clear.
+Tell me more people.
+If there are no questions, then write clear.
+And we will practically implement it.
+Clear.
+Clear.
+So basically the whole thing is that what we are doing now, all these things.
+This change in parameters, this evaluation pipeline, this testing, this tag switching, we are doing all this manually.
+Going to the terminal and doing it.
+Wouldn't it be great if we could automate all this work in some way.
+That I simply change in my parents.yml.
+And this should act as my trigger.
+And as soon as I do this change, the whole flow of the future automatically happens.
+And automatically if my new run is capable of becoming a champion, then the champion tag will be applied on it.
+And if not, then whatever tag he had with the challenger, it was removed.
+We want this.
+And this is called your continuous integration.
+We want this.
+And this is called your continuous integration.
+So what is continuous integration in the world of software?
+That you have a software, let's say you have a calculator.
+Okay, now you have two functions available in this calculator.
+Add and subtract.
+What did you do in the next feature development?
+You have added a feature of multiply here.
+This is your new feature.
+So now you don't deploy the application directly after adding this feature.
+Before that, you do rigorous testing on this feature.
+And testing is also of two types.
+What are the two ways?
+First of all, you check that the feature you have added, is it working or not?
+Is it working or not?
+Is it functional or not?
+You check this thing.
+Second, you check that after adding this feature,
+your pre-existing features have not been broken down.
+Is it working or not?
+Again, this is a form of regression testing.
+So in CI, what you do is you automate your testing.
+And if your application is working as intended even after adding this feature,
+then the version 2 you have brought with the multiply feature,
+this will be your new version.
+Which you will deploy tomorrow.
+So this is the whole story.
+In our case also, what we are doing is we are changing our parameters.
+And after that, we are checking these two things.
+After changing, are our metrics improving?
+We are checking that and checking the other thing,
+that is, if the metrics are improving,
+let's say we have changed the parameter for contextual relevancy.
+So we are also checking that there are no other metrics that are getting spoiled.
+Because everything is interrelated.
+I hope this point is clear to you.
+So let's do one thing.
+Let's go towards the code part and understand this whole thing in the code.
+What we are going to do is we will take two approaches in this particular session.
+The first approach will be the manual approach,
+which we have done so far.
+I will replicate this whole flow manually.
+And you will see how the tags are switching here and how the testing is happening here.
+Once this is done, what we will do after that is we will implement this through CI.
+I hope this point is clear to you.
+Is this point clear?
+Clear. Let's go towards the code part.
+I will do one thing. I will turn off the camera so that you can see the screen well.
+And let's close this.
+So this is your whole code.
+I have done some changes in the code.
+I have shown you the API related changes.
+And the changes that I have done here, I have structured it a little more properly.
+You could see the compute threshold files here.
+Now what I have done here is I have put them in the experiment.
+What is this experiment?
+I have put this in the utils.
+And I have put the experiment related files in the experiment.
+So this is the pipeline that we are already using.
+I have not changed anything in this.
+What I have done here is a small change.
+Earlier we were using the staging tag.
+Instead of that, I have changed the tag name.
+I have changed the tag name.
+If I can show you.
+See.
+Let me use the annotate.
+You see here.
+MLflow.set tag.
+Our historical threshold is the same.
+There is no change.
+If you see in this particular line.
+What was in the stage earlier?
+First stage was staging.
+We are leaving this staging production convention.
+We are using challenger and champion convention here.
+So what I am doing is.
+As soon as I am running a new pipeline here.
+For the experimentation.
+So I am naming that run as challenger.
+That's it.
+This is the small change I have done in this file.
+Now you will see some other files here.
+Like this is your promote challenger.
+And this is your reject challenger.
+Let's study the code of this too.
+Let's study.
+Now what is the promote challenger doing?
+It is a very simple code here.
+What is the work of this?
+First of all.
+It is importing some things.
+Get run by stage and promote challenger functions.
+First of all we are initializing.
+We are logging in to the DAX app.
+We have set our tracking server here.
+We are fetching the experiment ID.
+After that what are we doing?
+We are simply checking in these two lines.
+What is our champion run?
+We are getting all the information of our champion run.
+And second we are checking.
+What is our challenger run?
+So as soon as you execute this particular experimentation pipeline.
+Then your new run will be marked as challenger.
+And you already have a champion available.
+So what are we doing in these two lines?
+We are getting all the information of the champion.
+Like metrics, parameters, we are fetching all that information here.
+And simply we are calling the promote challenger here.
+And what are we doing through the promote challenger?
+If we pass this testing.
+Regression testing and promotion testing.
+So what we will do?
+We will label our champion.
+As what? As archived.
+And our challenger.
+We will label it as champion.
+That's it.
+So you can understand this particular file that we will run it.
+We will run it only when both our tests pass.
+Which one? Regression testing and promotion testing.
+If both these tests pass.
+Which means my challenger is capable of becoming a champion.
+So we will simply label it as champion.
+And archive the champion.
+I hope you understood this file.
+There is another file here.
+That is your reject challenger.
+In some cases, our regression testing or promotion testing.
+Any particular test will fail.
+Let me start the annotation again.
+In some cases, our test will fail.
+So what I have to do in the fail?
+I don't want to make it a champion.
+Because obviously my test failed.
+So what I will do is.
+I will simply remove the challenger tag from the challenger run.
+I will remove the challenger tag from the champion run.
+So the code for that is written here.
+Very simple code.
+First of all, I will login to my DAX app.
+Set the tracking url.
+Then I will set my experiment id.
+After that, I will bring all the information of my challenger run.
+So as soon as I start the experiment.
+If I do testing, then some challenger will be created.
+So I will bring all the information of the challenger.
+And after that, I simply have to call this reject challenger.
+Which will clear the tag from my challenger run.
+That's it.
+Now I will show you these functions.
+The functions that you are showing.
+Promote challenger, reject challenger.
+What are these functions doing?
+I will show you this.
+So let me go to the.
+Utils.
+These functions are inside MLflow utils.
+You can see clearly from here.
+I am importing it from there.
+Let's go once in this file.
+Some code is of the previous file.
+And I have added some new functions.
+Let me tell you what things I have added.
+First of all, I have defined these tags.
+Stage tag.
+It will be in the stage name.
+How will we define the champion?
+In the name of the champion.
+Challenger will be challenger and archive will be archive.
+So basically I have defined the constants here.
+Now this is the previous code.
+Now the new thing here is this.
+Find runs by stage.
+Basically what it is doing is.
+It is returning my runs according to the stage.
+So here.
+Whatever stage I want to check.
+Whatever stage I want run information.
+Simply I am passing the stage.
+Which stage should be there?
+Whichever I want to search for stage name.
+Either champion or challenger.
+What am I doing in this particular function?
+In this particular function.
+First of all I am doing this find runs by stage.
+And second.
+I am also checking here.
+In this particular run.
+In this particular run.
+In this particular run.
+There should be exactly one champion or challenger.
+Means.
+I am setting a hard limit here.
+What is the hard limit?
+That I should have only one champion.
+Of course.
+There can be two champions at the same time.
+No.
+There can be only one champion.
+So I am making sure that.
+There should be only one champion.
+And secondly what I am checking here.
+There should be only one challenger.
+Which is only my.
+Current run.
+If any challenger tag of the previous run.
+Is still remaining.
+Then what I will do.
+I will try to fix it here.
+How will I fix it?
+I will simply remove this particular thing.
+I will run a piece of code.
+Which will remove any stray challenger.
+I hope this point is clear to you.
+This is a hard restriction that.
+In our list of runs.
+There will be only one champion.
+What does one champion mean?
+That there will be only one best run.
+And only one challenger.
+Means that our current run.
+Will only have that challenger.
+Before that we will remove any stale challenger.
+I hope this point is clear.
+Again.
+When you will see it happening in the code.
+Practically.
+You will understand it better.
+Okay.
+What is this set stage doing?
+This is basically setting my tag.
+Clear stage.
+What is this doing?
+It is deleting my tag.
+Here is demote stale challenger.
+So if any stale challenger is left.
+Then I can also demote it.
+Means that I can remove the challenger tag.
+Stale means.
+That there is an incomplete run.
+Or that no testing was passed.
+But its tag is left there.
+So I have to remove it here.
+And finally.
+This is my promote challenger.
+What does promote challenger do?
+It makes my champion archive.
+And the challenger makes it champion.
+Okay.
+Reject challenger also.
+You can understand it from the name.
+It will clear the tag.
+So stale challenger is different.
+And reject challenger is different.
+And that's it.
+This is the utility code.
+Again I have shared this code with you.
+This is the utility code.
+Here we are calling MLflow.
+Using set tag, delete tag.
+And basically moving the tags.
+That's it.
+Is this point clear?
+Clear.
+Okay.
+Now let's start our whole process.
+So how is the process?
+Just give me a second.
+So how is the process?
+So how is the process?
+So how is the process?
+So how is the process?
+So how is the process?
+First of all, we will delete our embeddings.
+So I have done it.
+Delete embeddings.
+After deleting, what I will do is I will go inside the params.yaml.
+Now we will change a parameter here.
+We will change it randomly.
+I will change the size of my chunk 270 to 250.
+Okay.
+Now as soon as I will make it 250, what I have to do next is I have to run an evaluation pipeline or experimentation pipeline again.
+But before that I have to create my embeddings again.
+Now what we were doing to create the embeddings earlier,
+This file of ours,
+Inside the app, that is our vectorstore.py, we were running it manually.
+But you will remember that in the last session I showed you that I had also defined a router for this.
+Which was my vectorstore.py, internal router, which was not running because of our API key.
+So let's run it now.
+Okay.
+So what I will do is I will open a terminal.
+You know what you have to do first for the API?
+You have to start your uvcon server here.
+So let me see.
+Here is your uvcon code.
+You will simply run it.
+Look, your uvcon server is starting here.
+It will take some time but it will eventually start.
+Look, which models are loading here?
+Your guardrails.
+It is starting.
+Look, what we have set the chunk size.
+Earlier it was 270, we set 250, so it is able to read 250.
+So proper logging is also happening.
+We have not changed any of the chunk overlap 15.
+And the embedding dimensions are 3072.
+Okay.
+Done.
+Now let's do one thing.
+Let's go to our localhost.
+8000.
+Okay.
+We are able to load it here.
+We will slash docs.
+So here our docs will come.
+Look, I have added an extra in the debug one.
+Again, it needs an internal admin key.
+Okay.
+So what we will do is we will execute it in terminal.
+Because I have added an admin key in my environment file.
+Okay.
+So let's go back to our code.
+And we will re-execute it.
+Okay.
+To re-execute it, I have made a file in the test.
+If I show you.
+Look, this is the file in the test.
+Demo transcript sync.
+We have to run it.
+Okay.
+So we will write here uv run.
+We will go inside test.
+demo transcript sync.py.
+And you will see that as soon as I run it.
+Here I will have my embeddings created.
+Now you must be seeing this folder.
+But what is this folder?
+This is just my folder where I want to persist.
+There are no embeddings here.
+Okay.
+Now I will run it.
+Look.
+Now what is this telling?
+How many chunks are there in my vector store?
+Zero.
+Because it is completely empty.
+Here you will see a folder.
+That will be your collection.
+Look.
+What came in the sync results?
+How many files were scanned?
+14.
+Why 14?
+Because there are 14 transcripts in my raw data.
+So I have ingested 14 files here.
+How many chunks are there?
+1241.
+Okay.
+This number will keep changing.
+Because as soon as I change the chunk size.
+The number of chunks will keep changing.
+How many were the skip files?
+None because I am syncing everyone for the first time.
+And all of them are added here.
+Now if you add a new transcript here and re-sync it.
+Then you will see that only that file will be synced here.
+Rest will not be synced.
+They will come inside the skip.
+Because we have implemented hashing here.
+So my vector store is created here.
+Now what we have to do next?
+We have created our vector store.
+Changed it in parameters.
+Now we have to rerun our experimentation pipeline.
+So I will write UD run here.
+And we have to go inside source.
+Inside experiment.
+And our file is inside the experiment.
+That is experiment tracking.
+Execute experiment pipeline.
+Okay.
+So we will go to source.
+Experiment.
+Experiment pipeline.
+Let's run it.
+And you will see that I have put proper logging here.
+See.
+Logging is going on here.
+Chunk size is 250.
+Overlap is 15.
+Dimensions, everything is logged.
+I have accessed my DAX app.
+Okay.
+See what is happening first.
+First of all a pre-flight check is going on.
+In the pre-flight check we are checking that is there any existing
+In my runs.
+There is no challenger in my runs.
+If there is, I will remove its label.
+But I didn't find any challenger here.
+So it is clearly written here.
+Demoted zero stale challenger runs.
+Now my parameters are logged here.
+It is saying this.
+So let's go and see.
+This is my new run started.
+See my parameters are logged.
+My logger is saying absolutely right.
+Okay.
+Now see this is my.
+Evaluation data set is being created.
+So it will take some time guys.
+5 minutes.
+Till then if you have any questions or feedback.
+You can tell me.
+How to get the admin key.
+This is the reason for making it.
+It is internal.
+Rest I will share admin key with you.
+Rest the right way is that you never share internal keys.
+Again because we are learning here.
+So I will share it with you.
+But I will share it with you.
+I will share it with you.
+I will share it with you.
+I will share it with you.
+But you have to keep it secure.
+I hope this point is clear.
+Admin key.
+After class I will share it.
+Don't worry.
+Can we create our own?
+Yes you can create your own.
+But I have put a specific pattern here.
+If you follow that pattern.
+I think it is 14 characters long.
+Maybe.
+And there is a pattern in it that these things should be there.
+I will share the exact key that I am using.
+It will take some time.
+We can't do anything here now.
+We have to wait.
+So let it be.
+Till then if you have any questions you can ask.
+We will add 14 test cases here.
+And after that.
+Our run will be completed.
+We will save all artifacts.
+And.
+Then we will move to our testing.
+We will do regression testing first.
+Then.
+We will do promotion testing.
+And.
+Then we will run reject challenger or promote challenger manually.
+And.
+We will run the test manually.
+And.
+We will run the challenger manually.
+But you can see that there is a cumbersome process.
+It will take some time.
+Till then if you want to drink water then you can have your water.
+Now.
+I am not wanting to jump the flow.
+Because if I move forward then you will not understand this flow.
+I will show you one more thing.
+It is a very interesting thing.
+Here I have intentionally kept the tag setting work at the end.
+That is because my run is running now.
+So I have to do it.
+Now my run is running.
+It is possible that there will be some problem here.
+My API will not respond here.
+Or it is possible that there will be some issue in MLflow.
+So I don't want to unnecessarily mark it as challenger.
+Challenger will be created only when it will be successful.
+And this green tick will come.
+I hope this point is clear.
+For transcripts we executed test file but why not the actual API file.
+Because you never run the actual API file.
+There will be no execution from it.
+What did I tell you?
+What is API?
+You communicate the API through the HTTP protocol.
+So here I am in this particular file.
+A very good question came that why don't you run this API file directly.
+This API file.
+Vector store file.
+Why don't you run it directly?
+My API file is running.
+So I will run it directly.
+Why don't you run it directly?
+My work will be done.
+No, here I have only defined my endpoints in functions.
+But these functions have to be called.
+And the calling work is done through HTTP.
+So in this particular file.
+Which is this file.
+Here I have sent a request.
+Which request is not sent?
+It depends on the endpoint.
+Now this sink endpoint is asking for a post request.
+That I have to send a post request here.
+And what to send in the post request?
+Whatever input has been asked here.
+OK.
+So I am using the request module here.
+Through the request, I am here.
+This is my server URL.
+Where my UV is running.
+On localhost 8000.
+I am giving it an admin key.
+And here I am calling it.
+Using the post method.
+So I am doing request.post.
+And after that I am sending my full address.
+This is my endpoint.
+Internal Vector Source Transcripts.
+Slash Sync.
+And I am sending my admin key inside the header.
+And it is doing my job.
+So I can't do this directly.
+I hope Tushar this point is clear to you.
+Right.
+Let's see how much it is.
+It's 8.
+It's a little left.
+This data set creation work takes a little time.
+Evaluation I think will be fast.
+One more thing.
+I am using my normal rag app.
+This is not my rag app with guardrails.
+Take care of this.
+Specifically, I have made two files.
+Inside source.
+If I can show you.
+Let's close this once.
+Inside the app.
+So I have two apps here.
+Rag workflow and rag workflow with guardrails.
+The guardrails one is basically used through API.
+But we don't need to use it for evaluation.
+There are two reasons.
+You are working on a golden data set.
+So there is nothing malicious in it.
+That you are testing it.
+And secondly, if you test your results through guardrails.
+Then unnecessarily you are wasting API calls for your guardrails.
+If we are not evaluating the guardrails.
+So the result passed through guardrails.
+Or passed through a normal rag app.
+What difference does it make?
+The result is already correct.
+That's why we are intentionally skipping that flow.
+Although you shouldn't do it.
+But just to save some API calls.
+So that when you run this code.
+You can save some API calls.
+And in the long run.
+Because you have to do this multiple times.
+So you can save some dollars.
+That's it.
+I hope this point is clear.
+So here I have attached separate loggers.
+You can see here.
+Rag app logging is running here.
+ML flow logging is running here.
+So every step in the terminal.
+Will be exactly as it is.
+It's 11.
+It will take some more time.
+Because we are running the complete pipeline.
+One more thing guys.
+I will try to cover it.
+In the next one hour.
+But if it stretches a little.
+Just because it takes time to run.
+So don't mind.
+That means you will see it all visually.
+While running.
+So please stick around.
+Conceptually we will cover all the things in one hour.
+Don't worry.
+It's 12.
+It will be 13.
+Evaluation will be very fast.
+Because it's 14.
+Evaluation will be fast.
+This is taking time again.
+Time is slow.
+Because we are using the vector store.
+Our brute force approach is searching.
+Then contextual compression is applied.
+So yeah.
+Latency is a little more in the application.
+On my end when I was running.
+It created two folders.
+Like mlruns and mlartifacts.
+It is created for you as well.
+No.
+You must have run it locally.
+So it must have created two.
+Because I think you are not logging on the DAX app.
+If you run it on DAX app.
+Then these folders are created on DAX app.
+So these artifacts.
+Which are artifacts of any run.
+They come from the folder of your mlartifacts.
+But it is created on DAX app.
+When we were doing it locally.
+So folders were created here as well.
+But if you are not doing it locally.
+Then it is not created.
+I hope this is.
+This solves your doubt.
+Right.
+You can ask your questions.
+Whatever questions you have from the previous lecture.
+You have time.
+You can ask it.
+Let me restart it.
+Yes.
+It is right.
+See the evaluation has started.
+It is parallel.
+36% complete.
+43% complete.
+That's it.
+Once it is done.
+Everything will be logged.
+Two more minutes guys.
+I will expand it.
+So that you can see it clearly.
+Almost complete.
+Done.
+These are our results.
+You can see.
+Contextual recall is 97.
+Precision recall is 90.
+It is almost complete.
+It is almost complete.
+It is almost complete.
+Recall is 97.
+Precision is 99.
+Relevancy is 91.
+Faithfulness is 90.
+Contextual relevancy is 73.
+Answer correctness is 91.
+Simple explanation is 90.
+I have logged everything.
+I have my run ID here.
+The evaluation is complete.
+Results and reports are logged.
+Matrix is logged.
+System prompt is logged.
+Evaluation and golden data set.
+Let's see.
+It says it is done.
+Let's go back to the runs.
+See.
+This current run.
+You can see.
+Challenger tag is added.
+This is the run.
+Which is going to challenge
+this champion.
+I have implemented everything
+through code.
+I have not done anything manually.
+Now look at this run.
+Refresh.
+Matrix is coming.
+Results are logged.
+Parameters are coming.
+Everything is here.
+You can open
+anything you want to see.
+Report.
+Everything is available.
+System prompt is also available.
+Next step is
+we have to fight them.
+How to fight?
+Through two tests.
+Regression testing.
+We want to check if this
+nosy snail is
+worse than my resilient mid.
+First of all
+we will do regression testing.
+I will go here.
+Let's clear the terminal.
+I will write here
+uvrun
+I will go inside
+the tests.
+Let's do uvrun pytest.
+Let's do
+uvrun pytest.
+The file inside
+test is test regression.
+In test
+test
+regression.py
+Let's run.
+What is the code
+inside test regression.py?
+Basically both runs will be compared here.
+Regression
+testing passed.
+This means
+it will still hold
+challenger tag.
+Where will I get latest metrics?
+Challenger.
+Where will I get old metrics?
+Champion.
+I have imported my threshold.
+And after that I am simply testing.
+Same formula
+that we had in regression testing.
+So yes, regression testing
+is doing this particular run.
+Compete.
+Let's compare.
+Not this one.
+This one.
+Let's compare and visually
+see what is the difference.
+This is my recent one.
+This is my old one.
+If I go down.
+I will show you
+changes here.
+We changed the chunk size.
+We did 270 to 250.
+Let's see the metrics.
+So see, these metrics have changed.
+Answer relevancy has decreased.
+It was more earlier.
+Contextual relevancy has decreased.
+But again, regression
+is inside the limit.
+It is useless but not very useless.
+This one point has decreased.
+This one has increased.
+10%
+And this one point has decreased.
+But still
+these things are passing.
+Now let's do promotion testing.
+So let me ask you guys.
+Can you see this current run
+is better than my previous run
+or is it poor?
+You guys tell me.
+It is poor.
+Tushar is saying it is poor.
+Simply compare.
+Is it better or poor?
+Poor.
+But this understanding
+you may think that
+it is 80 to 73.
+But anyway,
+it is 81 to 91.
+Here 10 points have increased.
+So this is not in our hands to judge.
+We will
+judge it logically.
+How will we judge logically?
+We have defined the logic for that.
+In our promotion testing.
+Let's run it once.
+We will write UV run pytest.
+Then we will go to test.
+Test
+promotion.py
+Let's run it and see.
+We will get the answer here.
+No. This is not good.
+It is poor.
+Where is poor?
+It is failing here.
+The full result is given here.
+Contextual recall
+is 97.
+Before it was 97.
+So here delta is 0.
+It is not bad.
+Contextual precision is same score.
+It is better.
+Answer relevancy is less.
+But it is less in noise threshold.
+Which means that the noise of our judgment
+is less in it.
+Then it will work.
+It will not make much difference.
+This is our delta and our
+10% or 12%
+tolerance.
+Faithfulness is also in the noise.
+One point is less.
+If there is a tolerance level, then it will also work.
+These tolerances
+we are calculating through our thresholds.
+We have not
+kept any hard cut off values.
+Logically defined here.
+Contextual relevancy is saying that
+it is failing. How is it failing?
+Here it is 73%.
+Before it was 80.
+How much is delta? 7%.
+How much is tolerance? 3%.
+If there was a decrease in 3%
+then it was considered
+in noise. But here it is failing.
+So because of this contextual
+relevance, this promotion test
+failed.
+Now the promotion test failed.
+So what should I do guys?
+Is it over?
+Should I move forward or do something?
+I am looking at the chat.
+You guys tell me.
+Do I have to do something?
+Here I have two runs. One is champion.
+One is challenger.
+It passed stage 1.
+It failed to pass stage 2.
+Shruti was right.
+Now I have to remove this challenger tag.
+Why? Because when a new run comes
+it will come as a challenger.
+So I don't need the previous challenger.
+I have to remove this challenger tag.
+So what I have to do here?
+I have to run this particular file.
+The file is
+just a second.
+Rejects challenger.py
+So what I will do here?
+I will simply write uber run.
+In source
+in experiment
+I will run reject challenger.py
+Let's run it once.
+It is saying
+login. Token is over.
+Authorization is done.
+Let's go back.
+Login is done.
+Look.
+Challenger's run id is coming here.
+It was nosy snail.
+It is saying cleared stage tag from
+this particular run id.
+Let's confirm it in UI.
+Refreshed.
+Challenger is removed.
+I hope you understood this whole flow.
+Now we have
+executed this flow manually.
+We will execute it in CI.
+Did you understand the whole flow?
+Whatever we discussed here
+may be confusing to you.
+But seeing it manually
+you are understanding.
+Yes.
+Now you can understand
+that if I give you this work to do manually
+for every iteration
+what you have to do?
+Go manually. Change parameters.
+After that you have to run experimentation.
+Everything is getting logged properly.
+You have to eyeball everything.
+And after that
+you have to manage everything.
+Which file you have to run. Which sequence you have to run.
+You have to manage all these things.
+Don't you think it is very
+troublesome?
+It is a big hassle.
+What do you say?
+Is it easy if I give you this work?
+I am looking at the chat.
+If I give you this work, will you do it?
+You will not.
+For one or two runs
+it may be possible.
+But regularly if you are running these iterations
+then it will become cumbersome.
+So what we have to do here
+is automate this whole thing.
+Through some mechanism.
+And for automation comes
+my CI pipeline.
+And to implement this CI pipeline
+we are going to use framework
+that is our GitHub actions.
+So GitHub
+basically gives you a whole
+framework which is called
+GitHub actions.
+On top of which you can run this whole CI CD
+pipeline.
+So let's discuss
+how this whole thing
+works.
+We will discuss it in a simple way.
+So first of all let's discuss
+why we need CI.
+Why do we need CI?
+Because if we run it manually
+then it is cumbersome.
+We have to remember the sequence.
+Maybe we made a mistake.
+Maybe we did promotion testing
+instead of regression testing.
+Maybe we run this particular file by mistake.
+We had to run rejectchallenger.py
+We do promotechallenger.py here.
+So what will happen with that?
+Our run will be promoted to champion.
+Although I am not showing you
+it by doing it because I don't want to lose the champion.
+But if you run it
+then your current challenger
+will become champion.
+That you don't want.
+And this is a big risk of making a mistake.
+So what we will do is
+automate it through CI.
+So you understood the why part.
+Now let's discuss how this
+will happen through GitHub actions.
+What does GitHub actions do?
+So GitHub actions
+is nothing but
+assistance.
+This is an assistant
+and it is performing
+some actions.
+It's name is GitHub actions.
+It performs some actions.
+Now what is action? I will explain it to you.
+If instead of this assistant
+there was a human
+you would be there.
+So you would have to do the complete testing manually.
+So how would you do it?
+First of all
+you pull this code.
+You do this.
+I have updated this code on GitHub.
+First of all you download it on your system.
+After downloading
+what you do is
+you here
+in parameters.yml file
+see what has changed or not.
+Basically you look for the trigger.
+You have pulled the code
+and you know that there is no change in params.yml.
+Then why do you need to run
+the whole thing?
+This has to be done only when you have a new version of your application.
+And how will you get a new version?
+When you change your parameters
+then you will make sure
+that the change has come in the parameters.
+Let's say I changed the parameters
+and pushed the code and you pulled the latest code.
+Next what will you do?
+Next in which is this whole code written?
+It is written in Python.
+So you on your system
+you will install Python on your system.
+We are using Python version 3.12.
+So you have to install the same version exactly.
+If you do it new or old
+then there can be incompatibilities.
+After that
+what are we using to manage our packages?
+UV.
+So you will install UV here.
+After that
+you will run UV sync
+and download all the packages.
+Or in simple words
+you will create your
+virtual environment.
+After creating
+virtual environment
+after doing so much work
+you will go to actual testing.
+First thing you will do on actual testing is
+you will run your
+experiment pipeline.
+You will run this script.
+Execute experiment pipeline.py
+This file.
+You have to run this manually.
+After that
+you will do testing.
+You have two files for that.
+First one is regression testing
+and second one is promotion testing.
+And you will make sure
+that here
+promotion testing is not required.
+You have to make sure that
+promotion testing is only run when
+regression testing is passed.
+If it fails on this step
+then you can stop your pipeline here.
+And you have to do
+the full tag management.
+You have to make the challenger a champion
+archive the champion
+and if any testing fails
+then you have to remove the challenger
+demote it.
+So all these things you will manage here.
+So all these things
+you have to manage as a human.
+What if
+you have to do all these things as an assistant?
+But the thing is that
+this flow
+will be exactly the same.
+There will be no change in the flow.
+What you have to do on this assistant
+you have to tell this assistant
+what to do first.
+First of all you go
+and pull my latest code.
+And
+after pulling this
+check if there is any change in
+parents.yml or not.
+It may be that I have changed in some other file
+like I have changed in
+test file
+testpromotion.py
+so testpromotion.py
+is not changing my application.
+My application will change only when
+it changes in parents.yml.
+So until this change is detected
+don't trigger the whole flow.
+If it is there then trigger it.
+Next step is
+install python.
+But make sure that version
+should be 3.12 only.
+Next step is to install uv.
+Next step is to install all the dependencies.
+Prepare your system.
+After that
+what you have to do is
+you have to run this particular file
+and lock everything.
+After locking you have to check
+manually if things are
+logged in the runs or not.
+After that you have to start with your testing.
+First regression testing.
+If it is completed then move to
+promotion testing.
+If it is completed then promote the tags.
+And if
+any of these two tests fail
+then remove the challenger tag.
+That is your complete CI workflow.
+Basically whatever we have done manually
+here you have to automate it.
+And for automation
+what you do is
+you write a yaml file.
+You
+in this yaml file
+very carefully
+tell step by step how to automate
+everything.
+Again these are the steps that follow.
+Now I will show you the yaml file.
+And you will be surprised that
+the steps that we have discussed here
+that a human does, that same machine
+will do it for you.
+Is this point clear guys?
+Is this point clear?
+Hari has a question.
+But we might have to
+trigger the workflow even if we
+decide to change the text splitter
+which is not there in the yaml file.
+Yes, but the workflow that we have
+designed is simply according to our config.
+We have made this architecture
+static in a way.
+Just to simplify things.
+Because sometimes this happens.
+You do minor code changes.
+You don't want your
+workflow to restart.
+Again we have provided that provision.
+It's not like you don't have an option.
+You have an option.
+But that is to manually trigger the workflow.
+We have manually triggered the automatic trigger.
+If any code changes
+or any architectural change
+then you re-trigger the workflow manually.
+That's it.
+The automatic trigger will happen only when
+the change is done in params.
+Which is generally the flow.
+So we have added two types of triggers.
+Is this point clear guys?
+Is this point very clear?
+Right. We have kept the option.
+But
+the automatic trigger is only on params.yaml.
+Let's move ahead.
+Right, clear.
+Guys, if you are clear.
+Each and every step.
+Okay. Now I will show you
+that yaml file.
+Okay. You have to do one thing.
+I will close all these things.
+And I will close these two
+as well. Let's close these too.
+There is no need for this.
+You have to keep one thing in mind.
+I will close the camera too.
+Whenever
+you have to define a workflow
+using github actions.
+It will always be in your .github
+workflow directory.
+This is conventional.
+.github
+slash workflows.
+If you have written slash workflow
+then this workflow will not be your trigger.
+Okay. Keep in mind
+.github slash workflows
+should be the name.
+And here is our yaml file.
+What is the name of yaml file?
+ci.yaml. Once I open it.
+You don't worry.
+From this file.
+I will explain everything step by step.
+Okay.
+Now there are some core primitives
+of your github actions
+or a pipeline.
+Okay. Let's discuss
+about those core primitives.
+What did we say?
+We said that
+your github actions
+this is basically
+an automatic system.
+Okay.
+It is automating your entire workflow.
+Now how will it automate?
+It will do it on a system.
+Like a human
+needs a laptop or desktop
+to pull this code.
+To execute all the files.
+So this machine will also need a system.
+A server.
+That machine is called
+in the language of github actions.
+Okay.
+So the server on which
+this whole code will be executed
+remotely is called runner.
+Okay.
+Now you set when you want to
+trigger this whole flow.
+Means when to start it.
+What is the trigger?
+So this whole
+yaml file
+is called
+workflow. It is simple.
+This whole yaml file is your
+complete workflow. Like this whole ci
+workflow. First of all
+you set your trigger.
+What is the trigger in our case?
+In our case there are two triggers.
+First one is that in parents.yaml
+if there is any change
+and that change
+is pushed to github
+it automatically triggers this workflow.
+Second one is
+we have also set a manual trigger.
+Like
+I think Tushar said that
+if the code changes or
+Harry said that the code changes
+then what will we do?
+We will run it manually. So we have set a manual trigger
+in this case.
+This is your trigger.
+After that what you do?
+After that you run certain
+jobs.
+What are jobs?
+In the language of github actions
+jobs are nothing but your individual
+runners.
+If there is one job
+in your workflow.
+It means that the entire
+workflow pipeline
+is running on one runner or one machine.
+If there are multiple jobs
+in your workflow
+then what are you doing?
+All the jobs
+let's say there are 5 jobs
+then here you are using 5 runners
+to execute
+different steps of your pipeline.
+Now you will have a question
+in your mind that sir
+why do we need to use multiple runners?
+When we are doing this manually
+then we are able to do it on our system
+as a human.
+Why do we need multiple runners
+in github?
+You need multiple runners in
+2 cases. First case is
+when you want to run something parallelly
+but obviously
+you have to run
+2-3 workflows together parallelly
+2-3 tasks together.
+So you will give your individual job
+to everyone.
+You do regression testing, promotion testing
+you do this, you do that.
+Everything is happening parallelly.
+Second case is when you want to do
+anything sequentially.
+Sequentially means
+where one job
+means job A
+is dependent
+on job B
+sorry job B is dependent on job A
+to function.
+Like in our case
+regression testing can happen only
+when our experimentation is complete.
+That's why we will do regression testing.
+So regression testing
+is dependent on experimentation.
+Similarly
+promotion testing is dependent on
+regression testing.
+So in such sequential flow where you want
+that A is executed after B, C is executed
+after B and some
+dependency is there between the
+sequence.
+You run your whole workflow
+sequentially
+and again you use multiple jobs.
+You can do this
+in a single job but
+it is advisable because
+you are doing 3 major tasks
+experiment tracking is
+separate, regression testing is
+separate, promotion is separate
+so you are going to run them
+in different jobs.
+Ok
+This is clear guys.
+Trigger jobs clear.
+I will tell you Harry, don't worry.
+Yes, it will work.
+I will show you
+in the code now.
+Don't worry.
+I will explain everything.
+What I explained now
+about jobs,
+you understood it.
+There are 2 types of jobs
+Parallel where there is no
+dependency and sequential
+where next job is dependent on
+previous job.
+Now it can be the previous job
+or 2-3 steps
+it depends.
+In our case,
+it is just the previous one.
+Now you must be thinking
+Sir,
+why are we using multiple jobs
+for jobs?
+Why can't we do this in single job?
+Why can't we make our life easy?
+You can make it but
+what is the reason?
+You won't get this separation of concern.
+I will tell you how.
+Let's say
+you have run
+one run here.
+Your experimentation
+and regression
+testing
+promotion testing
+and tag
+management.
+These are your 4 jobs.
+You have run them
+in one file,
+in one job, in one runner.
+First, experiment testing
+then regression
+then promotion
+but as soon as promotion
+happened, your server crashed.
+Now your experiment testing is complete.
+It means
+you have run a run on MLflow
+Tag as challenger.
+Regression testing is complete.
+It means your challenger run
+is capable of
+passing the regression test.
+Promotion testing is complete
+and tag is automatically
+found of the challenger.
+The last challenger is archived.
+But you
+sorry, promotion testing is complete
+but your tags are not moved.
+Now you have to move tags
+but at the end your server crashed.
+Now what you have to do
+with the same configuration
+you have to re-execute this whole flow.
+If you are doing all this
+on one runner.
+But if you are doing
+this on different runners
+then this is complete, this is complete
+this is complete.
+This is completely separate.
+You simply go to your workflow
+and trigger this only.
+Triggering will automatically
+make your challenger champion
+and champion will be archived.
+The steps that you completed
+you don't have to
+re-initialize or re-run them.
+That's why we are doing
+all this through multiple jobs.
+The simple reason is
+that our experiment
+tracking stage is expensive.
+We are running evaluations
+and creating our data set.
+So we are turning off the API calls.
+If there is a problem in any step
+then we don't want to turn off
+the API calls again.
+That's why we are using different jobs.
+Is this point clear?
+Very important point guys.
+Our runners are serial.
+I will show you. Yes, they are serial.
+But they are different machines.
+We have 4 jobs
+and
+we are doing this on 4 different machines.
+Point clear guys?
+Why are there 4 machines here?
+Just that if there is a problem
+on any stage and the stages
+behind you have been run, then you can
+continue from that stage.
+So this is the main feature.
+Now in every job
+you have
+steps.
+I am understanding the name right.
+What are the steps?
+Let's say in an experiment tracking
+what all things I have to do.
+I have to do step A, then step B
+then C, then
+step D. Those are my
+steps.
+And that's it.
+So you define your entire workflow
+through 3-4 primitives.
+Is this point clear? I will explain the hierarchy.
+Up is your workflow.
+Workflow is your complete yaml file.
+In one yaml file
+whatever is defined is your entire workflow.
+Now in every workflow
+there can be one job
+or multiple jobs.
+So job A, job B
+and job C.
+These all will go on their own runner.
+Runner is an individual server
+which is giving you
+get up action.
+Now in every job
+there will be some steps
+so those steps will go on your own sequentially.
+Step A, step B, step C.
+In job B there are only 2 steps.
+Step A, step B.
+In job C there are
+5 steps.
+Step A, B, C, D and E.
+And what you can do is you can run them parallel
+meaning A is doing its work, B is doing its work
+C is doing its work.
+Or you can link them.
+To work B, one is required to complete.
+So you can link them sequentially.
+First job A will run on
+its machine. These 3 steps will be completed.
+Then job B will run.
+These 2 steps will be completed.
+Then only your job C will run.
+Is this point clear guys?
+It is very important to have this clarity
+before we move to the CI file.
+Now when you will see the CI file
+then how you have to write the CI file
+there will be no hassle
+there will be no tension.
+You will understand
+as soon as you see the CI file
+that yes, even I can write a CI file
+with scratch. It is super easy.
+So let's go towards the CI file.
+If you understand this flow
+then you can write a CI file very easily.
+So first of all,
+what you do is at the top of the file
+you give a name to your pipeline
+using the name.
+So we have set the name as what?
+CI pipeline. I will turn on annotate.
+So I have set the name as CI pipeline.
+So whenever I am in
+GitHub actions
+I will show you GitHub actions.
+So what you have to do is
+go to your repository
+and you have to go to the actions tab.
+So if you see clearly
+then on the left you will see
+the name of your pipeline.
+What do you see? CI pipeline.
+And if I open this and show you
+a run I had done here, test run
+then you can see what is here?
+Sequentially this pipeline is running.
+First this step is running
+then this step is running, then this step is running, then this step is running.
+It is all sequential.
+Everything is linked.
+I hope this point is clear.
+And as soon as the promotion gate stopped
+then the next step did not run.
+It means cancelled.
+This slash
+means cancelled.
+So we write this
+in a YAML file.
+And you can see the YAML file here too.
+If you go to the workflow file
+then this is the exact YAML file
+that we are using.
+I will explain it in the code.
+Step by step, it is very easy.
+You will understand everything.
+So in our pipeline
+we have
+these few steps.
+Let's read these steps once.
+First is experiment step.
+What we are doing in experiment step is
+first of all we are rebuilding our vector store.
+Why is it necessary to rebuild the vector store?
+Because in our GitHub repository
+we are pushing this updated vector store
+every time.
+You know that when you
+rerun the code with the new configuration
+then we have already deleted
+our vector store.
+And we made it again with the new chunk size.
+So you have to mimic that.
+So we are going to rebuild
+the vector store again.
+I have written a small file for that.
+You can read it in the code.
+It is a simple file.
+You just have to delete your vector store
+and re-execute it with the new configuration.
+So you will run experiment pipeline.
+What will happen with that?
+You will have a challenger
+named run on an MLflow.
+As soon as your experimentation
+pipeline is completed, you will go
+to the next runner, to the next job.
+Next job is regression testing.
+You will do regression testing here.
+After that,
+as soon as the regression testing is completed,
+you will move to promotion testing.
+And after that you will promote the challenger
+to champion and you will archive the old champion.
+And if anything fails here,
+then you will remove
+the challenger here.
+The same flow
+that we discussed is written here.
+Now let's discuss how
+you write this YAML file.
+You have told the name.
+After that you tell trigger.
+So you set the trigger using the on.
+If you hover here,
+then you will see it here.
+Let me clear this once
+so that you can read.
+The GitHub event that triggers the workflow.
+So what do you tell through on?
+What will trigger your workflow?
+What step do we want to trigger?
+We want to trigger on push.
+So it is written here.
+As soon as your new commit
+will be created on GitHub,
+you will run this workflow.
+Which branch do you want to see?
+The branch is my main branch.
+Means if I commit something on the main branch,
+then only this workflow should be triggered.
+Otherwise it should not be.
+Let's read along.
+After that you define path.
+What is path?
+Use path filter when you want to include file path patterns.
+You can also tell which file you want to exclude.
+Paths ignore and paths.
+So what did we tell in paths?
+We told that whenever your code will be pushed to GitHub
+on branch what main and changes,
+will be there inside the parent.yml file.
+Only then you trigger this workflow.
+And we also told that you can also trigger manually.
+For that we use this thing called as workflow dispatch.
+So I will tell you once or write.
+We will go step by step guys.
+Don't worry.
+This is a small file.
+We will cover it in 15 minutes.
+On is your outer key.
+You can see here.
+This is outer key.
+There are two ways of inner key.
+One is push and one is workflow dispatch.
+So on is what?
+On is your trigger.
+On tells you how to set the trigger.
+You have set the trigger of two types.
+One is push type and one is manual type.
+You have set some things in push.
+Which branch should I see if it is push?
+Main branch.
+Which path should I see?
+parent.yml.
+Only then you will trigger this workflow.
+Else you can do it manually.
+If I hover it here.
+Workflow dispatch event allows you to trigger a workflow manually.
+So you can go inside GitHub and trigger manually.
+If I show you.
+If you go to actions.
+You will see here.
+CI pipeline.
+Go inside this.
+You can see run workflow.
+This is your manual.
+If you do run workflow.
+Your workflow will be re-triggered.
+You can do it manually.
+If you have changed a code.
+Which is not parent.yml.
+You can do this manually.
+We have kept this feature here.
+After that.
+You can set it.
+You can set it or ignore it.
+That is your concurrency.
+The reason to set concurrency.
+What are we doing here?
+We are executing our multiple pipelines.
+It is possible that I changed it in yaml file.
+And pushed it to GitHub.
+So my workflow started.
+Let's say workflow is A.
+Along with that my colleague.
+Changed something in yaml file.
+And pushed it to GitHub.
+It is possible that after 2 minutes.
+When I initiated my workflow.
+So its workflow will also run.
+Now the problem is.
+Here two workflows are running together.
+Now this will also be marked as challenger.
+This will also be marked as challenger.
+So.
+My whole code will be confused.
+Which challenger is my actual challenger.
+I also changed yaml file.
+And initiated.
+Friend also did.
+Difference is difficult to tell.
+So what I am doing here.
+Specifically I am setting in concurrency.
+That if.
+I have run a run.
+And here.
+Again another run is initiated.
+So put it in waiting.
+So concurrency is simple.
+What it tells you.
+That you will do next run.
+Put it in waiting.
+And it will not run till.
+Till your previous run is running.
+When it will complete.
+B will automatically start.
+And here you mark one more thing.
+That is cancel in progress.
+If you set it false.
+Then B will wait.
+Till A is not complete.
+B will not start its work.
+Whereas if you make it true.
+Cancel in progress.
+If you have any workflow.
+Then cancel it.
+So many times if cancel in progress is true.
+Then your A is running.
+So let's say someone has started B.
+So as soon as B is detected.
+A will cancel.
+Which you don't want.
+So we have set it false.
+I hope you understood this point.
+It is simply a fail safe.
+Just that you are ready for multiple runs.
+That multiple runs are here.
+So you have set Q here.
+That it will wait.
+Next is your permission.
+You are setting permission.
+For the content.
+For the files you have pushed to the repository.
+You are only giving it read permission.
+Which means.
+I am telling my CI workflow.
+That this get up repository.
+Whatever files are in it.
+You can only read these files.
+You can't do any updates or changes on them.
+You can't do any writes.
+Ok.
+Is this clear to you?
+Is this step clear?
+What is concurrency? What are permissions?
+It is just a fail safe.
+You won't even put this in your code.
+It will work.
+Is it clear?
+Not getting any response in the chat.
+Clear.
+You can read it here.
+Ok.
+It is written here.
+Concurrency ensures that only a single job or workflow
+using the same concurrency group will run at a time.
+You can see on this.
+To cancel any currently running job or workflow
+in the same concurrency group.
+We have set this as a false.
+Permissions.
+From the name itself we can understand that you are giving permission.
+On what? On contents.
+Which means whatever is in your repository.
+You are only giving read access on it.
+Ok.
+Now we are going to set up your jobs.
+What are we doing here?
+We are setting up like this.
+We have 4 jobs.
+These 4 will run on different machines.
+Ok.
+We are setting up in the code.
+Our first job is
+with the name of experiment.
+So you give a unique id to each job.
+This is called job id.
+Ok. It is written here.
+Each job must have a unique id.
+And this is called job id.
+Ok.
+Now you will define 4 jobs.
+So we have defined the first job
+with the name of experiment.
+If you go down, this is your second job.
+With the name of regression test.
+If you go down, this is your third job.
+With the name of promotion test.
+And if you go down, you have the fourth job.
+With the name of promote.
+And this is it. These are the 4 jobs in our workflow.
+Ok.
+After that what you do is
+you give a name to your job.
+Like we gave the name
+Rebuild Vector Store
+and run experiment.
+Now where will you see this name?
+This name will be shown to you
+in the UI.
+This name will be shown to you here.
+If you don't give this name, what will happen?
+So whatever is your job id
+will be shown to you here.
+Ok. Again you can see this thing here.
+The name displayed
+of the job in github.
+Ok.
+Now what you tell me is
+this is a runner.
+This is a machine.
+This is a runner.
+What you are telling me is
+what job you have to run here.
+What is its name?
+Then you tell me which OS will work on this machine.
+So which OS we have set?
+Ubuntu Latest.
+Basically we are going to work here
+inside Linux.
+Every machine needs an operating system.
+So we simply told you the operating system
+of this machine.
+If you drag here,
+then it will define the type of machine
+to run the job.
+Basically your OS.
+After that we told you
+timeout minutes.
+Means how long
+this particular job can run.
+We gave maximum time for that.
+Means if this job is running
+for 60 minutes, then you will not
+shut down this machine.
+Whatever is working in this machine for 60 minutes
+then you will let it run.
+This is just a fail safe mechanism.
+You can reduce this time
+Our evaluation is
+15-20 minutes.
+So you can reduce this time.
+60 minutes is the time you are giving ample time.
+After that comes an important thing
+that is your environment variables.
+So you define your environment
+inside ENV.
+What are these environments?
+These are the environments
+which are in your .ENV file.
+Like our open AI API.
+How do you bring this?
+You bring this using
+this particular thing.
+Now you will get dollar double curly braces.
+This is called in the language of
+GitHub Actions, expressions.
+We often work in
+Lang chain and Lang graph.
+You must have seen that in prom template
+you get single curly braces.
+Or if you want to write F string
+then you get single curly braces.
+Single curly braces means
+that this is a dynamic part.
+Meaning you will define its value
+at run time.
+Similarly, to write expressions
+in GitHub or
+to write dynamic variables
+you use dollar double curly braces.
+And inside that
+you define your variables.
+Now there are two types of variables.
+One is your secrets
+and the other is
+your vars.
+There is a lot of difference
+between these two.
+Secrets are generally your API keys
+which you don't want to show
+in your logs at run time.
+You put those things
+inside secrets.
+And the other
+are vars or variables
+which you don't want to show
+in your logs at run time.
+So you put things in it
+which are common or basic.
+And the other is the base URL of linefuse.
+I can show the URL
+but I can't show
+my API keys inside the logs.
+So what you are doing
+in the environment
+is mentioning all your API keys.
+Now where you have to store
+these keys
+I will show you.
+You will go to your repository
+and you will see the settings tab.
+In the repository
+where you want to put actions.
+In this tab
+you will see
+Secrets and Variables.
+Click on this
+and you will see actions.
+In this tab
+you will see two tabs
+Secrets and Variables.
+I have set one variable
+inside variables
+and all my API keys are set inside secrets.
+You simply have to go
+to the new repository secret
+and give your secret name
+and also your variable.
+Paste the API key
+and that's it.
+You will create your new secret.
+Once the secret is created
+you can simply delete it
+and change its name
+but you can't see the actual API key.
+Whereas in variables
+you can see the value.
+This is the difference
+between value and secret.
+I hope this point is clear.
+Let's move ahead.
+We have set all our environment variables
+and then comes steps.
+I told you that
+your steps are in jobs.
+Guys, are you following so far?
+Is it difficult?
+I will explain this later.
+Don't worry.
+Is the flow so far difficult?
+Can you follow along?
+Yes.
+Now comes our
+first step.
+Our first
+experiment
+that is experiment
+that is experiment.
+We have to define steps in it.
+What are the steps?
+I told you that
+there are some steps in every job.
+They can be different.
+We will define that here.
+Let's say
+I have a runner, a machine
+I have to run
+my experiment pipeline on it.
+What steps can be there?
+The first step is
+logical step.
+I need all the code files
+for the experiment pipeline.
+First, I will bring my code files
+on this runner.
+Where are the code files?
+On my GitHub repository.
+I will copy the files on GitHub repository
+to my runner.
+Next,
+I will install python
+because all these code files are written in python.
+So I need python.
+Third, I will install uv.
+Fourth,
+I will install my dependencies.
+I will create
+my virtual environment.
+As soon as this work is done,
+what is the next step?
+First, I have to delete my vector store.
+Because, which
+vector store is there in this code file?
+I have created it locally and
+pushed it to GitHub.
+I have not rerun it.
+I have not made it again by deleting it.
+So I have to make sure that the vector store
+which I will create now,
+that should be from my latest parameters.
+So I will delete it and
+create a fresh vector store.
+Next,
+I will run my experiment.
+After that,
+all the things will automatically
+log to MLflow.
+Finally, I will print
+the challenger run.
+I will do these steps inside my job.
+And I have defined these steps here.
+See,
+how do you define steps?
+As a list.
+So whenever you want to define a list in YAML,
+you do it through hyphens.
+This is the format of YAML.
+You can read about YAML.
+So you come to the jobs.
+What are the steps?
+What you do.
+You can run commands, tasks
+or take action.
+So the first command
+we have to do is
+checkout repository.
+You have to copy
+all the code files
+and bring them to this machine.
+We are doing the same here
+using this particular
+piece of code.
+Now inside this code,
+I will show you.
+Just a second.
+Here you can see
+the name of the step.
+This name is human readable.
+You can give it any name.
+And second is uses.
+Steps are of two types.
+One is where we use uses
+and the other is where we use run.
+You can see,
+some places uses uses and some places run uses.
+I will tell you the difference between these two.
+What you do inside uses is
+you use built-in actions.
+What does built-in action mean?
+It is a particular workflow
+that GitHub has made for you.
+So you don't have to manually
+code it.
+Now how will you pull this
+GitHub code on the runner?
+You don't have to manually define it.
+Already, GitHub has made
+a pre-built code for it.
+You simply have to run it
+and it will automatically pull your code.
+So for some common tasks
+GitHub has already made actions.
+So if you search on Google
+here
+I will show you.
+Search on Google
+and here you will write
+actions marketplace.
+So you can see the marketplace.
+Here you will see
+the common actions.
+So if you want to search actions
+you can simply search here.
+For example, you have to search
+Python related.
+Here is the setup python.
+And what does blue tick mean?
+It is verified by GitHub.
+You will go to this.
+Here is the readme.
+What's new in v7?
+Basic usage. Here is the code.
+You simply have to use this code.
+You can read the entire documentation.
+These are pre-built
+workflows that GitHub
+makes and gives you.
+We have defined that here.
+That is our code checkout.
+We will copy all the code
+and bring it into our runner.
+After that, we will set up
+Python. So there is another action
+setup python. Its version is 7.
+Generally, you use the latest version.
+Now you will see one more thing
+that is with.
+It is uses.
+Uses is for your pre-defined actions.
+But here you can see with.
+Whenever you see with
+with an action
+then with is basically to pass
+inputs to that action.
+Basically to pass
+the parameters.
+So for every action,
+if there is a specific input
+then you pass that input with the keyword.
+That you run this action
+with this particular configuration
+or with this particular input.
+I hope this point is clear to you.
+So here we defined
+with python version file.
+Because here we specifically
+have to install
+Python 3.12.
+So what I said is
+do one thing. While setting up
+python, you read this .python
+version file.
+Let's go in this. When we made
+UV, then this file was automatically made.
+And see the version number is written in it.
+So what will happen now?
+Now in this runner, specifically
+my python 3.12 will be installed.
+If I would not have given this,
+then what would have happened? The latest python version
+which is available on the github, maybe 3.14
+would have been installed.
+There may be some compatibility issues.
+But now on my runner
+3.12 will be installed.
+What is the next step? I told you the next step.
+What will you do?
+You will install UV here.
+How will you install it? You can't go on the internet
+and download UV.
+Again, there is a pre-built action for that.
+You will use this action.
+And
+what you have done here is
+enabled cache.
+This UV installation
+and dependency install.
+You will do it once
+on one runner and this installation
+will be cached.
+All the packages will be downloaded and stored in cache.
+Whenever you want to install
+in one runner,
+it will be automatically installed through cache.
+I will show you all this now.
+After that
+you will install all your dependencies
+using UV sync.
+Now what is the difference here?
+Here the difference is of run.
+First you were using uses.
+Now it is your run.
+Basically what you do in run is
+whatever files you want to run here
+or whatever commands you want to run
+which you were manually running
+you can run them through run.
+So
+whatever terminal commands
+which are not your pre-built
+workflows
+you can run them using the run command.
+You can see here, it will be clearly written in run.
+Run command
+line programs using the
+operating system shell.
+So you can run the commands
+through run.
+That's it.
+So there are two types of steps here.
+One uses
+where your pre-built workflow works.
+And one is run
+where you can run your terminal commands.
+So we have installed our dependencies.
+After that what I have to do?
+First of all
+I have to recreate my vector store.
+So I called this script.
+UV run
+like we do manually.
+In source, in experiment
+I have made a file by then.
+CI Rebuild Vector Store.
+So the simple work of this is
+it will go on this runner and
+rebuild the vector store.
+Now whatever python files I have to write
+I don't want to write runner specific.
+Whatever I am doing in my local laptop
+flow execute, the same flow will be executed
+on my runner.
+So the same code is written in this file simply
+delete and recreate.
+That's it.
+It is not CI specific.
+I will run it on my system and it will
+delete my vector store and
+after that I will run my experiment
+pipeline again using the
+same file experiment execute
+experiment pipeline.py
+I ran it manually and showed you.
+I didn't write any code specially here.
+And after that I simply
+check in the next step that
+if all the above steps were successful
+then if you have to check
+any condition here then you can check
+that if success, if failure
+I am saying that if all the above
+steps are successful then show me
+the ID of the challenger and tell me
+that all the work is executed.
+This is simply for my logs.
+I am simply printing all these things.
+It is clear guys.
+All the steps of one runner
+are cleared.
+The next process is very simple.
+This was your biggest
+job.
+Now let's go to the next job.
+You defined the ID of your job
+here like you defined the experiment
+on you.
+Same thing.
+You defined the ID here.
+Now you named it regression gate.
+And you set a key here
+needs.
+What does needs mean?
+You set needs when you
+have to tell that this particular job
+is dependent on any previous job or not.
+And what did I tell you?
+If you want to make it sequentially
+that B is dependent on A
+then you define the needs keyword.
+What did we tell you about needs?
+Experiment.
+If my experiment is successfully executed
+then you run this flow.
+All these sequential things
+you can see here.
+Inside your GitHub.
+This whole flow is visible.
+If I remove the needs then this link
+will break in between.
+Clear?
+Now this is also a machine.
+So I am defining its operating system.
+Again open to.
+I am defining the timeout.
+This regression gate will run for maximum 15 minutes.
+Now define their environment variables.
+First I defined all the environment variables.
+I need to run the experiment
+to open the experiment.
+I need the key, I need the tag sub, I need the line fuse.
+Now I don't need all that.
+I need to run the experiment.
+My logs are saved on my MLflow.
+I simply need to read them and compare their metrics.
+And perform my regression testing.
+So I just need the tag sub token here.
+After that
+again I am defining my steps.
+Some steps are common here.
+Like these 4 steps are common.
+I have a fresh system.
+I will pull the code and install it.
+I will install python, I will install uv.
+I will install dependencies.
+I will run my regression gate.
+Which is what? My file.
+My test file.
+I am running it. That's it.
+And if this file fails
+then what I am doing is
+removing the tag
+from my challenger.
+Reject challenger on regression failure.
+I need to run this always.
+Whether the steps above are pass or fail.
+So if any challenger is saved
+I need to remove it.
+And here I have a check.
+I need to run it.
+And this is basically my AND.
+2% and this is AND.
+In bash.
+Here I am saying that if
+my upper step
+steps.regression
+If its outcome
+you have some options
+like success,
+failure, cancel, skip.
+If this step fails
+when will it fail?
+If this step fails
+then I need to demote challenger.
+I need to run reject challenger.py file.
+Same with my
+promotion test.
+Same thing here.
+Same code.
+The only difference is that
+I need to run my promotion test file.
+And finally there is my promote.
+What is inside the promote?
+It is based on promotion test.
+And it will work only when
+all the steps above are cleared.
+What I need to do is
+I need to install it.
+And after that I need to promote my challenger.
+I need to make it to champion.
+And archive is the champion.
+Is this whole flow complete guys?
+Did you understand this?
+I know it is a little cumbersome.
+You can see it in the first look.
+But it is clear.
+It is not very difficult.
+The steps we have discussed
+and ran manually.
+You can write that in the code.
+For some it is predefined actions.
+For some you can write your UV run command.
+Nothing difficult.
+Clear?
+Now moment of truth.
+Let's do one thing.
+Let's run one workflow here.
+So first of all
+we will test one thing.
+What will we test?
+That I haven't changed anything in parents.yml.
+So will my workflow
+be triggered here or not?
+Let's see.
+Just give me one second.
+See here I have
+made changes
+in it.
+Into my vector store.
+Let's do one thing.
+For now I will
+make it 270.
+Discard it.
+And I will push this change to get up.
+These are the changes of my vector store and evaluation.
+So I have staged all the changes.
+And here I will write commit message.
+Commit message is
+changed
+vector store.
+And this is our
+dummy commit.
+So I will write dummy so that you remember.
+Let's commit.
+Done.
+Let's push it to get up.
+Let's go back to my repository.
+And let's
+check.
+Let's refresh.
+See here a new commit has come.
+Change vector store dummy.
+But if you go to actions
+and see.
+So nothing is happening here.
+Disc is completely silent.
+Why? Because I have not pushed
+the change of my parents.yml.
+Now let's do one thing.
+Let's change in parents.yml and
+push it.
+So let's go back.
+Let's go to.
+Just a second guys.
+Let's go back to
+parents.yml.
+Here is my parents.yml.
+Now let's change something here.
+Good results were not coming
+after 270.
+It was failing.
+We did not test it at 270.
+Let's do it. Let's make it 275.
+Let's just
+play with it.
+We changed parameters here.
+Let's stage it once.
+And commit it once.
+CI
+test run.
+I put a commit message.
+Committed. Now I am pushing it.
+As soon as I push it.
+My workflow will be triggered there.
+Because what was my trigger?
+My trigger was on push.
+On the branch main. So I am pushing
+in the main branch. Which file
+should be changed in parents.yml.
+Let's push it.
+Let's see.
+If I refresh it.
+See.
+Here you can see the yellow dot.
+My workflow is
+running. See CI pipeline is running.
+If I go to details.
+See.
+Everything is happening here.
+Let me show summary.
+This is my complete workflow. Now this whole workflow will work.
+Automated fashion.
+Let's go here.
+And these are my individual steps.
+What were the steps? First of all, code checkout will be done.
+Here my code checkout is done.
+All the code is on my machine.
+Python setup is done.
+What was the python version in python setup? 3.12
+After that UV is installed.
+UV is downloaded and installed.
+After that dependencies are installed.
+How fast. Because it was already cached.
+See.
+Now my vector store is being rebuilt.
+See.
+CI vector store.
+Removed.
+Stale vector store. Which was saved.
+This is the runner address.
+And again.
+Chunk size 275.
+Overlap 15.
+And my vector store is being created again.
+First transcripts are being cleaned.
+And again vector store will be created.
+Transcript Asserted. Scan 14 files.
+Embedded.
+These new chunks.
+And here.
+My vector store is created.
+Now my experiment is running.
+Again.
+The whole MLflow experiment will be running.
+Accessing as Emalshu 1703.
+So my MLflow
+is accessed on DAX app.
+Parameters are logged.
+And preflight check is done.
+That there is no stale
+challenger here. Let's go and refresh it.
+So see here. 17 seconds before.
+A new experiment called SincereLoon
+has been locked. Everything is
+running automatically. I am not
+doing anything manually here.
+You must be able to understand the power of CI.
+GetUpActions. Everything
+that I have done manually.
+I have automated it.
+Now let's wait. Again.
+It will take some time.
+It will hardly take
+another 10 minutes.
+Till then if you have any questions you can ask me.
+It is running on the screen. You can see it easily.
+Questions guys.
+Whatever you asked
+before.
+You can ask again.
+Exactly the
+flow
+running on your system
+in your terminal.
+You will see the same flow and
+logs here. But
+all these things are not happening on your system.
+It is happening on GetUp's servers.
+But you can see how tightly
+integrated it is.
+All the changes on MLflow are reflecting.
+What happened guys?
+Are you bored?
+I know it is a bit
+challenging to understand
+CI in one session.
+But I will share this code with you.
+You can ask me once.
+I will tell you.
+I will tell you.
+I will tell you.
+I will tell you.
+I will tell you.
+I will share this code with you.
+You can see this yaml file. It is simple.
+Nothing difficult.
+Only two are most popular.
+GetUp actions and Jenkins.
+Mostly if the code is on
+GetUp then
+GetUp actions is used.
+Jenkins is also used.
+Again the flow is same.
+There is a little syntax difference.
+You define it through yaml files.
+You understand the concept of CI.
+Whatever you were doing manually,
+you automated it.
+We defined all the steps and procedures
+in this pipeline.
+Now there is a particular way to define it.
+That's it.
+Whatever we discussed is happening.
+You will see that no new steps have come.
+It can also fail.
+Because the changes we have made
+can be 275.
+If any promotion or regression testing fails.
+Whatever happens will happen in front of you.
+If there is failure, we have built it
+for failure only.
+If there is any failure
+and challenger is not worthy of being a champion
+then don't let him be.
+It is also an intended flow.
+There is a rule.
+You can set it according to your needs.
+Hardware timeout is set
+because the runner is running.
+Let's say your API is down.
+It is stuck at some step.
+We are basically telling GetUp
+not to close it for 60 minutes.
+Even if it is stuck somewhere
+then wait for 60 minutes and let it run.
+If I set it for 10 minutes
+then after 10 minutes
+if it is not doing any action
+then after 10 minutes it will be closed.
+That's it.
+How many max steps can be
+in any job?
+Is there a limit?
+Generally, in your job
+you have so many steps
+that you can maintain.
+You have to define these steps yourself.
+This should be a maintainable number.
+It is not like you have written many steps
+in one job.
+If we wanted we could have made one job
+and do all the work in it.
+That is also happening sequentially.
+That is the same.
+You keep in mind separation of concern
+and all those things.
+There is no limit.
+It is the limit of your usage.
+You get usage details.
+You have different plans.
+You have some monthly limit
+that you can use this much.
+These machines have very less memory.
+I think
+2GB or 3GB RAM is there.
+Storage is also very less.
+That's why my system is also
+running slow.
+It has been 7 minutes already.
+If I show you
+if you see the duration
+in 11 minutes
+the whole experiment was completed.
+So yeah.
+I think it is
+running slow.
+Can you tell me the extension name again?
+You are using VS Code for folders.
+As per your wish.
+Did you like it so much?
+It's name is
+Where is it? It must be somewhere here.
+It is something like material icon theme.
+It is very famous.
+Yes, it does.
+How was today's class?
+I hope you liked it.
+How was today's class?
+Conceptually you understood the CIE.
+I know it was a lot to take in.
+Now the lectures will be
+a little dense.
+Because it is deployment.
+I can't do anything.
+CIE runs like this.
+And this is how logs come.
+So I can show you that.
+But I hope you
+understood the whole
+why CIE runs.
+And how to do it.
+How to define steps.
+If you understood that, then rest is okay.
+Code part is okay.
+Thank you guys.
+It looks interesting.
+It is also interesting.
+Everything is happening on the screen.
+And let's hope
+that our whole run
+passes.
+Both our tests
+pass here.
+And we get our new champion.
+Because I have been testing
+for the last two days.
+And now no one
+has been able to beat the champion.
+I don't know why.
+Maybe I haven't
+tested the right parameters here.
+Which are going to beat.
+Because it is
+at 270.
+Let me see the champion one.
+This is the champion one.
+So inside the champion
+If I see, yes, 270
+and 15. So we have tried
+275.
+Let's see.
+It is 12 now.
+Two more are left.
+Then our
+evaluation will start.
+Everything will be logged.
+But everything is happening through the GitHub server.
+Locally, there is nothing on my system.
+If I simply
+close the VS code from here.
+I will show you.
+See, I have quit.
+Then this thing will continue.
+Because it was not happening locally on my system.
+So
+Wait a little guys.
+This is
+the last one.
+Environment variables in Git.
+In the environment file of
+harrylock, there are API keys.
+You will not paste them in the code.
+That's why you store it
+on the GitHub and define it here.
+GitHub automatically
+pulls it from its secrets.
+Secrets are your API keys.
+Secrets are your API keys.
+Because this particular repo
+or this particular runs, you can also go and see
+on my GitHub. This is a public repo.
+So you can't see my API keys.
+That's why I saved it in secrets.
+So this is the API keys.
+And the other thing is that
+what are you doing in GitHub?
+In your code checkout, whatever is on GitHub
+Listen carefully guys.
+This is the code checkout.
+So whatever is in your GitHub repository
+currently, whatever files are there
+you can only import them.
+You can only load them.
+You can't load your local system files.
+So I haven't pushed .env anywhere.
+So it needs API keys to work.
+Where will it take them from?
+It will take them from the secrets.
+See here, my evaluations are going on.
+Now it won't show you
+the whole thing.
+Because it doesn't show here.
+But once it is complete
+then you will definitely see the result.
+Whose output is it?
+CI's output?
+Yes, it is going to happen.
+If you want to see it in the next session
+OK.
+See here, some test cases have failed.
+This is my complete summary.
+The contextual relevance is very less.
+I think it should not fail.
+Maybe it will fail because it is 72.
+See, the regression gate has started here.
+So it is not going to fail.
+So it is not going to fail.
+So it is not going to fail.
+See, the regression gate has started here.
+Python setup is done.
+UV setup is done.
+As soon as UV is installed
+dependencies will be installed in a minute.
+We need some better contextual relevancy.
+I think it will not work from 72.
+It will fail.
+Regression will fail.
+Promotion will be fixed.
+It was on 73, so it will be on 72.
+No problem.
+The champion will be our champion.
+We will work with that configuration.
+Rest of the trials
+I will do one or two more runs.
+See, dependencies are installed.
+Everything is cached.
+Now your test is running.
+Now your test is running.
+The test is started.
+The test is cleared.
+So the regression test is passed.
+Ok.
+It is on the promotion gate.
+Again, UV is being downloaded.
+Guys, don't be disappointed.
+It will fail.
+But this is not error on the code part.
+This is error iteration.
+This is not the best of our previous best.
+That's it.
+It is intended flow.
+Don't be sad if it fails.
+Now what will happen is
+the tag you have,
+I will show you.
+The challenger tag will be removed.
+It will be a little bit different.
+It will be a little bit different.
+The tag will be removed.
+It is done.
+It is installed.
+The promotion test is started.
+It is running.
+It failed.
+It is written fail.
+Contextual relevancy.
+But the gate is not closed
+because of the fail.
+See, this is interesting.
+This run promotion gate
+is shown as a cross.
+But after the cross,
+this step is running.
+Reject challenger on promotion failure.
+We had set it on always.
+The upper step is pass or fail.
+We have to run this.
+Because we have to remove this challenger tag.
+See, it is removed.
+Because this was not the challenger
+that we were hoping.
+Challenger will remain till
+all tests pass.
+And then it will become a champion.
+I hope this thing is clear to you.
+So we removed it from the challenger.
+Clear guys.
+And this step did not work.
+The job was skipped.
+Because obviously.
+In this step, the challenger
+was made a champion and the champion
+was archived.
+But I will show you this flow in the next class.
+I will try some more runs.
+More iterations by changing some configuration.
+And I will show you the results.
+Clear.
+So you will not be disappointed
+by this cross.
+This is not error. This is intended.
+I think it was on promotion.
+This run was also
+on promotion.
+And here
+contextual relevancy.
+So here
+75 came. See it did not work on 75.
+Because already we have 80.
+So we have to
+bring better
+than that and bring it to the ballpark.
+I will be back in 2 minutes.
+And then I will close off the session.
+Any questions?
+Those who do not have questions can leave.
+How was today's session?
+Conceptual clarity.
+Conceptual clarity.
+Out of 5.
+Awesome. Thanks.
+Tell me more guys.
+If you do not have questions, you can go.
+I will be back in 1 minute.
+Ok Aditya. Don't worry.
+Just once, you see things.
+See the flow and try to understand it.
+Now you are starting fresh.
+So obviously it will go from the top.
+But after seeing the flow,
+I hope you have understood something.
+How this whole thing works.
+You will also build some confidence.
+Ok guys. That was it.
+See you in the next session.
+In the next session, we will
+do CD and dockers.
+And we will complete it.
+So the deployment part, continuous
+deployment, we will complete in the next session.
+Bye guys.
+See you on Thursday.
+Thank you.

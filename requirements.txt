@@ -9,3 +9,4 @@ python-dotenv
 langgraph
 ipykernel
 langchain_chroma
+langfuse

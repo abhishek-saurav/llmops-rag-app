@@ -1,0 +1,3627 @@
+WEBVTT
+Hi guys, good evening. How are you? Am I audible? Am I visible? Is my screen share
+also visible? Great. Let's wait a little while. People are joining in. If you have any questions
+then you can ask me. Questions guys, how are you? How are you?
+I am audible guys. It's okay Gagan if you have covered the class after a long time. We will start a new topic today.
+We have a small part of our previous class left. We will complete that and start the topic of guardrails today.
+If you haven't covered anything then there is no issue. You will understand today's class.
+Code explanation after live code. Shivani, I have already written the code today.
+Because it was the code of the Pi test. Actually I was watching my previous sessions.
+The problem with live coding is that the length of our sessions is increasing.
+I thought it would be better to write code today because we are going to implement it on existing code.
+I will annotate the code I have written and explain it to you properly. I will explain it line by line.
+Don't worry about that. I have written the code and tested it.
+I think this flow will be better instead of me live coding everything.
+Because it takes a lot of time to type in it.
+And when we move on to advanced topics then even small errors in the syntax will break the whole flow.
+It will be better to test everything and push the code here.
+So that you can also run the latest code with me.
+Let's wait a little more. 5 more minutes and then start.
+Let's start.
+If you have any questions then ask me.
+This round I will try to get structure notes.
+It will take some time to generate. We are figuring out a pipeline.
+If the pipeline matures because I am taking classes side by side.
+If it matures in between then I will start providing you the notes of all the lectures.
+Otherwise after the complete playlist is over.
+I am not guaranteeing the time that when we will meet.
+But I am sure that we will meet.
+That is my promise.
+Any other questions?
+I liked one thing. I would like to thank you all for taking classes of LLMEvals.
+In the last session when you were teaching rack based metrics.
+You gave correct answers.
+I was also available in that class.
+I liked it a lot.
+You are picking the concepts very well.
+Yes Rajinder, past sessions are available.
+Recordings are already available.
+You can watch the past sessions.
+Let's wait for 2 more minutes and then start.
+People are still joining in.
+Please add a message in the group that the class has started.
+Whoever wants to join, please join.
+Any more questions? Any more feedback?
+You asked for live coding so we did it.
+I have received feedback that you want live coding.
+But the problem is that it takes too much time.
+So to reduce the time, again hybrid approach.
+I have written the whole code for today's session.
+How is the flow of LLM Ops?
+Whatever we are understanding and reading, it seems logical.
+It doesn't seem out of place.
+You shouldn't feel that.
+You should feel that you are developing this application.
+And the flow that we are building is all coming together.
+If you are able to build that flow in your mind.
+And the next flow that we are going to do is also coming together.
+I think it is a success for me.
+My benchmark is that you should learn what you have come to learn.
+You should come to learn.
+There will always be good days and bad days.
+They always stay with the sessions.
+Sometimes the code will work, sometimes it won't.
+There will be bugs.
+Those are the parts of the operations.
+You don't have to worry about that.
+And I have to let you down.
+These are the parts of the whole operations.
+Let's start.
+Let's do one thing.
+Let's continue the previous session.
+And after that I will come to the code part.
+Before starting that, let's take a quick recap.
+Basically, let's make a mental picture of what we have done so far.
+That will help you understand today's session better.
+And what we are going to read further.
+Excuse me for a second.
+Let's go.
+I will take your questions.
+Let's start our session.
+Can someone tell me about the recording?
+Is the recording on?
+Okay. Thanks.
+Let's start.
+Let's assume that we are the AI engineer.
+We are the developer.
+We have got this task.
+Let's discuss the task first.
+Many people are joining new today.
+I am working at campusX.
+And I have been given a task.
+The task is very simple.
+There is no AI based doubt solving solution on our platform.
+So sir told me to integrate a solution into our website.
+So we decided to build a rag chatbot here.
+What will this rag chatbot do?
+Basically, we will give the transcripts of all the lectures we are doing inside the insider program.
+And on the basis of this transcript, this rag chatbot will give me answers.
+And what will the answers be?
+Basically, the doubts of my students will help them solve.
+But the answers will be grounded in the transcripts.
+Whatever I have taught inside the course.
+Whatever Nikki sir or Ajay sir has taught.
+On the basis of the same teaching, this rag chatbot will reply to me.
+So you assume that you have got this task.
+So what will happen first?
+First of all, how will you make this rag chatbot?
+The whole workflow.
+You will plan it out.
+We decided to build this whole chatbot using Landgraph.
+And after that, we made our version 1 of the workflow.
+And after making this, we did wipe testing.
+Basically, we ran this and checked that the components we stitched,
+the flow we made, the code of the Landgraph, is it working or not.
+Everything was working well.
+So then we felt that this wipe testing is okay.
+We are testing manually.
+But because we have around 14 documents in our chatbot during the development phase.
+And each document on an average is having the transcription of a 2 hour long lecture.
+So approximately, if you see here, 30 hours of content is available.
+Our lectures are 2 hours long.
+So around 30 hours of content is available.
+Now, by doing wipe testing, whatever flow we are putting in the wipe testing,
+we cannot properly test these 14 documents.
+Or we cannot test our chatbot on the basis of this.
+We will not get that much coverage.
+If I am testing this particular chatbot, because I am teaching LLM Ops,
+then I can ask questions related to LLM Ops.
+But what is going on in AI Pulse sessions?
+What is going on in News Roundup?
+What do I know?
+I don't think there will be as much detailed idea as Ajay Sir has.
+So this was a problem that how to test it.
+So to do testing, we thought why not use a proper framework here.
+And there came our DeepEval in the picture.
+DeepEval has built-in metrics.
+And we tested our application through these 5 metrics.
+Along with that, we needed to make our custom metrics here.
+Which are specific to our task.
+So we implemented 2 custom metrics here.
+And in total, we have 7 metrics to test our application on.
+And not only we tested our 7 metrics on our application,
+we made a proper pipeline for this testing.
+Which means I have to simply start this pipeline.
+And it will automatically bring me my test results.
+So now I am getting test results in 2 ways.
+First, we are getting a structured test result.
+As a JSON file.
+Which I can use programmatically.
+If I show you those who are joining new.
+If we go to reports and evaluation results.
+So these test runs are JSON files.
+These are basically my programmatic runs.
+I can parse this inside the code.
+And I can fetch the information from here.
+And the second way is that I am getting detailed reports in markdown format.
+Through which I can see the results for each test case.
+If I go to evaluation reports, these are the detailed reports.
+I am getting all the information for each test.
+So we built this.
+What was the need after that?
+What was the need after that?
+We understood how to test our application.
+But is testing the only part of development?
+No.
+There is one more thing with testing.
+That is experimentation.
+Why experimentation?
+It is very logical.
+The application that you have built.
+That is your version 1.
+You don't know if the configuration that you have used is the best or not.
+What you did is that you have plugged in the values according to your gut feeling and past experience.
+Like we have made our application and plugged in some values.
+Now we don't know if these values are good or we can seek out better values than this.
+So we have made an experimentation pipeline for that.
+From some parts of experimentation pipeline,
+First of all we have brought our configurations into one file.
+So we have made this parameters file.
+And we have listed all our configurations in this.
+That we will make changes in this particular file and our application will change.
+Second thing we did here is that we have written the code to validate this.
+That when we will import this configuration into our application,
+We will not import directly.
+We will check it properly and then we will import it.
+So after that what we did here is that we have made an experimentation pipeline.
+So one was our evaluation pipeline and one was our experimentation pipeline.
+Whenever I run this experimentation pipeline for a certain set of configuration,
+So first of all my data set is made.
+On that data set, my evaluation is done automatically.
+So here we have my configuration file, my metrics which are the evaluation results or output.
+Plus my other artifacts, which have my evaluation data set, code, system prompt etc.
+I can lock all these things through this single pipeline.
+And for that we are using MLflow.
+So we have done this step.
+Now we are doing experimentation here.
+We are creating new runs here.
+Basically we are doing multiple iterations over our application.
+Now here we felt a need that why not we have set a gating mechanism here.
+Gating is what? Gating is a barrier.
+You have set a barrier here and here we are implementing a new thing.
+That is called as your regression testing.
+Regression testing is that we have a current best version.
+After experimentation we created a version B.
+Through regression testing we have to see that is this B version which we have created,
+Is this version worse than A?
+What is the benefit of this?
+The benefit of this is that if our version B is not working,
+Then we will consider this A as our current best.
+And till we don't get our next good version,
+We don't pass this regression testing.
+We have discussed the rest of the details in the previous lecture.
+What are the other benefits of this?
+One more benefit of this is that you see the effect here.
+For a certain change in configuration.
+Is it possible that a metric which was performing well earlier,
+Now it is performing badly?
+Here you make a threshold and basically check your new iteration.
+That is it performing so badly in comparison to the previous one,
+That it is not reaching the minimum threshold.
+We just check this regression testing.
+What is the next logical flow?
+Next logical flow is your promotion or promoting your application.
+You have done the regression testing.
+You have come to know that your version B is not performing worse than A.
+It is possible that it is performing slightly worse than A or it is performing equal to A.
+Or it is also possible that it is performing better than A.
+What you do next is you do a promotion testing here.
+In the promotion testing, you simply see that the B metrics,
+Are they better than A or not?
+If they are, then this better version becomes your current best.
+And this whole thing, this regression testing flow and this promotion flow,
+We will implement in today's session.
+So it's clear guys, so far our whole operations journey has been cleared.
+Yes, it means evaluation data set, but we are logging all the artifacts.
+So we have done the regression testing.
+It's clear.
+You have to see in detail about regression testing.
+So we have already discussed the concept of what happens.
+How it is calculated, we discussed the whole flow in the previous session.
+It's clear guys.
+If you have any question, you can ask me.
+If you don't have any question, then write clear and we will move ahead.
+And today we will discuss regression testing and promoting your application.
+I am looking at the chat. Write clear. If you don't have any question.
+And if you have any question, you can ask me a question.
+Yes, it means evaluation data set.
+We are also logging the golden data set here.
+If you have any doubt, then you can see the previous session.
+Means we can't discuss everything in detail.
+Clear.
+Let's move ahead.
+So we had read the regression testing here.
+Regression testing is that if you change and rerun,
+then you see that the thing that was running before is still running.
+That is your regression testing.
+After that we made this mental model.
+How our testing is done.
+After that we discussed how to make this formula.
+This was our version 1 of the formula.
+We improved this version 1 and then we reached this final version.
+What was in the final version?
+We had 3 things to calculate in the final version.
+The first was our noise threshold.
+What were you calculating in this noise threshold?
+We were calculating the standard deviation of noise.
+What is this noise? This is basically the noise of our judgment.
+We are using LLM as a judge for the evaluation.
+So for the same set of configuration,
+LLM gives different results because it gives probabilistic output.
+So to capture the variation of that different result,
+the noise, we are capturing a noise threshold.
+What is the second?
+What happened?
+Second is our historical threshold.
+Now every matrix does not vary on the same scale.
+So what we did in the historical threshold?
+We ran multiple evaluations.
+We ran multiple runs.
+And in the multiple runs, our matrix came.
+And what was this matrix?
+This matrix was not your noise one.
+In the noise one, we ran runs with the same configuration.
+So we changed the configuration.
+So we captured the variation in the historical threshold.
+You can read it here.
+What is the historical standard deviation?
+7-8 past runs, real config changes.
+3-5 repeated runs, your configuration is frozen.
+So we calculated these two things in the previous lecture.
+If I show you its code, then this is its code.
+Compute historical thresholds.
+Through this, we computed historical thresholds.
+And compute noise thresholds.
+Through this, we computed our noise thresholds.
+And these are our threshold values.
+Just a second.
+What we have to do today?
+Basically, we have to do this regression testing.
+Now we have to bring some things into the formula.
+So this is the regression testing formula.
+Lower bound is your baseline score minus your regression threshold.
+Which is your standard deviation plus your noise buffer.
+And you check here that the current score of a metric.
+Any metric, you have 7 metrics.
+So for 7 metrics, the current score is below or above its lower bound.
+If it is below, then we will say that this particular iteration has failed.
+This has failed in regression testing.
+Our application is regressed.
+So we have to build this particular flow today.
+We have built this thing in it.
+We have done both these computations.
+We have done both these computations.
+And we have stored these computations in a JSON file.
+What we have to do today?
+Today we have to do a new run.
+After that, we have to fetch the metrics of the new run.
+And then we have to do our regression testing.
+First of all, we will do regression testing.
+And we will check whether our application is passing or failing.
+If it is passing, then we will do promotion testing.
+And if it is failing, then our current will be the best.
+We will not go on promotion testing.
+Is it clear?
+And this is happening because regression testing is acting as a gate.
+It is a gating test.
+Whoever passes this will go to the next step.
+If he fails on this step, then we will stop him here.
+Is it clear?
+Is anyone feeling confused?
+Clear.
+If they have done the previous session, then they must be understanding.
+They are not feeling confused.
+Okay, let's move ahead.
+Let's go to the code part.
+Before going to the code part, I will show you some runs that I have done.
+I have done some runs here.
+Let's take this run.
+So here my contextual recall is 97.
+Precision is 1.
+Answer relevancy is 85.
+Faithfulness is also good.
+Contextual relevancy is 78.
+Answer correctness is 80% and simple explanation is 90.
+And this is the whole configuration.
+Now you can see that contextual relevancy has increased.
+It has increased because I am using a better embedding model.
+So I was experimenting.
+So I used text embedding 3 large instead of text embedding 3 small.
+With this particular dimension value.
+This was my chunk size and chunk overlap.
+And I got these results.
+Then I thought why not we put contextual compression here.
+Because our contextual relevancy is bad.
+Signal to noise ratio is bad.
+So why not we put contextual compression here.
+Now you can see that these particular runs take around 3 times more time.
+And I hope you understand why this is happening.
+If you have read about contextual compression.
+Then you must know that we also do an additional LLM call in it.
+And in that whole processing, in an additional LLM call.
+The latency here is increasing around 3x.
+So although my metrics are improving here.
+In this particular run.
+But my latency is increasing.
+Let me show you the results.
+Here if I go down and show you the configuration.
+If I can show you the value.
+Here I have added a new configuration.
+Here it is.
+Contextual compression.
+So here I am storing the value.
+That whether I am putting contextual compression in my application or not.
+And if I am putting it then which LLM should I use for it.
+Now I will show you the results.
+Recall is 96.
+Precision is 99.
+Answer relevancy has decreased a little.
+It is 89.
+I think it was around 95.
+Faithfulness has also taken a little hit.
+But my contextual relevancy.
+Which generally was not performing well.
+68, 65, 75.
+It was in that range.
+It is touching 80%.
+And the answer correctness which was generally low.
+It is touching around 80%.
+So what we will do.
+We are going to work with this particular version.
+Is it clear guys.
+I will show you changes in the code.
+What changes you have to make in the code.
+So what is the first change we have done here.
+If I show you params.aml.
+So we capture these two parameters here.
+And along with that.
+I had to validate this particular change.
+So I have changed the configuration in config types.
+So what I have done is.
+I have added two attributes.
+In the parameters of my rag application.
+Contextual compression which is a boolean.
+This is true or false.
+And compression LLM.
+Which LLM I am using for compression.
+If I talk about code.
+If I go to the actual app.
+And talk about code.
+So here is the code.
+If my contextual compression is true.
+Then I will make a compression retriever here.
+And if it is false.
+Then I will do the same with my basic retriever.
+Is this code clear guys.
+Ok.
+And what we have done here.
+We have done all the calculations here.
+And calculated our thresholds here.
+Ok.
+Now what we will do here.
+We will do a new run.
+We will do a new experimentation.
+Again keeping the contextual compression.
+Into the code.
+Ok.
+We will not close it here.
+So here we.
+Can make changes in this.
+In size chunk overlap.
+Ok.
+So you guys tell me what values should I keep here.
+And let's run it here once.
+Let me open the chat.
+I will ask you guys.
+LLM is being used.
+Yes Saurabh.
+LLM is used for contextual compression.
+If you have seen the advanced act release.
+So here.
+What you do basically.
+Whatever you retrieve from your base retriever.
+You send it to an LLM.
+Along with the system prompt.
+To remove the noisy information.
+And compile the final information.
+What is the cost for the final run.
+I haven't calculated the cost.
+Because we are not tracing here.
+But by looking at the time.
+I can understand that yes.
+Our time is increasing.
+Because if I had to lock an iteration.
+It took 4 to 5 seconds.
+Now it is reaching 12 to 13 seconds.
+So yes.
+Time is increasing.
+Because multiple LLM calls have increased.
+At least in contextual compression.
+I think 2 LLM calls increase.
+Yes Saurabh.
+Latency is because of the LLM.
+Again.
+It is just used to improve the metric.
+You can also apply the embedding filter.
+You can also try other mechanisms.
+At your end.
+And if you get better results.
+Then we will use that configuration.
+Okay.
+We are just focusing more on ops.
+We are not focusing on the latency.
+Or our application.
+We are not focusing on that.
+I know.
+It is not performing well.
+Our latency is increasing.
+But we can't do anything here.
+We had to improve the metrics.
+Our metrics are improving.
+If we try how many credits required.
+You can do 5 dollars.
+Run 1 or 2 configurations.
+Just for your practice.
+Rest of the best configurations.
+You will get.
+Now you tell me.
+What should I change here?
+I am looking at the chat.
+Let's run the entire pipeline.
+Vice.
+No.
+How much should I keep chunk size and overlap?
+How much should I keep its value?
+500 will not work Saurabh.
+We don't want to increase.
+We want to decrease.
+Exact values are shown.
+Now it is 300 and 15.
+We don't want to mess with this.
+Because 15 was working good.
+Not 200.
+Not 45.
+Let's do one thing.
+Let's make it 270.
+Because we were getting good results.
+Around 270-250.
+Yes it will reduce.
+But you can reduce the chunk size.
+If you pass less noisy information to LLM.
+If you pass less noise.
+It will compress better.
+It is like needle in a haystack.
+If you increase the hay a lot.
+If you hide the needle in it.
+Then it will be difficult to increase the noise.
+Overlap will change 30.
+Let it be.
+I want to show you a run.
+Let's do one thing.
+Let's run.
+Rest of the code I will share with you.
+You can run by changing.
+One thing we will do here.
+We will delete the embedding.
+I have added one more thing.
+I will increase the terminal.
+You will see I have added proper logging.
+You will see proper logs.
+What we have to do.
+We have to run our experiment tracking pipeline.
+Execute.
+Experiment pipeline.py
+What will happen here.
+I will tell you.
+First of all.
+As soon as this pipeline is executed.
+Our tracking will start.
+First of all.
+Evaluation data set will be made.
+Evaluation will be done.
+Everything will be logged.
+And in these historical runs.
+We have a run ID.
+And a run name will be saved.
+For our latest run.
+What is our latest?
+This is Redolent C912.
+And you can see the information of it here.
+Okay.
+So now we run it.
+See.
+What we have set the chunk size.
+270 is reflected in logs.
+We have kept chunk overlap 15.
+These are our embedding dimensions.
+Loading is happening here.
+We have loaded 14 transcripts.
+So many chunks are made.
+And we have added so many in the vector database.
+Now our logging has started.
+Our parameters are logged.
+Now what will happen next.
+Those who are watching this flow.
+They know.
+Next our evaluation data set.
+Will be made again.
+Because we have changed it in our application.
+So clearly if you refresh it here.
+You can see these logs here.
+This is our new run created.
+Resilient Mesh.
+Let's wait.
+Let it run.
+Till then if you have any questions.
+You can ask me.
+Questions guys.
+We will do only one run.
+We will not do more.
+Which I want to show you the regression testing pipeline.
+That's it.
+Any questions.
+Yes name will be dynamic.
+And we are capturing that dynamic name inside the code.
+We have built this code in previous sessions.
+We are using MLflow here.
+And capturing this whole thing.
+Okay.
+If you go down.
+Here we are using MLflow code.
+And we are locking this particular thing.
+Okay one more thing I have done.
+Which was our utility.
+MLflow utility.
+I have put it in the utility.
+And made a module on it.
+Because we were importing it in many places.
+And I have put it in MLflow utility.
+So this is my utility code for MLflow.
+I will put it on top.
+Questions guys.
+It will take some time to run.
+In 5 minutes.
+So you will have to wait that much.
+Okay.
+Now we will have to do.
+Because we are not running any automatic script here.
+Rest we can include it in CI-CD.
+We can give a delete command in CI-CD.
+It will automatically rerun it for our new iteration.
+Again you do this in experimentation phase.
+Once your chunk and all will be fixed.
+After that you will not change it.
+So today we will complete the experimentation.
+And after that we will need to delete it again and again.
+Yes we can version it too.
+We can use it.
+It is always a good practice to implement your test using PyTest.
+It is a core Python module.
+Unit test and PyTest.
+You should get one of these.
+And I always incline more towards PyTest.
+Because its syntax is very easy.
+You have to make classes in unit test.
+It is a very oops code.
+You can easily define functions in PyTest.
+And there are many more features of PyTest.
+If you have written the name of the file in test.
+Test something.
+The file name starts with test and ends with test.
+Or the function name ends with test and starts with test.
+So it automatically detects it.
+This feature is not in unit test.
+So PyTest is basically your modern implementation of unit testing.
+It is easy.
+I am telling you that it is very easy.
+If you know the logic then you can easily do it.
+Once it runs then we will go towards the code.
+Again you can see guys.
+Those who have seen the previous session.
+That our data set was quickly created.
+Will someone tell me why it takes so much time to create it?
+Earlier these 14 iterations were done very quickly.
+Why is it taking so much time today?
+Yes, you are right.
+Today it is taking time for contextual compression.
+So we have to face more latency here three times.
+But it is good.
+Those who have not seen this flow yet.
+If you have not seen this pipeline then you are getting to see it live.
+So we are spending some time here.
+Because this is our final experimentation.
+From my side.
+You can do it.
+But from my side this will be the last experiment.
+Yes, data ingestion pipeline will be separate.
+Now let us get our back end.
+Let us get the API.
+Let us get our back end.
+Let us get the API.
+Let us get the front end.
+Everything will come.
+Data ingestion will obviously be separate.
+Transcript will be with you.
+And your user can also give it.
+Your chat bot has been updated.
+Or I have to give it.
+On the development side.
+What will be the sequence of the pyTest?
+The sequence of the pyTest will be.
+You will use the pyTest in two places.
+One is in deep eval.
+When you read CICD.
+Your evaluation is being made.
+Report is being made.
+Here you don't have any gate.
+If the evaluation fails.
+You don't have any gate.
+We will implement it in CICD.
+Through pyTest.
+So in deep eval also pyTest integration comes.
+Where you will first
+Test your new version.
+That on your matrix.
+Whether it is passing properly or not.
+Whether it is crossing your thresholds or not.
+If it is able to.
+Then you will take that new version
+In the regression testing pipeline.
+That is it performing better than the current best.
+Or it is performing worse than that.
+If it is performing worse.
+Then you will stop it there.
+If it is performing similar or better.
+Then you will pass it ahead.
+You will go ahead towards the promotion stage.
+That we have to promote it.
+That is why we have to make it our next best.
+If it is performing better than the previous one.
+If any matrix is there.
+If it is a little bit ahead of our current best.
+Then you will stop it there.
+So in these 3 stages.
+This will be our full flow.
+So if I explain it to you.
+This is a good question.
+And you should know this flow.
+We are testing in 3 stages.
+First of all we have
+Deep eval testing.
+So in CICD.
+First of all we have
+So in CICD.
+The first gate of Deep eval will come.
+In Deep eval we have 7 metrics.
+7 metrics have their own thresholds.
+Although we are
+Working with the same thresholds.
+But you know that you can define these thresholds
+In the code.
+So if our application
+Pass on these 7 metrics.
+Then we will pass it ahead.
+You can call it your preliminary stage.
+After that.
+After that will be your regression testing.
+You will go to regression testing.
+Only when you pass in this step.
+You will go in every subsequent step.
+Only when your previous one is cleared.
+After that you will check.
+That in your experimentation
+Logging, tracking.
+There will be a best version.
+Which will be your best till now.
+You will check.
+You will compare between A and B.
+B is your current.
+That B is.
+Is it comparatively better or worse than A?
+Is it better or worse than A?
+If it is worse than A.
+You will completely discard B.
+Your A will be the best.
+And regression testing will fail.
+But if your B.
+Can be passed in 2 scenarios.
+Either it is similar to A.
+Means its performance is in the same ballpark.
+And second.
+B is actually better than A.
+So regression testing.
+Doesn't test better.
+It tests bad.
+It doesn't test bad.
+Either it is better than A.
+So we will go to the next step.
+Next step will be our promotion.
+Application promotion.
+In that we will compare again.
+Between A and B.
+And here we will test.
+How much better it is.
+No bad test will happen.
+If it is better.
+Then it will be our best.
+If not, then A will be the best.
+So testing is happening at 3 levels.
+Which data loader to use.
+Yes you can experiment.
+That is your application side.
+But when a PDF is uploaded by the user.
+Whose layout is different.
+How do we decide which loader to use.
+In that case.
+You support multiple loaders.
+According to file extension.
+You use multiple loaders.
+In production.
+That is what happens.
+Any loader.
+No loader gives you all the features.
+So you check first.
+What is the structure.
+In your particular document.
+Again you have to do multiple experimentations.
+Flow will be the same.
+Scale will increase.
+Let's see our current has reached.
+It is still running.
+It has reached.
+Let's wait a little more.
+Let it be.
+You will run online evals.
+There.
+You will get feedback from your user.
+That is he getting the proper answer.
+If not.
+You will figure out.
+Why he is not getting.
+Tracing is why you do it.
+In tracing.
+Your loading step will be traced.
+Chunking will be traced.
+Everything will be traced.
+Tracing.
+Tracing is a logging.
+But.
+Basically.
+You open the whole application.
+And log each step.
+I told you.
+You trace the whole journey from input to output.
+That is why it is called tracing.
+Two more left.
+Again you will get answers.
+You will get answers.
+As we move forward.
+You will understand.
+Things will be logically stitched together.
+Don't worry.
+Till now.
+Give me feedback.
+Is there anyone who is confused.
+And doesn't understand any step.
+Any illogical step.
+You tell me.
+Whatever we have studied.
+If it is not working.
+Then it won't work further.
+Don't worry.
+You will get answers.
+Of all your questions.
+Again you have these codes.
+You have everything.
+You test it.
+You have pipeline.
+You do changes.
+Try to fix the error.
+I have put contextual compression.
+Try to fix something else.
+Make a compression pipeline.
+We have put it in advance track.
+Don't worry about errors.
+See.
+Our evaluation data set is ready.
+Now our testing has started.
+It will be done quickly.
+Let's see.
+Let's see how our results come.
+It is going.
+Much faster.
+As compared to the previous step.
+One more is left.
+It is not working.
+It is not working.
+It is not working.
+It is not working.
+It is not working.
+30 more seconds.
+Everything will be done quickly.
+Lock will be done quickly.
+Done.
+Our three test cases have failed.
+But the one I did in the previous run
+was failing.
+Our pass rate was improved.
+These are our results.
+Contextual relevancy
+is 80%.
+It is 81.
+Some of our metrics have improved.
+Some have decreased.
+But not that much.
+We have locked everything.
+Let's see the results.
+This is our new run.
+Our metrics, configuration
+everything is properly logged.
+All our artifacts are being tracked.
+Evaluation data set
+golden, reports.
+Everything is being tracked properly.
+You have to do
+comparisons.
+Let me show you that too.
+Let's refresh it.
+What you have to do is
+compare the runs.
+You have to select those three or four runs.
+You can compare all of them.
+Simply click on compare.
+Here you will get
+parallel coordinate plot.
+You can set multiple parameters
+and multiple metrics.
+We have chunk size, chunk overlap.
+What have we changed here?
+Contextual compression
+or not?
+We have changed it.
+We have set some parameters.
+Let's remove compression.
+We can test our metrics.
+Contextual recall.
+Answer correctness.
+Answer relevancy.
+You can track things.
+For which value
+was your chunk size in that case?
+Just follow these lines.
+What was contextual compression?
+True or false?
+Unknown is coming because we have not tracked false.
+Recall was coming.
+Answer correctness was coming.
+And answer relevancy was coming.
+You can easily sit
+and compare these plots.
+You can choose your best.
+Best in case of which configuration
+you get the best results.
+You can do this.
+You can see scatter plot.
+Again, here on y axis
+is your metric.
+On x axis is your configuration.
+You can see box plot.
+Let's say for
+different chunk overlap values
+this particular metric
+let's say contextual
+relevancy was behaving.
+See here
+where did it go?
+Let's refresh it.
+On x we have
+set our
+chunk
+overlap
+no, chunk size sorry.
+And here we have our contextual relevancy.
+Contextual relevancy.
+See.
+You can see box plot.
+By seeing this box plot you will understand
+that even on 250 chunk size
+you are getting different values.
+One value is less than 67
+and other values
+are higher.
+Why is this?
+Because you may have changed chunk overlap
+or contextual compression.
+That is why your values are changing.
+You can easily do
+comparisons for a given chunk size
+and see the result.
+You can see its range.
+Is it clear?
+You can do this comparison.
+We have done this in MLflow many times.
+Now I will show you the fun part.
+The fun part is
+that this particular run
+I have set it
+as a tag
+as staging.
+You know our staging tag
+is our current best.
+In all these runs
+this staging run
+was my best run.
+So which run was this?
+If I mark here
+Just a second.
+So this run
+this particular run
+this is my run A
+this is my current best.
+And I want to compare it with this.
+With my most recent run.
+So this will be my B.
+I want to do
+comparison between these two.
+What I have to do for that?
+First I have to build
+my formula for my regression
+testing and I have to conduct
+my test here.
+So let's understand how to build this.
+Basically we have to implement
+this particular formula in the pi test.
+So I will remove this.
+And let's go towards the code part.
+So in the code
+here in this test folder
+I have
+both my pi test codes.
+So this is considered
+a best practice that you make
+a test folder and put your
+test files in it.
+First of all we go to this file
+testregression.py
+and understand the code of this particular file.
+Now to run this particular
+test
+let's discuss
+what all things we need.
+What all inputs we need.
+So for this
+particular test, what all
+inputs we need, first of all
+our threshold values.
+Whether it is noise threshold or historical threshold
+we need these threshold values.
+Second we need
+our baseline values.
+What is baseline value?
+What are the metrics of our current
+current run?
+If I show you in formula
+If I show you in formula
+See this formula
+So this baseline score
+what is this?
+This is my current score.
+Means score of my A run.
+So I need that also here.
+And secondly what I want is
+Just a second.
+Annotation is little difficult
+to work in this.
+So I will figure it out.
+Third is
+your recent run
+metrics
+As soon as you have these four things
+Two thresholds
+One is your current
+current best metric and one is your recent run metric
+You will bring them here
+in your test
+and do your regression testing here.
+So this is the code of that thing.
+Let me clear this once.
+This thing is clear guys.
+Our inputs are clear.
+What inputs do you need?
+If you have clear then you will understand the logic of the code.
+I am looking at the chat.
+Inputs are clear.
+Why are we bringing thresholds
+Why are we bringing baseline
+Is it clear guys?
+Yes.
+Come on.
+Just a second.
+This is the way to close it.
+Great.
+So what we have to do first
+First of all, what we have done here
+We have made paths.
+So where are my historical runs?
+In this JSON file
+I have defined its path
+And my threshold values
+are in this particular JSON
+So I have defined its path here.
+After that
+What I am doing is I have made a function
+Get latest run id
+Now this function is basically
+going to my historical runs
+file
+And getting my latest run id
+Basically this particular value
+This
+Getting this value
+So basically
+What are we doing here?
+Why my value is not locked?
+Why my value is not locked?
+This is not my latest value.
+Where is my latest value?
+One second.
+This value is not locked.
+This particular value.
+One minute guys.
+I have run this code today
+So it was working properly.
+And here
+This is the log code.
+Hmm
+Everything is working properly here.
+I don't know
+Why it is not locked.
+Let me reopen this file.
+Hmm historical runs.
+If it was locked, it would have looked modified.
+Anyways, it is not locked.
+So I have to manually add it here.
+I don't know why it is not locked.
+It should add.
+I will have to work a little extra.
+There is no bug here.
+I don't know what is the problem.
+That it is not logged.
+This exact
+piece of code was working
+a few hours ago.
+If I show you, I have run this
+runs just now from the class.
+5 hours ago it was working.
+Now currently
+it is not working.
+Let's add it manually.
+So this is our
+run ID.
+And
+This is our
+run name.
+Let's copy this too.
+And let's add it here.
+So we have tweaked it manually.
+Hmm.
+There is no error here.
+Everything is working correctly.
+But I don't know.
+So guys, we have done it here.
+Now what we have to do is
+First of all, we have to
+fetch this ID of this particular
+latest run.
+This ID that you can see here.
+We have to fetch this ID.
+So we are writing the code of that here.
+Get the latest run ID.
+Where will we get this from?
+From our historical runs file.
+Whatever is the latest entry,
+we will get the run ID information from it.
+And what is the second thing we have to get?
+The second thing is
+we have to get our two threshold values.
+So for that I have made a function here
+called load thresholds.
+Through this you can either get noise threshold
+or historical thresholds.
+So you will give the path of the threshold file
+and will tell you what kind of threshold
+you have to load.
+And you will get thresholds here.
+Again, this is your DAGZUB code.
+Here we have
+fetched our experiment ID.
+After that, what I am doing first is
+I am getting the latest run ID
+using this particular function.
+Get latest run ID.
+We gave it this particular JSON path.
+And it gave us its latest run ID.
+Which is this particular value.
+After that,
+what we are doing is
+we are using another utility function
+called get latest matrix.
+And here,
+this function get run info
+I have defined it
+in the file MLflow utilities.
+So this file is open
+MLflow utilities.
+And this is its particular code.
+The code is very simple.
+This particular function, which is MLflow's
+get run function, needs a run ID.
+We fetched the run ID from JSON file.
+We gave that run ID to this function.
+Through that, we got the whole run object.
+I told you that
+run has info and data.
+So simply what we did is
+we fetched our run matrix
+from JSON file.
+It's easy guys.
+This is the code of MLflow.
+We haven't done anything
+which is different from the previous class.
+After that, we have made two custom
+load threshold functions.
+With this, I have taken
+my historical thresholds
+and noise thresholds.
+These are all in thresholds.
+What are these thresholds in themselves?
+These are basically your dictionaries.
+This is your noise threshold dictionary.
+This is the dictionary of historical thresholds.
+I have imported it here.
+Then what I am bringing at last is
+my staging matrix.
+For that, I am using a method
+getMatrixFromStage.
+You will get this in this particular file.
+Here it is.
+Again, you have to use
+MLflow.searchRun which we were using above.
+In getMatrixFromRuns.
+What will be the difference?
+First, we were setting noise historical
+and now we have to set the stage.
+You have to filter that particular
+run whose stage
+name is what?
+Which we will provide in the input.
+And output it as a list.
+If you have multiple tags,
+then you will get multiple files
+and multiple elements in the list.
+And from that,
+you will fetch your elements.
+Because you have only one stage run.
+Which is this particular one.
+Again, you have to refresh it again and again.
+This one.
+The stage is its staging.
+So this particular run will come.
+And now what you have to do is
+you have this run.
+You have to fetch your matrix from
+data.matrix.
+So we have collected all the things
+in this particular file.
+What all have we collected?
+Our latest rank matrix,
+our historical thresholds,
+and our previous best.
+We have collected the metrics.
+After that, what are we doing here?
+First of all, we are checking an important thing.
+We are checking
+if our staging run
+matrix and latest run
+matrix, are their names
+the same or not? Because it is possible
+that the current run
+you have done with 5 metrics
+whereas your previous run
+was with 7 metrics. So here you will
+get mismatched. So we are
+checking this thing here.
+So if there is no mismatch,
+then you will go to the next test
+or else you will close the test here.
+So this particular code you can see
+pytest.exit.
+You will simply close the run of pytest.
+If this doesn't happen.
+After that, this is
+your main testing function.
+What are we doing here?
+We are using a very good feature of pytest.
+Which is called
+pytest.parameterize.
+So here you use
+pytest.mark.parameterize.
+Now what happens
+with this particular thing?
+Here you can
+multiple
+inputs here.
+We have 7 metrics here.
+If I have to test 7 metrics,
+then I have to write
+these 7 functions here.
+Test regression on contextual
+test regression on contextual
+relevancy,
+text compression on answer relevancy,
+on precision, on recall.
+Here I have to make 7 such functions.
+I have made a single function here.
+And here I will
+run this particular function 7 times
+for each of the metrics.
+And here what I will send in the input?
+Input I will send only
+the name of my metric.
+I am telling here in the argument
+name that the input that I will get
+in this particular function will be
+metric.
+And where will I get its value?
+I will get its value from my keys.
+Dictionary is coming back to me.
+So I have fetched my keys from it.
+And after that
+I have defined my testing logic in this function.
+So
+whatever historical threshold is coming to me,
+I have multiplied it with multiplier.
+Now I will show you the value of multiplier.
+What is multiplier?
+Multiplier is 2.
+Because we discussed in the previous session
+that we will use 2 standard deviations.
+So I multiplied it with multiplier.
+And we have
+from historical threshold
+of that particular metric.
+We have 7 metrics.
+We are testing individually one by one.
+So here let's say our first metric
+is coming in the input.
+Contextual Precision.
+So here the value of historical threshold
+will come from precision.
+The value of noise threshold will come from
+stage value.
+Stage value means
+the value of precision of my previous best
+and the value of
+my latest run.
+The value of B.
+Now I will define my lower bound.
+What is lower bound?
+From my previous best, I will subtract
+this threshold plus this
+noise threshold.
+And after that
+through an assert statement, I will simply
+test that what is my latest
+value.
+What is the latest value?
+The latest metric value for my current run.
+Is it greater than my lower bound or not?
+And if assert statement
+is true
+then basically your test
+will pass here.
+Whereas if it is not true
+and if it is false
+then you print this particular message.
+That metric, whatever is the name of metric
+if there is any regression then it will be written
+metric contextual relevancy regressed
+metric answer relevancy regressed
+So you are testing
+that the latest run
+value, is it lower bound?
+What is lower bound?
+The lowest limit of regression
+is it less than that?
+Is it less than that?
+Is it below that?
+If it is less than that then your test will fail.
+And if your
+test fails on any of your metrics
+you have 7 tests
+if it fails anywhere
+then you will stop your application version
+from promoting it.
+You will not promote it.
+Your A will be best.
+B will never be
+best, even if it fails on one metric.
+I hope you understood
+this whole thing.
+Did you understand guys? Did you understand the code?
+Clear?
+Yes.
+Basically whatever we have discussed
+the formula written in the notes
+we have implemented it through the PyTest.
+Rest all your utility functions
+their work is only
+to load the appropriate values.
+Clear guys?
+Any doubt? Any question?
+Anyone feels that this code is
+very tough? Not like that?
+It is a simple code of PyTest.
+If you have any questions you can ask me.
+Any questions guys?
+If not then write clear in the chat.
+All are open source in prod.
+What is open source?
+PyTest?
+PyTest is your built in module
+of Python.
+It comes with Python.
+Rest all the frameworks
+we are using are open source.
+DeepAval is open source.
+Langfuser is also open source.
+The ones we are going to use
+for Cardless are also open source.
+Cardless, EIE.
+Yes, these are used in industry.
+Any more questions?
+Put some comment above the code.
+Ok, I will do it.
+Jitendra sir, I will do it.
+It was a simple code that's why
+I didn't add any comments here.
+If you look at the file
+here
+they are basically doing simple loading.
+It is easy. If you look at the code
+you will understand. Nothing fancy.
+Here we are loading the files
+building our formula.
+After building the formula we are simply
+testing in this particular line.
+In this single line our testing is complete.
+Now let's run this.
+We will write
+uvrun, then we will write
+PyTest.
+After that our file
+is inside the test
+and it's name is
+test regression.
+test
+regression.py
+Let's run.
+Test session has started.
+Now
+here
+you will get the proper result.
+Your 8x8 tests have passed.
+So, here
+these dots have passed.
+If any of them had failed then F would have been written.
+Ok, what does this mean?
+This means that
+we had set our lowest bar.
+If
+we get worse results than this then
+we will not pass our application.
+Our application has crossed
+our current run.
+Did you understand this?
+If I visually compare it
+and show you
+simply
+we compare
+our previous best course and current run
+Ok, so these are the changes
+we have made.
+We have made it 270, first 300
+and rest of the metrics
+are same.
+If you want to see here, if you do showdiff only
+then you will see different metrics
+and different parameters only.
+And you can see clearly here.
+By doing 270, answer relevancy is increasing.
+Contextual precision is same.
+Recall is increasing.
+Relevancy is same.
+Faithfulness is a little less.
+But it is not less than regression.
+And answer correctness is increased.
+Now let's do
+promotion testing.
+So, once I will show you
+the code of promotion testing.
+It is simpler than this.
+So, again you are doing the same imports.
+And here you are setting your route.
+You have told your target stage.
+Your current best
+is in stage.
+After that you are taking
+latest run id. Again same code.
+Here you are initializing your tags up.
+Now you don't need
+thresholds value here.
+Because you are not doing regression testing here.
+Here simple testing is
+that you have two versions.
+Version A and version B.
+You have proved that
+version B is not less than A.
+Now you simply have to check
+that is it better than A
+on every matrix or not.
+You have to check better here.
+That is better or not.
+So, we are checking that here.
+So, we will bring our latest run matrix
+which is the B matrix.
+And we will bring the staging matrix
+which is the A matrix.
+And we will compare these here.
+First of all, we will check
+that the names of the matrix are not different.
+And finally we are doing comparison here.
+Comparison is very simple.
+That our latest value here
+is better than staging.
+Better or not.
+If not, then our current
+best is going to be our current best.
+So, let's run it once.
+The name of this file is
+test
+promotion.py
+And I have run it.
+Test has started.
+There are 8 tests in this file.
+Let's see.
+Here our test has failed.
+Where it has failed?
+Somewhere in between, in one particular test.
+Now you have to see the whole report
+where the fail is.
+Test promotion on matrix.
+Which matrix has failed?
+Faithfulness.
+What was the matrix in faithfulness?
+The value that you got
+is 91%
+So, in current run
+your faithfulness value is 91%.
+What was the value in previous run?
+95%
+So, it has failed on faithfulness.
+So, we will not promote it
+here as current best.
+Although it was performing well in other tests
+but in current one matrix has failed.
+I hope this thing is clear to you.
+So, we are still using our old version
+of this test.
+So, we are still using our old version.
+We will still consider our old version
+as best.
+Although other matrix are improving here.
+But
+we will not promote it because of one.
+We will keep trying
+till all our matrix are not improved.
+Is this thing clear?
+Clear?
+Clear?
+Clear?
+Code was easy.
+Code was not difficult.
+Any questions in your mind?
+Any question?
+Do you think there is a way
+to improve this pipeline?
+This promotion pipeline?
+On specific matrix and
+side reduction in different matrix
+can be neglected.
+Can there be any improvement
+in this pipeline?
+Guys?
+Guys?
+Can we do something?
+Can we do something?
+Automatically change the parameter.
+No, you have to change
+the parameter manually.
+But we will set a trigger
+in the future that
+as soon as the parameter value changes
+the entire pipeline will run on its own.
+Rest will be automated.
+You have to change the parameter
+manually during development.
+In this particular pipeline
+did you see a flaw?
+I have not proved it
+because I wanted to discuss this flaw with you.
+Do you see any flaw in this?
+Saurabh has said a flaw
+that what is the problem here?
+See, from our 8 matrix
+to 7 matrix
+in 7 matrix, we have only one matrix
+and our score is not performing well.
+Rest all have improvement.
+So why didn't we call it
+our best run?
+It was also decreasing in 1,
+so it is performing better than the previous one.
+So why didn't it become our best run?
+What can we do in this
+Yes, one fail result
+equals full pipeline failure.
+What should happen?
+It is a little less.
+Instead of 96, you are getting 91.
+Rest are getting better.
+Rest of your matrix
+is better than the previous one.
+Answer relevancy is also 5% higher.
+This is also higher.
+This is one point higher.
+What difference does it make
+if this is 4 or 5 points lower?
+Rest are getting better or equal?
+Is there any better way
+to find out the best?
+We have spent a lot of time
+in regression testing.
+Is there a better way?
+Yes, Rahul is right.
+We should include noise threshold.
+What is this?
+These are noisy results.
+So we should include some threshold here.
+But the question is
+historical or noise?
+Or something of our own?
+Historical, noise
+or something else?
+We have to include threshold.
+We have understood.
+Both cannot do it.
+We will do only one.
+But which one?
+Guys
+Which one will we do?
+Historical one?
+Or the other one?
+The noise one?
+Think and tell me.
+Think how we were
+calculating both.
+Were both capturing different variations?
+Which one is better
+for our use case?
+Is our configuration same here
+or we are changing it?
+Is the configuration same or changing?
+Same. Where is same?
+Chunk size was 300 before.
+Now it is 270.
+If we are changing here
+then which one should we use?
+Historical or noise?
+Historical
+But the simple answer is
+you will choose historical here.
+But it depends on you
+which version you want to
+promote.
+And what threshold you want to use.
+You can choose historical
+standard deviation.
+What multiplier value you want to select
+depends on you.
+You can also choose fixed threshold
+or fixed window.
+5% up and 5% down
+is fine for me.
+Or you can also
+keep a condition that
+how many results you will fail
+and how many you will not promote.
+Or how many you will pass, you will promote.
+So all these things
+you can define custom.
+So what we will do
+in next lecture
+I will write the code
+we will take some method
+that if you are getting
+small changes here
+then our whole iteration should not fail.
+Technically, your iteration should be
+next best.
+Is it clear now?
+So we will figure out some way.
+But what is that method?
+It is not fixed, it is custom.
+You can make anything there.
+But it should be logical
+and mathematically valid.
+Is it clear?
+Is it clear?
+In our case, here one approach
+can be that we set a fixed window
+that should not be below this particular point
+and we should have
+5 metrics to pass.
+Means in 2-3% range
+and we want 5 metrics
+to be passed.
+Only then we will pass it or not.
+Rest 2-3% range
+can be out.
+We can also define multiple ranges.
+First order is done,
+second order is done, some big range is done.
+We can also define like this.
+Again everything is custom.
+I hope this whole thing is clear to you.
+So how to do testing?
+How to do testing?
+Everything is clear.
+And what we will do is integrate it
+in our CIACD pipeline.
+So now what will happen is
+as soon as you change your configuration
+and push the change to your GitHub
+the whole pipeline will be run.
+First your experimentation pipeline will be run.
+All your results will be logged.
+Again evaluation will be done.
+After that your thresholds will be calculated
+if you have set for calculation.
+We will not recalculate
+the thresholds again.
+After that your
+particular testing flow will run.
+And in this one by one
+your testing will be done.
+First regression testing and then promotion testing.
+So this exact flow
+we will follow in production
+or in CIACD.
+Is it clear guys?
+Clear?
+If it is clear
+then write clear.
+If there is no question
+then you can ask your question
+and then we will move to the next topic.
+Which is guardrails.
+And this is also a very important module.
+Like evaluation was there
+so guardrails are also very important.
+Regression testing is clear.
+Regression testing is clear.
+Great.
+Am I audible guys?
+Any questions?
+Any questions?
+I know
+you might have some questions in your mind.
+Or you might have a recording in your mind.
+But it is highly
+advisable that you ask questions.
+Again there is no
+best approach that this approach is best.
+Or the approach I have done is the best.
+You can customize it.
+Because you are simply
+running comparisons.
+It is possible that comparison for me
+is not same for you.
+I will change custom logic approach in the code.
+I will change the code.
+We will discuss in 2 minutes.
+You can put some other approach.
+There is no standardized approach
+that this approach will work for everyone.
+Application to application
+can be changed.
+Domain to domain can be changed.
+It depends on
+who you want to see next best.
+You will set that passing criteria.
+As a developer.
+Your stakeholders will decide.
+For an EdTech platform
+in answer relevancy
+no one wants to keep a window.
+I will say in answer simplicity
+that if a particular
+version is giving simple answers
+from the old version
+and scoring better in that evaluation
+then I will promote it.
+I prioritize it.
+That is my custom logic.
+I have put harsh logic here.
+If one fails, I will not pass.
+Again there is no best approach.
+Best approach depends
+on application to application, domain to domain.
+Let's start Cardrails.
+Today we will start
+a very important topic.
+Again I am reiterating
+that the more important the evaluation
+the more important the guardrails are.
+Let's bring focus here.
+Next half an hour 40 minutes
+we will focus on guardrails.
+In today's session
+we will not discuss any framework.
+We will understand what are guardrails
+and where do we need them.
+First of all let's discuss
+why do we need guardrails?
+You must have heard about guardrails
+many times.
+We use guardrails in our applications
+or in your LLM based applications.
+If we understand it simply
+then guardrails are basically
+your safety net.
+If I simplify it further
+then guardrails are your boundaries.
+What you do is
+you set some boundaries around your application.
+You set some rules.
+Those are your guardrails.
+Why do you have to set those rules?
+The answer is written here.
+The answer is that your LLM
+where did our discussion start from?
+that our core LLM based applications
+is LLM.
+Our application is around it.
+Our guardrails are around our application.
+The center point is our LLM
+our application depends on it
+and our guardrails depend on it.
+Because of LLM
+we have to set guardrails in our application.
+Why is it so?
+It is because our LLM
+those are basically
+good at a lot of things.
+These are general purpose models.
+But our applications
+are specific.
+How?
+They are task specific like our campusX chatbot
+It has a simple task
+that you have to solve doubts here.
+Is our application designed
+to tell weather report here?
+No, right?
+Is our application designed to generate code here?
+No, what you have to do is
+to answer the questions
+based on the information in the transcript.
+Then your applications
+have a specific domain.
+Like what is our application?
+It is working in the EdTech domain.
+So it has to show some behavior here
+like simple explanations
+or let's say
+to the point explanations
+that is a domain specific criteria.
+And what can be the third criteria?
+The third criteria can be
+application based.
+Now we are building a Rack chatbot
+for our use case.
+So there will be our boundaries
+and rules of Rack chatbot.
+Whereas tomorrow our application changes
+and we get an agentic application.
+So in agentic application there will be
+different boundaries and rules.
+So your LLM is general purpose
+and your application is
+highly specific.
+So you have to set a balance between these two.
+And to set that balance
+you use guardrails here.
+So what is your LLM?
+It is a general purpose
+text generator.
+Its job is to generate text here.
+Your LLM doesn't know
+what is your application?
+For whom is it?
+What can it do?
+What is considered correct
+and safe?
+So your LLM doesn't know.
+And it doesn't know if the output
+is factually grounded or hallucinated.
+So to protect
+all these things
+and to protect your application
+you implement guardrails here.
+Now we haven't discussed
+how to implement guardrails here.
+The simple concept is
+LLM is your general purpose
+and application specific.
+In the center of your application
+LLM is in the core.
+So your application
+is powered by LLM.
+Application specific
+LLM is your general purpose.
+You implement guardrails around it.
+And around which?
+Your LLM and application.
+So guardrails in the outer circle
+and your application in the middle
+and LLM in the center.
+Is it clear?
+Now the guardrails you implement
+you implement them
+by looking at LLM
+because that is the core
+and that is the inner circle
+and you implement guardrails
+specific to your application.
+So you implement guardrails
+by looking at both these things.
+If you don't set any boundary or guardrails
+If left unconstrained
+an LLM in a production system
+can fail in ways that are
+specific to generative systems.
+Meaning your LLM
+can fail which is very specific
+to generative systems.
+Generally generative systems fail in this way.
+Which are not bugs.
+It's not like your application
+starts working badly.
+The output your application will give
+will not be that good.
+Meaning their quality
+will not be that good.
+User's experience will not be that good.
+Like you will not fail here.
+Like you are running a test
+through PyTest.
+So it's not like you will fail here.
+But the answer may be hallucinating.
+Thank you.
+Thank you.
+Sorry, mic was muted.
+Am I visible? Audible?
+Is the screen share visible guys?
+Guys,
+Am I visible? Audible?
+No messages coming from you guys?
+Any thumbs up? Thumbs down?
+Any reaction?
+No.
+Hmm.
+Am I visible? Audible?
+Great.
+Just a second guys.
+I don't know. Zoom crashed.
+I think the day before yesterday
+same problem came up.
+It crashed without any reason.
+And the same thing happened to me.
+I don't know.
+What is the issue?
+Is it a platform issue or whatever?
+Let's continue our discussion.
+So where do we do
+in the discussion?
+We were discussing about guardrails.
+So as I told you,
+your
+inner circle
+is your
+general purpose.
+It has
+the knowledge of the entire internet.
+What did we build around it?
+We built our application around it.
+Our application
+which is specific
+will use this general purpose
+LLM and work on it.
+And around this application
+we built
+our guardrails.
+So basically
+for this LLM
+a safety net will work
+so that it generates
+specific outputs of our application.
+Here, there should not be a haywire.
+So here some failure categories
+have been told.
+We will discuss many categories in the future.
+First of all, your input side
+category. This is
+the category of your guardrails
+which you face from the user.
+From the user side.
+Your prompt injection.
+Jailbreak. Malicious toxic
+user input.
+Your output side risk.
+In which you see the risk factors
+generated by LLM.
+Like
+LLM can give hallucinated facts.
+Toxic or bias responses.
+Or system
+problems can be leaked.
+Then comes your task fidelity
+risks. In which
+your model may go off topic.
+If you were demanding structured output
+then instead of that
+you may be given something else.
+Or your specific business rules
+may be ignored.
+And last is your compliance and safety
+risk. In this
+comes your PIA leakage which is
+Personal Identifiable Information leakage.
+Generating disallowed content.
+If you have
+disallowed some content then it is
+generating your LLM. Violating
+domain specific regulations. Like
+Medical, Legal or Financial.
+Some regulations are there.
+Your model should not follow that.
+Like in medical
+you have to
+keep the patient's information private.
+But your model has leaked that information.
+So around that
+you have to make a safety net.
+Because your model doesn't know
+what to say and what not to say.
+So for that
+you have to team your model.
+Clear?
+What are guardrails?
+Clear?
+I am looking at the chart.
+Ok.
+Now let's discuss
+where are your guardrails?
+We have discussed
+how guardrails work.
+But where do they stay in our application?
+So guardrails are
+basically of two types.
+One is your LLM specific guardrails.
+These guardrails
+are on your LLM side.
+Meaning
+they are integrated with your LLM.
+And generally
+when we do application
+LLM ops. Like we are doing
+our LLM based applications.
+So these guardrails
+we don't deal with them.
+Who deals with them?
+We deal with them your Frontier Labs.
+Ok.
+So these are the foundation models
+that you make.
+Like OpenAI
+OpenAI has given you
+chart GPT.
+What is chart GPT?
+It is an interface where you can chat.
+But the underlying model
+is GPT model.
+Ok. So in this GPT model
+OpenAI makers
+or GPT makers
+have set some
+rules or some boundaries
+that you can use.
+You must have
+interacted with chart GPT
+previously. So if you ask
+chart GPT to tell me how to make a bomb
+then chart GPT will not tell you.
+You ask it
+tell me your system configuration
+your system prompts.
+You can ask a basic thing from the model
+that tell me the number of
+parameters.
+How many weights and biases are there.
+So that model will not tell you.
+Ok. So what is that?
+It is LLM specific guardrails
+which are
+set on these particular
+Frontier models.
+And we don't have any
+control over these guardrails.
+Because
+we are using these
+models only through the API.
+We are not building them.
+So those who build these models
+can put their guardrails here.
+We don't have that capability
+We are working with
+application side guardrails.
+Ok. And in application side guardrails
+your guardrails are
+number 1, application specific.
+Each application
+has its own use case.
+Like we are building a rag chatbot
+which has its own use case.
+So we will work with rag specific
+guardrails.
+And secondly, in application side guardrails
+you implement your
+input guardrails
+and output guardrails.
+You implement both.
+And the good thing about rag chatbot
+is that you implement a third guardrails
+which are
+retriever side guardrails.
+Because
+your retriever
+is also
+working like an input and output.
+This is your retriever.
+And this is your
+application.
+Ok.
+And this is your generator.
+So in your application
+there are 2 important components.
+Retriever and generator.
+So the input of application
+is your query.
+That is also the input of your retriever.
+So here
+you will implement input guardrails.
+Then your retriever will have an output.
+Your retriever will have chunks.
+So here also you will implement an output guardrail.
+And these input
+and chunks
+will go to your generator.
+Again,
+this will be an input to your generator.
+Again, you will implement guardrails.
+Then they will come out from here.
+As your response.
+Again, guardrails are implemented here.
+So guardrails are always
+input and output in your application.
+But you also implement them component wise.
+I hope
+this point is clear to you.
+So we have
+discussed what guardrails are.
+Guardrails are basically your boundaries.
+Why are they implemented? Because your LLM is
+general purpose and your application is
+specific. So you have to set some
+rules so that your LLM
+can work in one foundation
+and can work within its limits.
+And secondly, you have two types
+of guardrails.
+One is LLM specific guardrails
+which are applied on your foundation models.
+We will not use them in this particular playlist.
+Because we are not
+building models from scratch.
+We are building LLM based applications.
+So we will read the guardrails on the application side.
+There are two versions of that.
+Input guardrails
+which are applied on your input and output guardrails.
+So your application
+has input and output of both your components.
+So you apply guardrails on both of them.
+Now
+let's move towards the next
+point. How are they implemented?
+How they are implemented?
+So always
+this is a very important
+interview question. It can be asked to you.
+If you are being
+interviewed on guardrails
+then you can be asked
+that do you use guardrails
+to integrate inside your application?
+Inside the application?
+Or around the application?
+So I am looking at the chat.
+You guys tell me
+that do you implement guardrails
+inside your application or around it?
+We have already discussed this point.
+Around the application. Can you tell me
+why? Why is it implemented
+around the application?
+Can you tell me the why behind it?
+Any of it?
+Anything that you are thinking of?
+Before input we need guardrails.
+So we can integrate this
+in our application as well.
+Our rag workflow.
+Inside that
+we can also use this particular file
+which is our rag workflow file.
+This file.
+Inside this we can also apply guardrails
+on the output.
+But why are we specifically focusing
+that we have to build around it?
+Anyone can tell me?
+For better testing.
+Yes, this can be a reason.
+You can read it from here and tell me.
+Any other logical reason that you are thinking of?
+Why around only?
+Why not inside?
+Okay, tell me one thing.
+Our laws
+like criminal laws
+are they
+part of our constitution?
+Or are they written separately?
+Separately why?
+So that we can refer to the constitution
+So that we can refer to the constitution
+we can also do that.
+The answer to this is
+so that we can alter, we can change them.
+What are the rules and laws?
+Your time is frequently changed.
+It can be according to your needs.
+Every year you have to bring a new law.
+But constitution generally is static.
+Similarly your application
+what is that?
+It is a kind of static thing.
+You have prepared its flow once.
+Now you will use that flow.
+I am not talking about configuration.
+I am talking about the whole flow.
+What is the flow of your rack?
+You can go to any version of the rack.
+Or any iteration.
+Internally the way of working with the rack is the same.
+The same retriever, the same generator, the same chunker.
+Everything is the same.
+Only that complexity changes.
+So what you do is
+you do not implement the guardrails
+in your application.
+You do not do hard code.
+You implement guardrails as a wrapper.
+What is the benefit of that?
+If you have set the guardrail
+as a layer or as a wrapper
+then you can make changes
+in it.
+You can make improvements in it.
+You can evaluate it.
+Separately from your application.
+Basically what I mean to say is
+that the guardrails are
+a separate entity.
+So you can do it in a separate way.
+So you can do it in a separate way.
+You can say that the guardrails are separate entities.
+They are dependent on your application.
+You set the guardrail
+according to your application.
+But they act like a separate entity.
+You can consider it as a father-son relationship.
+Father and son,
+although related,
+they are separate identities.
+The son is dependent on his father
+in the growing stage.
+But are they not
+separate entities?
+They are separate entities.
+Similarly, guardrails and your application
+are two separate entities.
+What is the reason for that?
+The reason is,
+here are some points written.
+First of all, guardrails are cross-cutting concerns.
+Like your logging or authorization.
+They apply across many
+parts of the app.
+So they shouldn't be duplicated in line everywhere.
+Meaning,
+you have to apply guardrails on input,
+on retriever,
+on your generator,
+or on any other component.
+Now what you are doing here is
+you are applying guardrails separately.
+You are changing the code.
+So it is possible that your existing
+code breaks.
+It is possible that you don't do proper implementation.
+It is possible that you miss out on applying guardrails.
+So what you are doing is
+you are implementing it in a separate layer
+and
+binding your application with it.
+Guardrails must be
+independently testable.
+You always test your guardrails
+independently.
+You don't test with your application.
+You test independently
+that are your guardrails or rules
+that you have set working or not.
+Then guardrails must be
+plugable composable.
+Meaning, you can change your guardrails here.
+You can reorder them,
+remove them
+without rewriting the app logic.
+Your app is made here.
+If you want to add, remove,
+or reorder anything here,
+simply you have to change in your guardrails layer.
+So
+when guardrails app will work,
+you have plugable validators.
+You make a guard object there.
+What is guard object?
+This is basically your guardrails layer.
+In this guardrails layer,
+you attach your validators.
+What are validators?
+These are your individual guardrails.
+This guard
+interacts with your application
+like your evaluator interacts
+and it validates
+your application.
+Guardrails
+act on a contract, not on
+implementation details.
+What are guardrails?
+Guardrails are rules.
+Like you have one rule
+that you will not give
+any toxic output.
+This is one rule.
+It will work in your rag application
+and in an agentic application.
+It will work in a normal
+question and answer chatbot.
+You have set this rule.
+You can use it anywhere.
+They simply validate
+the input and output against a spec.
+Spec means in simple language
+against a simple criteria or a rule.
+They don't care
+how your LLM fall is made internally.
+Is it clear?
+That's why you implement
+guardrails as a separate layer.
+Like
+your user input comes
+first it passes on from guardrails.
+Then after passing
+on from guardrails,
+the validated input
+means
+the input that crosses guardrails
+goes to your LLM.
+LLM gives some output
+and that output goes to your output guardrails.
+Again, here
+proper validation is done.
+You get a validated output.
+And as soon as
+validation crosses, you get your final
+response. You can understand it
+as if your metro
+security is done.
+The security of metro
+keeps changing.
+Like the 15th star,
+the security of metro will increase.
+It will change a little.
+The checks will increase.
+What did you do there?
+You added additional checkpoints.
+You frisked
+more there.
+You checked the baggage properly.
+But does it make any difference
+in metro operations?
+I am looking at the chart.
+Does it make any difference?
+No, it doesn't.
+What did you do?
+You added checkpoints
+around the central operation.
+So guardrails are also like this.
+The input that you get
+is your metro riders.
+You checked the
+riders coming up.
+Then you entered the metro.
+Then you checked the station
+after getting off.
+After getting off, you added a further check.
+Although this doesn't happen in metro cases.
+But you understand that we checked after getting off.
+And after that
+we finally released it
+at our destination.
+So simply these guardrails work for you.
+Is it clear?
+Now let's move
+ahead and discuss
+how guardrails look like.
+What is their nature?
+This is also an important concept
+that you should know.
+The nature of guardrails
+is in a duality.
+It has a dual nature.
+It takes two personas.
+One nature is
+its transparent nature.
+My guardrails
+are for my user.
+If I am interacting with
+chatgbd, I will never ask chatgbd
+how to make a bomb.
+I am a legitimate user.
+Or I will never abuse chatgbd.
+Or I will never try to break chatgbd.
+I am a legitimate user.
+So for me
+guardrails should act
+as a transparent layer.
+We have discussed that
+this layer is implemented in a layer.
+But this layer should be transparent.
+A legitimate user should never see this layer.
+Chatgbd with or without guardrails
+doesn't matter to me.
+I should feel that
+guardrails are not needed.
+I should interact with my app.
+I should interact with my app.
+I should interact with my app.
+Yesterday we installed toxic
+output guardrail in chatbot.
+Tomorrow we installed toxic
+output guardrail in chatbot.
+I won't get an abusive
+output because I have installed guardrail.
+But I won't even know that
+there was a guardrail.
+I will simply think that
+LLMs are so good that they never abuse.
+Secondly,
+For any malicious attacker
+your guardrails should be opaque.
+What does opaque mean?
+No matter how much you try
+you can't breach this checkpoint.
+No breach allowed.
+Whenever you implement guardrails
+it creates a balance between
+transparency and opaqueness.
+Let's read it once.
+What is duality?
+How should your guardrails look?
+Your legitimate users
+should be transparent.
+Guardrails should never
+be felt as friction by the
+normal user while doing normal things.
+Because you can understand that
+if your guardrails act like
+a friction point
+will you use the application?
+You will not. You will leave the application.
+Because there is added friction.
+When we go to use an application
+on Google
+Google shows us images
+like traffic lights, bus
+etc.
+It is called capture.
+It creates friction.
+So friction should not be there.
+Why?
+Because bots cannot sign up
+through the application.
+But that particular
+method
+will generate friction.
+How should guardrails be?
+Friction is not generated for the
+legitimate user.
+Whereas for the adversarial user
+there should be proper opacity.
+You can't breach this.
+Guardrails should block
+malicious attempts immediately.
+Block at the same time
+with zero tolerance.
+No tolerance for
+wrong people.
+While leaking zero information
+about how the block happened.
+This is also an important point.
+People forget this
+while implementing guardrails.
+What do we have to do here?
+We have to check
+the checkpoint.
+We have to catch
+the terrorist.
+But the terrorist should not know
+at which point they are
+checking and where they are being watched.
+You should not reveal
+implementation details.
+Similarly, the guardrails
+in your application
+are not blocking
+but telling the user that
+they have blocked you because
+you asked this question.
+You simply have to block it
+and not answer it.
+Whereas you should never block
+your right user.
+So this maps closely to your
+well established security concept
+Fail silently to the attacker.
+If you are an attacker,
+then you should fail silently.
+Do not tell the reason
+why you were not allowed to pass.
+Fail invisibly to the user.
+If you are a user,
+then do not show it.
+It should not think that there is
+a checkpoint or a guardrail.
+It's the same instinct behind why
+a bank doesn't tell a fraudster
+which rule flagged their transaction.
+If there is a fraud transaction
+and the user is fraudulent,
+then I will not tell the fraudster
+that you did this
+and that's why this fraud was detected.
+That you made a big payment
+from the credit card
+and you made a payment of 10 lakhs
+and if you made a payment of 1 lakhs
+then I would not flag you.
+We keep that rule hidden
+so that the attacker
+does not make any mistake.
+Clear?
+If we do not make this guardrail
+invisible to the user,
+then what will be the problem?
+The first problem is that
+the guardrail fatigue will come.
+The user will see
+the answer of this kind.
+I can't help with that.
+Warning banners on some queries,
+innocuous queries.
+They distrust or root around the system.
+They are creating a kind of friction.
+What is guardrail fatigue?
+We added more guardrails than needed.
+Now the user is
+interacting with the app
+so he is getting worried
+because he has to authenticate it again and again.
+He has to prove
+his right face again and again.
+So he is getting fed up
+by proving it again and again.
+The second is false sense of the app
+being broken.
+If you are stopping somewhere again and again
+re-authenticating, then you will feel
+that the app is bad, it is not working properly
+or it is not safe.
+A user rephrasing three times
+because a guardrail is misfired
+makes the app
+that the app is not working properly
+or it is not safe.
+So you always keep guardrails
+invisible on the user's side.
+And you always keep it opaque
+to the attackers.
+Like you never reveal
+why your request got blocked.
+Like if your app
+responds, cannot answer
+questions about internal pricing
+logic.
+Then you have leaked the information
+that because you asked
+about internal pricing
+so I am not able to answer.
+So it is possible that your attacker
+will ask questions in some way
+he will get to know that
+there is a guardrail here.
+Now what I do is
+I rephrase it a little and ask.
+Here pricing logic
+may be a sensitive keyword.
+So I ask it in a different way
+that how do I break this system.
+You never have to tell
+which is the guardrail.
+Verbo's Refusals Enable Jailbreak Iteration
+which I told you.
+If you have a detailed refusal
+that is why it is not responding
+because of this reason
+then you will want to break it.
+What is the attacker's job?
+To break your application.
+And finally
+General Refusals Stop the Feedback Loop
+If you have a general refusal
+that I can't help with that
+then why is my response being blocked?
+So in that particular way
+with that fallback message
+it becomes very difficult
+to break your application.
+A flat uninformative response
+I can't help with that
+request gives the attacker
+no signal to optimize against.
+So you have to give responses like this.
+Again opaque to the attackers
+and invisible to the users.
+So your user request
+your input
+your input goes to your guardrail layer
+and this is unseen
+to both the attackers
+and the users.
+If your user is legitimate
+that is your guardrail is passed
+then it will see a normal response
+and no visible checkpoints will be seen
+and the user will feel
+that no guardrail was applied.
+Whereas if your intent is malicious
+then you will get a generic refusal
+and no detail will be found.
+So you will not know that guardrail is applied
+and how much is the strength
+and how much is the strength
+and you will not find any way
+to break that.
+Is this point clear?
+What was the source of the error?
+Oh you are telling about that
+I thought the lecture
+was not clear.
+Capsa, yes that is obviously
+very annoying.
+Part of our documents only why don't we
+we will discuss this in the future.
+Through retriever there is
+an attack called as prompt injection.
+Nowadays prompt injection
+is done through retrievers.
+Not through input
+because through input
+it is well guarded.
+In rag application through retriever
+people don't implement guardrails.
+Retriever is fetching from our documents only.
+It's a good point but we will cover it in detail.
+Shall we move forward?
+Is the concept of guardrails looking interesting?
+Actually it is very interesting
+and highly practical.
+Now the implementation process
+of guardrails is a
+two step process.
+It is always a two step process.
+In these two steps
+the first step is
+where you classify
+into a yes or no.
+That here
+this particular request
+should be passed or not.
+Either it is a pass or a fail.
+So this is your step number one.
+And step number two is
+your response.
+Here if it is passed
+then what kind of response
+you have to give
+and if it is failed then what kind of response
+you have to give.
+So as soon as a user request comes
+first of all you will get a guardrail check.
+It will decide
+whether it is passed or failed.
+And it will give you a score.
+How much it was passed
+and how much probability it was to pass.
+What percentage was it if it was failed?
+After that your response
+formatter decides
+what the actual
+user sees.
+And after that the response to the user goes.
+Now I will ask you
+that here we have
+made these two step or two layer
+process.
+Simply here we are in one single step
+classify
+and response
+Why can't we
+classify both in one single step?
+Here what is the need of these two separate steps?
+I am looking at the chat.
+Circuit breakers, tenant isolation
+Yes
+They are guardrails
+I mean they can be called guardrails.
+Yes, they are at authentication
+level.
+The user will know that they are guardrails.
+So if we classify
+and let's say our particular request
+failed.
+So we just gave a response
+that this particular
+input won't work.
+I can't give response
+or request denied
+we gave it like this.
+Why is this two step process
+needed?
+You are actually thinking in the right direction Gagan.
+Think a little more.
+The response is dependent on the classification.
+Yes, it's fine.
+We can do both things in one step.
+We can take a structured response
+we are doing it in evaluation also.
+In evaluation we are getting a score
+and the response of that score
+is also coming.
+Why do we need to do it in two steps?
+First we are checking
+the guardrails and then
+making a response.
+Let's say I am doing both of these things with LLM.
+So we have to do two API calls.
+Why is this not working in one API call?
+Anything?
+If you want to block the user
+again
+it will be classified
+and then you have to give a response
+why did you block it?
+It's not like you blocked it
+and showed it in a bad error.
+You can't do that.
+If I write on chart GPT
+I want to make a bomb.
+It's not like I just entered
+and there was no response.
+Black dot came and it stopped.
+There is some chart GPT
+and it gives a response
+that I can't tell this.
+Guardrails are the outer layer.
+Yes, but by a two step process.
+Like example
+the user doesn't know
+why it was blocked.
+Gagan was right
+that there is a separation of concern here.
+Let's take the example of Metro again.
+What happens in Metro?
+Your bag is checked
+in your scanner machine.
+Whereas the human
+is frisked and
+scanned by a human.
+Why did we put two different things here?
+We could have put one thing
+or we could have got the bag
+and the person scanned.
+But why did we put two different things here?
+We could have put one thing
+or we could have got the bag
+and the person scanned.
+The problem is
+that when
+one system checks our guardrail
+and also gives a response
+then the chance increases
+that the check
+methodology
+leaks in response.
+Because one system is checking
+and one system is giving a response
+so it knows about both
+things. Both are interrelated.
+What we have done here?
+We are giving a check
+to a different person
+and that person is just checking
+if it is a pass or a fail.
+So he will tell us
+how he is checking internally.
+And the other person
+we have simply told him
+that you have to generate a response
+on the basis of pass or fail.
+You don't know that the person
+who is telling the check
+is dependent on which logic.
+So what we have done here?
+We have implemented separation of concern.
+We have divided
+one particular component into two.
+The first component is just telling the result
+and not giving a response.
+It is simply telling a true or false.
+The second one is reading
+the true or false and giving a response.
+He doesn't know how to generate true or false.
+If false is coming then he is giving a response
+and if true is coming then he is giving a response.
+So what happens with this?
+Basically with this two step process
+we can
+save guard the implementation details
+or implementation logic.
+I hope this point is clear to you.
+So Gagan is right
+that we hide our implementation details here.
+Now let's talk about
+input and output guardrails.
+So generally,
+we have already discussed that there are two types of guardrails.
+One is input side guardrails
+and the other is output side guardrails.
+So the input side guardrails
+who gives the input to your application?
+A user or a human?
+So the nature of this particular guardrail is different
+because it is
+judging the human's responses
+and human's inputs.
+Whereas the output
+is generated by the human.
+Who generates that in your application?
+Generally your LLM does.
+So this is generating a bot
+or a machine.
+So here the way to judge
+is different.
+And the other thing about LLM is
+that in your LLM
+in general LLM based guardrails
+are already implemented.
+Which your Frontier lab
+has already implemented and sent.
+So they are already aligned to human values.
+So you judge them from a different perspective.
+Whereas you judge your user
+from a different perspective.
+Generally you must have seen that
+your LLM
+if I talk about Frontier models
+generally they will not use toxic language by default.
+In most of the cases
+like 99.99% of cases.
+If you ever
+abuse them and talk to them
+they will not give you an answer by abusing you.
+Because they are aligned that way.
+In LLM, guardrails are already implemented.
+But can you expect
+the same thing from your user?
+When you can ask by abusing your user
+then here we have to
+apply guardrail
+which is user specific.
+Like toxicity
+bias
+like this.
+Whereas in case of LLM
+LLM creates
+different problems like
+hallucinated answers.
+Have you ever heard about
+hallucinated questions?
+User will never ask hallucinated questions.
+LLM can give you
+yes PII leakage.
+If you have any personal information
+in your documents
+your ragchatbot will leak it.
+You have said something
+about competitor.
+You told your LLM
+that because we are
+campusX, we are an ad tech platform
+we have some competition.
+We asked you to write
+a poem about it
+where you are abusing it.
+My ragchatbot
+printed it and I took a screenshot
+and I filed a case
+of defamation.
+CampusX is abusing
+competitors.
+So I have to implement guardrails
+against it.
+I hope this particular
+thing is clear to you.
+So guardrails and output guardrails
+are different.
+First let's discuss
+who is
+the person
+or system that gives input and output.
+Input guardrails generally
+are for attackers
+possibly for adverse serial attacks.
+Toxic input
+PII information input
+bias input
+or
+jailbreak input
+You apply guardrails on such inputs.
+You don't apply guardrails on correct inputs.
+For our doubt chatbot
+you will never apply guardrails on doubts.
+It's work to answer doubts.
+This is its intended task.
+You will never apply guardrails
+on intended task.
+Whereas output guardrails
+if your model is misbehaving
+then you apply restrictions on it.
+Like maybe it is presenting
+a fact that is not available in our documents.
+Maybe it is hallucinating.
+Maybe it is not able to give
+proper answer by reading
+its context.
+Now what is your primary goal
+of response shipping?
+Whenever input guardrails fail
+you deny
+information to the attacker.
+Whereas
+whenever your output fails
+you gracefully fail
+for a genuine user.
+Remember this point.
+If your attacker
+is abusing you
+or abusing your chatbot
+then what will you do?
+You will simply say that request will
+not be taken.
+I will not fulfill this.
+Whereas if your model
+is hallucinating
+then what will your end user say?
+No, I will not give you an answer.
+No. What will you say there?
+You will say that I don't know.
+Or proper context
+was not found.
+Or all the related facts were not found
+in the context.
+You will give an answer that is appealing
+and proper. You will not block
+the request. If your requests are
+wrong on the input side
+then generally you block them.
+You don't process them.
+Whereas if you have some problems
+on the output side
+then generally you rephrase them
+and re-shape them and give them in the output.
+Because you have to maintain this flow.
+I hope this thing is clear to you.
+How will the typical response be?
+If your input is wrong then flat generic refusal
+will be there. Don't believe.
+Whereas if your output
+means if your model is doing something wrong
+then you will give an honest
+softened fallback message.
+You will tell your user with love
+what is the problem.
+Retry behavior
+Here you don't give any hint
+that your attacker
+could not retry the attack.
+Whereas in this case you tell the user
+that you didn't get proper
+context.
+Ask in some other way.
+Or keep your question like this.
+Or whatever it is, you guide it.
+Because in the case of output
+your right side
+is your right
+user.
+Because if your user is wrong
+then he will be blocked on the input level.
+He could not go inside the metro.
+Who will come out of the metro?
+So the checking is done.
+How will the person who got stuck on the entry
+enter the system?
+So you stop the wrong person
+on the entry.
+And you kick him out.
+Whereas if you are having
+any problem on the exit
+then you help your rider
+who has come in your system.
+You assist him.
+I hope this thing is clear to you.
+So if you take the example of metro
+then you will understand.
+Output guardrail catches a bad citation.
+That means he couldn't read the context properly.
+And response with a flat
+I can't help with that.
+So what will happen with that?
+Your user experience will be ruined.
+What you have to do here is
+you don't have to give cold treatment to your user.
+Because your model is wrong.
+Your user asked the right question, right doubt.
+You don't have to give cold treatment there.
+Whereas you don't have to give
+any soft treatment to the attacker.
+You have to say simple to the attacker.
+So you will fulfill the request.
+So that the right user
+doesn't have friction.
+And you don't leak any
+internal information to the attacker.
+I hope this point is clear.
+Basically you have
+two types of users.
+You have to treat both of them differently.
+Both on the input level
+and on the output level.
+Clear?
+Now let's go towards our
+very final point.
+Before that I will drink water.
+Then we will discuss this point.
+And that will be all for today.
+Till then if you have any questions
+you can ask them.
+Thank you.
+Generally what are the methods?
+How do you...
+We have discussed that these are rules.
+Boundaries.
+But there must be a method to apply these rules and boundaries.
+What is that method?
+There are many methods.
+There are manual and automated methods.
+Here we will discuss
+three most common methods
+in each of the
+frameworks that you deal with.
+There are five or six methods.
+But three most common
+that you will regularly see.
+And you will see in the guardiaz AI.
+Let's discuss them.
+First is our
+rule based approach.
+First I will write
+all three of them here.
+Second is my
+ML based approach.
+This is also called model based approach.
+And third is my
+LLM based approach.
+And this LLM based approach
+you have read many times.
+This is also called LLM as a judge.
+So I told you
+when I taught you LLM as a judge
+I told you that in guardrails
+this ghost will come again.
+So this ghost has come again.
+Now what happens
+in the rule based approach?
+In the rule based approach
+you simply write
+your python code here.
+As you build a software
+you have a python code here.
+In that python code
+you have a rule.
+Basically you define your rules
+through functions.
+Now because you are
+defining your rules through code
+so you are thinking that what will be
+these functions and rules.
+These rules will be my deterministic
+or static.
+Once you set the rules
+then only it will be fixed.
+Here what kind of rules can you set
+in functions like
+word count.
+That the word limit of output
+should be this much.
+If the output is more than 300 words
+then you should not give output.
+Here it can be
+toxic words.
+If these particular words are in half
+of your input then you will filter it.
+So what is rule based approach?
+Rule based approach is written
+through functions.
+It is deterministic code.
+Here what you have to do
+is to make patterns in code.
+You can use this for
+regsx or regular expression.
+Does this particular
+rule based approach
+understand the meaning of your input
+or output? No.
+You simply define your patterns in code
+and run loops
+and check the pattern.
+If it is available or not.
+If it is then
+you block it. If it is not
+then you pass it.
+Latency is near zero
+because the time it will take
+to run your function
+will be same. Cost
+is not any cost.
+You simply run your python code.
+Explainability is fully transparent
+because the logic in the code
+is implemented every time.
+Rules never change.
+Training data is needed.
+There is no model so training data is needed.
+Best for what? PII.
+Like you told me
+what is the pattern
+of an email id?
+Here domain name is there.
+Here user name is there.
+Here add the rate is there.
+Here domain name is there.
+So you told me this pattern.
+Now this pattern will be available anywhere
+so you have to mask it or block it.
+It is easy.
+You can also tell toxic keywords
+or you have to
+put word count
+or do counting
+you can define it in rule based approach.
+The biggest
+weakness of this is
+it is brittle and can easily
+be bypassed.
+How? You made rule based
+approach that you have to block toxic words.
+You added in list
+idiot, you added in list
+what can happen?
+I have written many abuses.
+But you didn't
+add stupid here.
+And your user
+told your model
+are you stupid?
+You had to block it but you didn't
+define it in function.
+And because here
+whatever words you are writing, it's meaning
+it is not understanding that rule.
+So it will pass this stupid.
+Although it also comes inside toxic.
+It comes with other words.
+But because you didn't
+write pattern there, it will pass.
+So this is
+weakness of rule based approach.
+Second approach is
+ML based approach.
+ML based approach.
+Here it is called
+your classifier approach.
+Here you do classification
+task.
+Your model will be here.
+Not ML based model, deep learning
+ML based model will classify
+here.
+Like spam or not spam.
+We have such models
+who do classification.
+ML based model, logistic regression.
+So you will do classification
+here. Toxic
+not toxic.
+What will you do? You will give your model
+a lot of training data.
+In which you will have label data.
+You will have toxic rows
+and non toxic rows.
+Here you will have label.
+Your model will be trained and evaluate.
+You will put the whole data science pipeline.
+And after that you will use
+your model to do
+the classification.
+So in ML based approach
+what is there? You have
+a small trained model.
+You use it.
+Can it understand the meaning?
+Like you have
+LSTM based model.
+It can understand a little meaning but not that much.
+Or you have used
+bag of words, TF-IDF.
+So the relationship between
+words will be a little bit understandable.
+But not as good as LLM.
+So it can partially understand.
+And for narrow semantic task.
+Like we have to classify toxicity
+or spam not spam.
+For such tasks
+these models work well.
+Latency is low.
+You know that inference of
+machine learning models is low.
+It has a lot of latency.
+Cost is low because
+machine learning models are generally small.
+Their training data is generally small.
+Training is easy.
+You can train it on your laptop.
+Maintaining data, versioning of model
+everything is easy.
+Explainability
+is opaque. Black box model.
+But it is not like
+you can't open it.
+You can open it using
+explainable AI.
+Training data is needed.
+Yes, machine learning model is needed.
+Best for toxicity
+topic.
+You have told the topic.
+If you talk on these topics, I will answer.
+Rest, if there is a restricted topic, I will not talk.
+That is your injection pattern.
+Like I told you, mail, phone number.
+You can detect these patterns.
+Again, weakness is narrowly scoped.
+Meaning you
+if you want to
+implement toxicity
+then there is a separate model for it.
+Here,
+PII is to be detected.
+There is a separate model.
+If you want to detect a third thing tomorrow, there is a separate model for it.
+You have to train everyone.
+Everyone has to use it in inference.
+So this is the problem.
+Narrowly scoped and
+you have to retrain them again and again.
+The same machine learning problems.
+Finally, the type
+is called LLM as a judge.
+Here,
+you know the mechanism
+in LLM as a judge.
+You have LLM
+and a system prompt.
+So what did you do?
+You took an LLM
+showed it an input
+like there are abuses written in it.
+And you gave a system prompt.
+If you think
+there is an abuse written in it.
+You gave some examples of abuses.
+Then you can block this particular input.
+So LLM will do it.
+OK?
+Does it understand the language? Yes.
+LLMs can understand
+the language very easily.
+Latency is high.
+If you hit the API, the latency is high.
+Cost is high.
+Because again, if you hit the API,
+the explainability is semi-transparent.
+LLM can give you a reason
+why it passed this particular input.
+Why it blocked it. But again,
+you can't see its weights there.
+You have to trust
+whatever reasoning it gives you.
+That's why it is called semi-transparent.
+Training data? No.
+We don't need it here because
+we are using pre-trained LLMs.
+If you had to train your own LLM
+then you would have needed training data.
+We simply need a good system prompt.
+OK?
+Best for what? To detect hallucinations.
+To detect some nuance policy
+or some very detailed policy
+to detect some changes.
+To conduct contextual judgement,
+LLMs are very good.
+Weakness is very slow.
+You know, LLM calls take a lot of time.
+It is expensive. You have to spend money.
+It's self-followable.
+Meaning, you are getting
+LLM based applications judged
+by LLM.
+So, the judge is the same, the witness is the same
+and the lawyer is the same.
+So, the problem is that sometimes
+LLMs get biased for their outputs.
+So, the best approach to this is
+to keep the evaluated LLM
+and the generated LLM
+separate.
+And you must be knowing
+what we were doing in DeepEval
+DeepEval
+our evaluator
+was always stronger
+as compared to your generator.
+We did the same.
+We were using 5 mini for generator
+whereas here
+we were using 5.4 mini.
+But, in guardrails
+the case is different.
+In guardrails, your evaluator
+is actually a more
+smaller model.
+Will anyone tell me
+that here, comparatively
+why we use small models?
+Yes, cost
+is a factor.
+Why is cost factor coming here?
+Why it was not coming in evaluation?
+Sorry.
+Or someone else tell me.
+Why is cost factor here?
+Inference cost.
+Yes, here we are using
+guardrails in every query.
+We were doing evaluations only once.
+We were doing it twice.
+We were doing it only when we were experimenting.
+Here, we have to use guardrails for every query
+and multiple guardrails.
+That's why smaller models are better.
+And the second factor is latency.
+In general, smaller models have fast inference.
+So, we can use them
+and also reduce latency.
+We can also use
+open source models.
+Yes.
+You are right. Classifier
+fire based models can also be easily
+bypassed.
+If that category is not available
+in them, then they will be bypassed.
+If they have not seen any
+examples in their training data,
+then how to categorize it
+becomes probabilistic.
+It's clear now.
+If we talk about latency,
+then in latency,
+the least latency is of your rule-based
+then it is of your classifier or ML based
+approach and the most is your
+LLM based approach.
+If we talk about cost, then cost is
+the most of your LLM based approach.
+Less than that is your ML based approach
+and the least is your rule based approach.
+So, cost and latency are inversely proportional.
+Is this concept of guardrails clear?
+Is it clear?
+That's it for today's session.
+We will cover the rest of the
+details in the next session.
+What kind of guardrails are there,
+how they are implemented,
+all those details
+we will cover in the next session.
+Today, it will make mistakes,
+but that's it.
+So, we have to do some cost benefit analysis.
+You can't use a big model here.
+Again, your query generation
+cost can't be more than your
+guardrail cost.
+Again, you have to keep this in mind
+that your foundation models already have
+guardrails implemented.
+So, they can do some heavy lifting.
+Is this clear?
+Is it clear?
+I am here in 5 minutes.
+You can ask me any questions you have.
+Great. How was today's session?
+How was the session?
+Was it good? Was it informative?
+The concept of guardrails looks interesting.
+Great.
+Actually, it is a very interesting concept.
+And important too.
+Those who don't have any questions,
+can go. If you have any questions, you can ask me.
+And then we will close the session
+in 5 minutes.
+Guys, rate the session.
+Clarity of concepts out of 5.
+How was it?
+5 out of 5.
+And that's good.
+Is everything clear?
+I know some questions
+and feedback come around
+that you teach slow.
+Again, my goal is that
+you understand what I am teaching.
+You have slow and fast recordings.
+You can try fast.
+There was a dialogue in 3D Jets
+that I don't
+leave the hand of my weakest student.
+So I use the same concept
+while teaching.
+Until everyone understands,
+I don't want to move forward.
+We need evaluation and experimentation.
+Yes, guardrails also have their evals.
+We will discuss this concept too.
+Although we will not implement guardrails evals.
+You will read them in LLME evals.
+You can implement them in your application
+but we will not implement them in this course.
+Because it will overlap.
+Then we have to complete it too.
+We have other things to do as well.
+Mr. Nitish will teach you
+in safety evals.
+You can import that pipeline
+and implement it.
+Again, you can use DP eval.
+I will show you.
+In DP eval,
+built-in metrics are available.
+If you read DP eval,
+you will understand the implementation.
+Simply go to the documentation.
+Go here, go to safety.
+Here it is.
+Bias, toxicity, non-advised,
+misuse, PIA leakage,
+role violation. Here are all the metrics.
+You can also make custom
+G eval.
+The method is the same.
+Go and read. Make the same LLME test case.
+This is the code.
+Now you should be confident.
+How it is working, it is written.
+Go and experiment and implement.
+Guys, I have shared
+the updated code with you.
+You can pull it.
+Run from your end.
+And make changes.
+We will tweak this once
+in the next session.
+Let me see what has happened
+in the code changes today.
+I will share this
+with you in the next session.
+Today's runs are there. Rest of the code is with you.
+Page more. LLME developer.
+I think
+LLME based application
+pays more in the long run.
+The people who make things
+are always less. The people who use them
+are more.
+It is like,
+take the iPhone. The designer of the iPhone
+or the designing team.
+There will be like 100 people
+or 50 people.
+And they have to design an iPhone iteration
+in a year.
+There is also a game of demand and supply.
+The people who make the application
+will always be more.
+Again guys,
+which pays more
+changes also.
+And if you are learning from that perspective
+then I don't know
+how it will be in the long run.
+My perspective has always been
+that you learn things.
+And one is that broader view
+of the application.
+And the other is that
+you learn things.
+And develop that broader view
+in your mind.
+That can this be done
+in some other way?
+Then I think you will be a better developer.
+Whether you are training LLME
+or building applications here.
+Like we have to do
+implement in Nexus.
+So bring some ideas
+of how we are implementing
+the gate here.
+What can be the way to promote it?
+Again there is no fixed criteria.
+This is completely custom.
+Regression testing is also custom.
+This is our implementation
+according to our application.
+You can do it in some other way.
+You can also keep the hard threshold value.
+That is also there.
+It is not like someone
+who will do regression testing
+and will feel bad
+if it is below 10%.
+That is not wrong.
+We have taken a more dynamic view.
+That is an easier way.
+There are many ways to do it.
+Clear guys? Any more questions?
+Any question
+around the whole playlist
+or any other topic.
+Any question on the wrap.
+What are you going to read?
+Write clear in the chat
+and then we will sign off.
+Bye guys.
+Good night. See you guys.
+After guardrails we will be covering
+our APIs.
+We have done guardrails.
+The application is ready.
+Now we have to serve it
+and make it front end.
+Then the deployment part
+will start.
+CI, CD, Dockers, AWS
+will start after that.
+Bye guys.

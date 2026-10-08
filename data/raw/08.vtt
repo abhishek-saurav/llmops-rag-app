@@ -1,0 +1,8651 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:20.800
+Yes, I am going through the questions.
+
+00:00:20.800 --> 00:00:24.320
+OK Hardik, let's discuss about this too.
+
+00:00:24.320 --> 00:00:27.160
+Can we do it at the end of the session?
+
+00:00:27.160 --> 00:00:29.160
+Because there is a metric in DPVal.
+
+00:00:45.160 --> 00:00:47.160
+Keys can change. I think so.
+
+00:00:47.160 --> 00:00:52.160
+The metric supported in DPVal has a fixed schema.
+
+00:00:52.160 --> 00:00:54.160
+You make a schema through Pydantic.
+
+00:00:54.160 --> 00:00:56.160
+You come to the schema and check the keys.
+
+00:00:56.160 --> 00:01:01.160
+You basically want the values to be exactly same.
+
+00:01:01.160 --> 00:01:05.160
+Keyword matching in values and semantic keys.
+
+00:01:05.160 --> 00:01:08.160
+To do this, you have to make a custom metric.
+
+00:01:08.160 --> 00:01:13.160
+Because DPVal works directly on the schema.
+
+00:01:13.160 --> 00:01:18.160
+I will show the rest of the DPVal implementation.
+
+00:01:18.160 --> 00:01:23.160
+And today we will see how you generate custom metrics.
+
+00:01:24.160 --> 00:01:29.160
+Any more questions?
+
+00:01:29.160 --> 00:01:37.160
+People are still joining in.
+
+00:01:37.160 --> 00:01:43.160
+Guys, again join a little bit timely.
+
+00:01:43.160 --> 00:01:46.160
+Like 5 minutes before.
+
+00:01:46.160 --> 00:01:54.160
+Any questions from the previous session?
+
+00:01:54.160 --> 00:02:03.160
+Is my screen visible? Is one note visible to you guys?
+
+00:02:03.160 --> 00:02:13.160
+Can anyone confirm that recording is going on?
+
+00:02:13.160 --> 00:02:15.160
+Recording is in progress.
+
+00:02:15.160 --> 00:02:19.160
+Recording toggle is visible.
+
+00:02:19.160 --> 00:02:27.160
+Fine.
+
+00:02:27.160 --> 00:02:36.160
+If you have any questions, you can ask me.
+
+00:02:36.160 --> 00:02:38.160
+Yes, there will be a summary of more than 5 minutes.
+
+00:02:38.160 --> 00:02:41.160
+A summary of 10-15 minutes.
+
+00:02:41.160 --> 00:02:45.160
+We will cover metrics from a different perspective.
+
+00:02:45.160 --> 00:02:49.160
+Because today's class will be on rag metrics.
+
+00:02:49.160 --> 00:02:51.160
+We have already covered 2 metrics.
+
+00:02:51.160 --> 00:02:53.160
+We will have a recap of that.
+
+00:02:53.160 --> 00:02:57.160
+And we will see a different perspective around metrics.
+
+00:02:57.160 --> 00:02:59.160
+We did not discuss that in the last session.
+
+00:02:59.160 --> 00:03:09.160
+We will discuss that today.
+
+00:03:09.160 --> 00:03:12.160
+Are you getting reminders of classes?
+
+00:03:12.160 --> 00:03:22.160
+Notifications through Google Calendar?
+
+00:03:22.160 --> 00:03:27.160
+Okay, fine. I will read the questions also.
+
+00:03:27.160 --> 00:03:30.160
+Great.
+
+00:03:30.160 --> 00:03:32.160
+Let's wait for 2 more minutes.
+
+00:03:32.160 --> 00:03:34.160
+People are still joining in and then we will start.
+
+00:04:00.160 --> 00:04:10.160
+Guys, please join in a little bit.
+
+00:04:10.160 --> 00:04:12.160
+We have to cover a lot in a session.
+
+00:04:12.160 --> 00:04:15.160
+And it takes a lot of time to start.
+
+00:04:15.160 --> 00:04:23.159
+And people are still joining in.
+
+00:04:23.160 --> 00:04:25.160
+That's why I am not able to start.
+
+00:04:25.160 --> 00:04:33.160
+We have submitted the eval data set.
+
+00:04:33.160 --> 00:04:37.160
+I will clear your doubt.
+
+00:04:37.160 --> 00:04:39.160
+Actually, I was also getting a doubt.
+
+00:04:39.160 --> 00:04:41.160
+If we go to the data set section,
+
+00:04:41.160 --> 00:04:45.160
+You will remember that we checked our evaluation data set at the end of the class.
+
+00:04:45.160 --> 00:04:49.160
+And after seeing this particular data set,
+
+00:04:49.160 --> 00:04:51.160
+I felt that the missing values,
+
+00:04:51.160 --> 00:04:53.160
+Like the actual output key,
+
+00:04:53.160 --> 00:04:57.160
+And the retrieval context are not coming.
+
+00:04:57.160 --> 00:05:00.160
+I thought that there is a problem in our execution.
+
+00:05:00.160 --> 00:05:03.160
+Actually, there was no problem in the execution.
+
+00:05:03.160 --> 00:05:07.160
+If I show you the code of this particular file,
+
+00:05:07.160 --> 00:05:09.160
+So what we did here is,
+
+00:05:09.160 --> 00:05:11.160
+When we made our evaluation data set,
+
+00:05:11.160 --> 00:05:15.160
+First of all, we added the golden in this data set.
+
+00:05:15.160 --> 00:05:17.160
+Which was saved in our JSON file.
+
+00:05:17.160 --> 00:05:21.160
+We imported the particular golden in this folder.
+
+00:05:21.160 --> 00:05:26.160
+And after that, we made our test cases and added them in the data set.
+
+00:05:26.160 --> 00:05:28.160
+So this thing got missed by me.
+
+00:05:28.160 --> 00:05:31.160
+I thought that this code is not working properly.
+
+00:05:31.160 --> 00:05:33.160
+These are basically your goldens.
+
+00:05:33.160 --> 00:05:38.160
+You can see the context here.
+
+00:05:38.160 --> 00:05:40.160
+These are your goldens actually.
+
+00:05:40.160 --> 00:05:43.160
+So we have appended two things in the data set.
+
+00:05:43.160 --> 00:05:45.160
+Goldens and our test cases after that.
+
+00:05:45.160 --> 00:05:47.160
+So if you can go down,
+
+00:05:47.160 --> 00:05:49.160
+Like our question is,
+
+00:05:49.160 --> 00:05:51.160
+Why is LLM app harder than ML?
+
+00:05:51.160 --> 00:05:53.160
+So if we go down here,
+
+00:05:53.160 --> 00:05:59.160
+These null values are finished.
+
+00:05:59.160 --> 00:06:03.160
+If I can go to the exact point,
+
+00:06:03.160 --> 00:06:06.160
+Still null is not working.
+
+00:06:06.160 --> 00:06:11.160
+Here.
+
+00:06:11.160 --> 00:06:14.160
+So see, this same question is repeated again.
+
+00:06:14.160 --> 00:06:16.160
+Here, your nulls were.
+
+00:06:16.160 --> 00:06:19.160
+So this is basically the line 1513.
+
+00:06:19.160 --> 00:06:21.160
+This is the end of your goldens.
+
+00:06:21.160 --> 00:06:24.160
+And after this, these are our test cases.
+
+00:06:24.160 --> 00:06:27.160
+So you see, this context field that is in our goldens,
+
+00:06:27.160 --> 00:06:29.160
+Grounded context,
+
+00:06:29.160 --> 00:06:30.160
+These are not available.
+
+00:06:30.160 --> 00:06:32.160
+We added four things in the test cases.
+
+00:06:32.160 --> 00:06:35.160
+Our query, which is the input.
+
+00:06:35.160 --> 00:06:37.160
+Our response, which is the actual output.
+
+00:06:37.160 --> 00:06:40.160
+Expected output is our grounded response.
+
+00:06:40.160 --> 00:06:42.160
+And our retriever output.
+
+00:06:42.160 --> 00:06:44.160
+These are the four things we are getting here.
+
+00:06:44.160 --> 00:06:48.160
+So basically, your test cases are starting from here.
+
+00:06:48.160 --> 00:06:50.160
+I hope you understand this thing.
+
+00:06:50.160 --> 00:06:53.160
+And when we evaluate our metrics on this data set,
+
+00:06:53.160 --> 00:06:55.160
+Then we will use these test cases.
+
+00:06:55.160 --> 00:06:58.160
+We will import these test cases from this data set.
+
+00:06:58.160 --> 00:07:02.160
+And then run it on our metrics.
+
+00:07:02.160 --> 00:07:04.160
+Is this thing clear?
+
+00:07:04.160 --> 00:07:06.160
+So nothing was problematic.
+
+00:07:06.160 --> 00:07:07.160
+Our code was working.
+
+00:07:07.160 --> 00:07:10.160
+Just a small point got missed out.
+
+00:07:10.160 --> 00:07:12.160
+Fine.
+
+00:07:13.160 --> 00:07:14.160
+Great.
+
+00:07:14.160 --> 00:07:16.160
+So let's start the class.
+
+00:07:18.160 --> 00:07:20.160
+So we actually.
+
+00:07:20.160 --> 00:07:22.160
+What are we going to discuss?
+
+00:07:22.160 --> 00:07:25.160
+We are understanding the evaluation metrics here.
+
+00:07:25.160 --> 00:07:28.160
+So we have created our data set.
+
+00:07:28.160 --> 00:07:32.160
+And now we have to understand the different evaluation metrics.
+
+00:07:32.160 --> 00:07:36.160
+Which DeepEval provides you for your rag application.
+
+00:07:41.160 --> 00:07:43.160
+But let's do one thing.
+
+00:07:43.160 --> 00:07:45.160
+Let's come in the overview mode.
+
+00:07:45.160 --> 00:07:47.160
+I want to give you a bird's eye view.
+
+00:07:47.160 --> 00:07:49.160
+That the whole effort we are doing.
+
+00:07:49.160 --> 00:07:51.160
+To do the evaluation.
+
+00:07:51.160 --> 00:07:52.160
+Why are we doing this?
+
+00:07:52.160 --> 00:07:53.160
+What is the end goal of this?
+
+00:07:53.160 --> 00:07:55.160
+So let's discuss the end goal once.
+
+00:07:55.160 --> 00:07:58.160
+So the end goal of the evaluation is basically.
+
+00:07:58.160 --> 00:08:02.160
+That the evaluation gives you a number.
+
+00:08:04.160 --> 00:08:08.160
+Number means it is a quantifiable quantity.
+
+00:08:08.160 --> 00:08:10.160
+It gives you a quantifiable number.
+
+00:08:10.160 --> 00:08:14.160
+Through which you can test your rag based application.
+
+00:08:14.160 --> 00:08:16.160
+Now we are talking about rag metrics.
+
+00:08:16.160 --> 00:08:20.160
+So we will talk about rag application only in LLM based application.
+
+00:08:20.160 --> 00:08:24.160
+So it is basically used for testing your application.
+
+00:08:24.160 --> 00:08:28.160
+You get a number through which you can tell.
+
+00:08:28.160 --> 00:08:30.160
+That your application.
+
+00:08:30.160 --> 00:08:33.160
+Passed or failed in any particular criteria.
+
+00:08:33.160 --> 00:08:36.160
+Now why are we working on pass and fail?
+
+00:08:37.159 --> 00:08:41.159
+We are doing this because our goal here is.
+
+00:08:41.159 --> 00:08:44.159
+Our goal is that if our application.
+
+00:08:44.159 --> 00:08:49.160
+Can't pass a particular or multiple metrics.
+
+00:08:49.160 --> 00:08:53.160
+So our end goal is that we have to get that application passed.
+
+00:08:53.160 --> 00:08:56.160
+Basically what we are trying to do is.
+
+00:08:56.160 --> 00:08:59.160
+We are tweaking and tuning our application.
+
+00:08:59.160 --> 00:09:02.160
+And we are tweaking and tuning our application.
+
+00:09:02.160 --> 00:09:05.160
+We are also trying to pass the metrics.
+
+00:09:05.160 --> 00:09:07.160
+On our given data set.
+
+00:09:07.160 --> 00:09:10.160
+Which is our evaluation data set.
+
+00:09:10.160 --> 00:09:12.160
+On that.
+
+00:09:12.160 --> 00:09:14.160
+Clear the metrics.
+
+00:09:14.160 --> 00:09:16.160
+Pass the test.
+
+00:09:16.160 --> 00:09:18.160
+So what we are doing here.
+
+00:09:18.160 --> 00:09:20.160
+The application we have made here.
+
+00:09:20.160 --> 00:09:24.160
+Which we have built here.
+
+00:09:24.160 --> 00:09:26.160
+How to make that rag application.
+
+00:09:26.160 --> 00:09:28.160
+Rag application is basically.
+
+00:09:28.160 --> 00:09:30.160
+A mixture of different components.
+
+00:09:30.160 --> 00:09:33.160
+We have arranged some components.
+
+00:09:33.160 --> 00:09:35.160
+According to a particular architecture.
+
+00:09:35.160 --> 00:09:37.160
+In our application.
+
+00:09:37.160 --> 00:09:41.160
+And we have hyperparameters available in each component.
+
+00:09:45.160 --> 00:09:47.160
+What we have done here.
+
+00:09:47.160 --> 00:09:52.160
+We have selected the hyperparameter value.
+
+00:09:52.160 --> 00:09:56.160
+So we don't have a definitive answer.
+
+00:09:56.160 --> 00:09:58.160
+We don't have an answer.
+
+00:09:58.160 --> 00:10:00.160
+That the hyperparameter values we have selected.
+
+00:10:00.160 --> 00:10:02.160
+Are they the best.
+
+00:10:04.160 --> 00:10:05.160
+Or not.
+
+00:10:05.160 --> 00:10:07.160
+We don't have an answer to this question.
+
+00:10:07.160 --> 00:10:09.160
+So the answer to this question.
+
+00:10:09.160 --> 00:10:14.160
+Basically whatever hyperparameter or components we have selected.
+
+00:10:14.160 --> 00:10:16.160
+Are they the best.
+
+00:10:16.160 --> 00:10:18.160
+Are they well suited for our application.
+
+00:10:18.160 --> 00:10:22.160
+We are trying to find the answer to this through evaluations.
+
+00:10:23.160 --> 00:10:26.160
+So whatever we have been studying from so many days.
+
+00:10:26.160 --> 00:10:28.160
+Data set creation, evaluation matrix.
+
+00:10:28.160 --> 00:10:30.160
+We are doing all that work.
+
+00:10:30.160 --> 00:10:32.160
+So that we can test our application.
+
+00:10:32.160 --> 00:10:34.160
+And after testing.
+
+00:10:34.160 --> 00:10:36.160
+We have a number.
+
+00:10:36.160 --> 00:10:38.160
+A quantifiable number.
+
+00:10:38.160 --> 00:10:40.160
+Which we can use further.
+
+00:10:40.160 --> 00:10:42.160
+And we can draw comparisons.
+
+00:10:42.160 --> 00:10:44.160
+So basically what we will do.
+
+00:10:44.160 --> 00:10:48.160
+When we run our evaluations on this application.
+
+00:10:48.160 --> 00:10:51.160
+So this application we have made through guesswork.
+
+00:10:51.160 --> 00:10:53.160
+This will act as our baseline application.
+
+00:10:53.160 --> 00:10:55.160
+This will be our baseline application.
+
+00:10:55.160 --> 00:10:57.160
+And what is our end goal.
+
+00:10:57.160 --> 00:11:01.160
+Our end goal is to tweak this hyperparameter.
+
+00:11:01.160 --> 00:11:03.160
+Every one version.
+
+00:11:03.160 --> 00:11:07.160
+Because we will change the hyperparameter value.
+
+00:11:07.160 --> 00:11:09.160
+So what will happen.
+
+00:11:09.160 --> 00:11:11.160
+Our different versions of application will be made.
+
+00:11:11.160 --> 00:11:13.160
+So we will lock every one version.
+
+00:11:13.160 --> 00:11:15.160
+And along with that.
+
+00:11:15.160 --> 00:11:17.160
+Whatever its test result is.
+
+00:11:17.160 --> 00:11:19.160
+Means the result of our evaluation.
+
+00:11:19.160 --> 00:11:21.160
+Means the result of our evaluation.
+
+00:11:21.160 --> 00:11:23.160
+We will lock this also.
+
+00:11:23.160 --> 00:11:27.160
+And we will basically compare between different versions.
+
+00:11:27.160 --> 00:11:31.160
+Between different versions.
+
+00:11:31.160 --> 00:11:33.160
+And through this comparison.
+
+00:11:33.160 --> 00:11:35.160
+We will know.
+
+00:11:35.160 --> 00:11:37.160
+What are the best possible set of hyperparameter values.
+
+00:11:37.160 --> 00:11:39.160
+So like you do evaluation in machine learning.
+
+00:11:39.160 --> 00:11:41.160
+What is your goal in machine learning.
+
+00:11:41.160 --> 00:11:43.160
+When you evaluate your baseline application.
+
+00:11:43.160 --> 00:11:45.160
+Then after that you do hyperparameter tuning.
+
+00:11:45.160 --> 00:11:47.160
+So sort of.
+
+00:11:47.160 --> 00:11:49.160
+We are doing the same thing here.
+
+00:11:49.160 --> 00:11:51.160
+We are also going to set hyperparameter.
+
+00:11:51.160 --> 00:11:53.160
+Of our rag application.
+
+00:11:53.160 --> 00:11:55.160
+And because we don't know.
+
+00:11:55.160 --> 00:11:57.160
+What are the best values.
+
+00:11:57.160 --> 00:11:59.160
+So through these evaluations.
+
+00:11:59.160 --> 00:12:01.160
+We will find the best values.
+
+00:12:01.160 --> 00:12:03.160
+This thing is clear guys.
+
+00:12:03.160 --> 00:12:05.160
+It is clear.
+
+00:12:05.160 --> 00:12:07.160
+Why are we doing this evaluation.
+
+00:12:07.160 --> 00:12:09.160
+Why are we working hard.
+
+00:12:09.160 --> 00:12:11.160
+This point is clear.
+
+00:12:11.160 --> 00:12:13.160
+Basically we want to make the best application.
+
+00:12:13.160 --> 00:12:15.160
+By tuning hyperparameter.
+
+00:12:15.160 --> 00:12:17.160
+We want to make the best application.
+
+00:12:17.160 --> 00:12:19.160
+I am looking at the chat.
+
+00:12:19.160 --> 00:12:21.160
+I hope this point is clear to you guys.
+
+00:12:21.160 --> 00:12:25.160
+So whatever we are reading in the evaluation.
+
+00:12:25.160 --> 00:12:27.160
+The whole 5-6 lectures we have done.
+
+00:12:27.160 --> 00:12:29.160
+All that hard work.
+
+00:12:29.160 --> 00:12:33.160
+Simply to give this quantifiable number.
+
+00:12:33.160 --> 00:12:35.160
+Now let's discuss.
+
+00:12:35.160 --> 00:12:37.160
+What kind of problems can come.
+
+00:12:37.160 --> 00:12:39.160
+In our rag application.
+
+00:12:39.160 --> 00:12:41.160
+Because I told you.
+
+00:12:41.160 --> 00:12:43.160
+What are we doing here.
+
+00:12:43.160 --> 00:12:45.160
+We are tuning hyperparameter.
+
+00:12:45.160 --> 00:12:47.160
+So we should also know.
+
+00:12:47.160 --> 00:12:49.160
+What are the hyperparameters.
+
+00:12:49.160 --> 00:12:51.160
+In your rag application.
+
+00:12:53.160 --> 00:12:55.160
+As I told you.
+
+00:12:55.160 --> 00:12:57.160
+You never evaluate the ingestion phase.
+
+00:12:57.160 --> 00:12:59.160
+You evaluate this.
+
+00:12:59.160 --> 00:13:01.160
+You evaluate the retrieval phase.
+
+00:13:01.160 --> 00:13:03.160
+And in the retrieval phase.
+
+00:13:03.160 --> 00:13:05.160
+You have two components.
+
+00:13:05.160 --> 00:13:07.160
+On which you have prime focus.
+
+00:13:07.160 --> 00:13:09.160
+First is your retriever.
+
+00:13:09.160 --> 00:13:11.160
+And the second is your generator.
+
+00:13:13.160 --> 00:13:15.160
+What is the work of retriever.
+
+00:13:15.160 --> 00:13:19.160
+Retriever basically acts as a search engine.
+
+00:13:23.160 --> 00:13:25.160
+The work of retriever is simply.
+
+00:13:25.160 --> 00:13:27.160
+That inside your knowledge base.
+
+00:13:27.160 --> 00:13:29.160
+There are many vectors.
+
+00:13:29.160 --> 00:13:31.160
+Many embeddings are available.
+
+00:13:31.160 --> 00:13:33.160
+Basically it is full of information.
+
+00:13:33.160 --> 00:13:35.160
+What is your goal.
+
+00:13:35.160 --> 00:13:37.160
+That out of that many information.
+
+00:13:37.160 --> 00:13:39.160
+According to your query.
+
+00:13:39.160 --> 00:13:41.160
+Whatever is the necessary information.
+
+00:13:41.160 --> 00:13:43.160
+You have to fetch the retriever.
+
+00:13:43.160 --> 00:13:45.160
+Like in a search engine.
+
+00:13:45.160 --> 00:13:47.160
+What happens in a search engine.
+
+00:13:47.160 --> 00:13:49.160
+You index all the web pages.
+
+00:13:49.160 --> 00:13:51.160
+In your search engine.
+
+00:13:51.160 --> 00:13:53.160
+What does index mean.
+
+00:13:53.160 --> 00:13:55.160
+You store them in a way.
+
+00:13:55.160 --> 00:13:57.160
+You store their address.
+
+00:13:57.160 --> 00:13:59.160
+Whenever you query in your search engine.
+
+00:13:59.160 --> 00:14:01.160
+What is the work of search engine.
+
+00:14:01.160 --> 00:14:03.160
+To read your query.
+
+00:14:03.160 --> 00:14:05.160
+To understand it.
+
+00:14:05.160 --> 00:14:07.160
+And according to that.
+
+00:14:07.160 --> 00:14:09.160
+It will give you relevant information.
+
+00:14:09.160 --> 00:14:11.160
+Is it your actual web pages.
+
+00:14:11.160 --> 00:14:13.160
+No. They are your web pages.
+
+00:14:13.160 --> 00:14:15.160
+So our retriever.
+
+00:14:15.160 --> 00:14:17.160
+Will do the same.
+
+00:14:17.160 --> 00:14:19.160
+That what will he do.
+
+00:14:19.160 --> 00:14:21.160
+He will take your query.
+
+00:14:21.160 --> 00:14:23.160
+He will understand your query.
+
+00:14:23.160 --> 00:14:25.160
+How will he understand.
+
+00:14:25.160 --> 00:14:27.160
+He will understand by creating embeddings.
+
+00:14:27.160 --> 00:14:29.160
+Because embeddings capture the semantic meaning of your text.
+
+00:14:29.160 --> 00:14:31.160
+And when you convert them in embeddings.
+
+00:14:31.160 --> 00:14:33.160
+You do comparison between embedding and embedding.
+
+00:14:33.160 --> 00:14:35.160
+Embedding of your query.
+
+00:14:35.160 --> 00:14:37.160
+Embedding of your documents.
+
+00:14:37.160 --> 00:14:39.160
+You do comparison between them.
+
+00:14:39.160 --> 00:14:41.160
+And after comparison.
+
+00:14:41.160 --> 00:14:43.160
+Whatever your top results are.
+
+00:14:43.160 --> 00:14:45.160
+Which we call our top results.
+
+00:14:45.160 --> 00:14:47.160
+You give these top results.
+
+00:14:47.160 --> 00:14:49.160
+Through retriever.
+
+00:14:49.160 --> 00:14:51.160
+As an output.
+
+00:14:51.160 --> 00:14:53.160
+To your LLM.
+
+00:14:53.160 --> 00:14:55.160
+So retriever's work is basically.
+
+00:14:55.160 --> 00:14:57.160
+Of a search engine.
+
+00:14:57.160 --> 00:14:59.160
+And generator's work is.
+
+00:14:59.160 --> 00:15:01.160
+I would say it is a little.
+
+00:15:01.160 --> 00:15:03.160
+Bola component.
+
+00:15:03.160 --> 00:15:05.160
+Bola component means.
+
+00:15:05.160 --> 00:15:07.160
+On the retriever.
+
+00:15:07.160 --> 00:15:09.160
+Because.
+
+00:15:09.160 --> 00:15:11.160
+The generator's work is.
+
+00:15:11.160 --> 00:15:13.160
+Whatever retrieved results.
+
+00:15:13.160 --> 00:15:15.160
+Whatever retrieved chunks he got.
+
+00:15:15.160 --> 00:15:17.160
+On the basis of those chunks.
+
+00:15:17.160 --> 00:15:19.160
+He has to generate his answer.
+
+00:15:19.160 --> 00:15:21.160
+So here our generator.
+
+00:15:21.160 --> 00:15:23.160
+Is not that he can do anything freely.
+
+00:15:23.160 --> 00:15:25.160
+He does not have any free will.
+
+00:15:25.160 --> 00:15:27.160
+We have specifically told our generator.
+
+00:15:27.160 --> 00:15:29.160
+That whatever retrieved results.
+
+00:15:29.160 --> 00:15:31.160
+Will come to you.
+
+00:15:31.160 --> 00:15:33.160
+On the basis of that.
+
+00:15:33.160 --> 00:15:35.160
+Generator's matrix.
+
+00:15:35.160 --> 00:15:37.160
+Here.
+
+00:15:37.160 --> 00:15:39.160
+This particular thing.
+
+00:15:39.160 --> 00:15:41.160
+How the generator can understand.
+
+00:15:41.160 --> 00:15:43.160
+The input query.
+
+00:15:43.160 --> 00:15:45.160
+And is giving the answer.
+
+00:15:45.160 --> 00:15:47.160
+According to that.
+
+00:15:47.160 --> 00:15:49.160
+These are the matrix we will read.
+
+00:15:49.160 --> 00:15:51.160
+For the generator.
+
+00:15:51.160 --> 00:15:53.160
+Is it clear?
+
+00:15:53.160 --> 00:15:55.160
+Now let's talk.
+
+00:15:55.160 --> 00:15:57.160
+Which hyper parameters.
+
+00:15:57.160 --> 00:15:59.160
+Is this retriever component.
+
+00:15:59.160 --> 00:16:01.160
+Responsible for.
+
+00:16:01.160 --> 00:16:03.160
+Evaluation.
+
+00:16:03.160 --> 00:16:05.160
+Which hyper parameters can we tune.
+
+00:16:05.160 --> 00:16:07.160
+So a logical.
+
+00:16:07.160 --> 00:16:09.160
+Discussion.
+
+00:16:09.160 --> 00:16:11.160
+We will do.
+
+00:16:11.160 --> 00:16:13.160
+After this discussion.
+
+00:16:13.160 --> 00:16:15.160
+You will figure out.
+
+00:16:15.160 --> 00:16:17.160
+Which parameters you have to tune.
+
+00:16:17.160 --> 00:16:19.160
+You will not have to remember.
+
+00:16:19.160 --> 00:16:21.160
+You will not have to keep anything.
+
+00:16:21.160 --> 00:16:23.160
+You will be able to make relationships.
+
+00:16:23.160 --> 00:16:25.160
+So what are we doing in retriever.
+
+00:16:25.160 --> 00:16:27.160
+Basically.
+
+00:16:27.160 --> 00:16:29.160
+We have a lot of information.
+
+00:16:29.160 --> 00:16:31.160
+And we are fetching the information.
+
+00:16:31.160 --> 00:16:33.160
+So whenever we go to fetch information.
+
+00:16:33.160 --> 00:16:35.160
+Then we have.
+
+00:16:35.160 --> 00:16:37.160
+Three types of problems.
+
+00:16:37.160 --> 00:16:39.160
+What is the first problem?
+
+00:16:39.160 --> 00:16:41.160
+The first problem is.
+
+00:16:41.160 --> 00:16:43.160
+Let's say for a given query.
+
+00:16:43.160 --> 00:16:45.160
+We have.
+
+00:16:45.160 --> 00:16:47.160
+To answer that query.
+
+00:16:47.160 --> 00:16:49.160
+Let's say 10.
+
+00:16:49.160 --> 00:16:51.160
+Web pages were available.
+
+00:16:51.160 --> 00:16:53.160
+So what I am here.
+
+00:16:53.160 --> 00:16:55.160
+All the links.
+
+00:16:55.160 --> 00:16:57.160
+Could you retrieve it or not.
+
+00:16:57.160 --> 00:16:59.160
+Basically we want to see.
+
+00:16:59.160 --> 00:17:01.160
+Is my answer.
+
+00:17:01.160 --> 00:17:03.160
+Complete or not.
+
+00:17:03.160 --> 00:17:05.159
+I am checking for completeness.
+
+00:17:05.159 --> 00:17:07.159
+I am checking for coverage.
+
+00:17:07.159 --> 00:17:09.159
+Whenever you check completeness.
+
+00:17:09.159 --> 00:17:11.159
+Or coverage.
+
+00:17:11.159 --> 00:17:13.159
+Your prime goal is.
+
+00:17:13.159 --> 00:17:15.159
+Is it complete or not.
+
+00:17:15.159 --> 00:17:17.159
+How it is completed.
+
+00:17:17.159 --> 00:17:19.159
+What is the order in it.
+
+00:17:19.159 --> 00:17:21.159
+It doesn't matter.
+
+00:17:21.159 --> 00:17:23.159
+Whenever you give a query.
+
+00:17:23.159 --> 00:17:25.159
+So if you want to check completeness.
+
+00:17:25.160 --> 00:17:27.160
+You will check.
+
+00:17:27.160 --> 00:17:29.160
+That in your search results.
+
+00:17:29.160 --> 00:17:31.160
+You will not check.
+
+00:17:31.160 --> 00:17:33.160
+Which is the first result.
+
+00:17:33.160 --> 00:17:35.160
+Maybe you have.
+
+00:17:35.160 --> 00:17:37.160
+Your query answer.
+
+00:17:37.160 --> 00:17:39.160
+Or your retriever output.
+
+00:17:39.160 --> 00:17:41.160
+Could be 20 results.
+
+00:17:41.160 --> 00:17:43.160
+But what is your prime focus.
+
+00:17:43.160 --> 00:17:45.160
+Your prime focus is.
+
+00:17:45.160 --> 00:17:47.160
+How many results I get.
+
+00:17:47.160 --> 00:17:49.160
+Are those 10 results coming to me or not.
+
+00:17:49.160 --> 00:17:51.160
+Your focus is only this.
+
+00:17:51.160 --> 00:17:53.160
+You are checking for completeness.
+
+00:17:53.160 --> 00:17:55.160
+I hope this thing is clear to you.
+
+00:17:55.160 --> 00:17:57.160
+And how do you check this thing.
+
+00:17:57.160 --> 00:17:59.160
+You check this thing through the metric.
+
+00:17:59.160 --> 00:18:01.160
+Called as contextual recall.
+
+00:18:01.160 --> 00:18:03.160
+Which we have already covered.
+
+00:18:03.160 --> 00:18:05.160
+So recall.
+
+00:18:05.160 --> 00:18:07.160
+Doesn't decide right or wrong.
+
+00:18:07.160 --> 00:18:09.160
+Recall only decides.
+
+00:18:09.160 --> 00:18:11.160
+That for a given query.
+
+00:18:11.160 --> 00:18:13.160
+You should have 10 units of information.
+
+00:18:13.160 --> 00:18:15.160
+10 facts.
+
+00:18:15.160 --> 00:18:17.160
+Could you retrieve those 10 facts.
+
+00:18:17.160 --> 00:18:19.160
+Or not.
+
+00:18:19.160 --> 00:18:21.160
+Is this thing clear.
+
+00:18:21.160 --> 00:18:23.160
+So.
+
+00:18:23.160 --> 00:18:25.160
+The factual information we are storing.
+
+00:18:25.160 --> 00:18:27.160
+Where are we storing this factual information.
+
+00:18:27.160 --> 00:18:29.160
+This factual information is stored.
+
+00:18:29.160 --> 00:18:31.160
+Inside our chunks.
+
+00:18:31.160 --> 00:18:33.160
+Right.
+
+00:18:33.160 --> 00:18:35.160
+And what are we doing with chunks.
+
+00:18:35.160 --> 00:18:37.160
+We are converting chunks into vectors.
+
+00:18:39.160 --> 00:18:41.160
+So if we.
+
+00:18:41.160 --> 00:18:43.160
+In our given chunk.
+
+00:18:43.160 --> 00:18:45.160
+Let's say in this chunk.
+
+00:18:45.160 --> 00:18:47.160
+We had 5 facts.
+
+00:18:47.160 --> 00:18:49.160
+Now I want my vector.
+
+00:18:49.160 --> 00:18:51.160
+Which is my embedding.
+
+00:18:51.160 --> 00:18:53.160
+That too will take the information of these 5 facts.
+
+00:18:53.160 --> 00:18:55.160
+When we are giving numerical representation.
+
+00:18:55.160 --> 00:18:57.160
+To this text.
+
+00:18:57.160 --> 00:18:59.160
+Then in numerical representation.
+
+00:18:59.160 --> 00:19:01.160
+I shouldn't have loss of information.
+
+00:19:01.160 --> 00:19:03.160
+So this particular thing.
+
+00:19:03.160 --> 00:19:05.160
+If I want to do it faithfully.
+
+00:19:05.160 --> 00:19:07.160
+Means I don't want to do.
+
+00:19:07.160 --> 00:19:09.160
+Lossy conversation.
+
+00:19:09.160 --> 00:19:11.160
+It should be lossless.
+
+00:19:11.160 --> 00:19:13.160
+So which component will be responsible here.
+
+00:19:13.160 --> 00:19:15.160
+Of course my embedding model.
+
+00:19:19.160 --> 00:19:21.160
+So whenever we talk about recall.
+
+00:19:21.160 --> 00:19:23.160
+We talk about embedding model.
+
+00:19:23.160 --> 00:19:25.160
+We check.
+
+00:19:25.160 --> 00:19:27.160
+That our embedding model.
+
+00:19:27.160 --> 00:19:29.160
+Will function properly or not.
+
+00:19:29.160 --> 00:19:31.160
+Because.
+
+00:19:31.160 --> 00:19:33.160
+You will search for similarities.
+
+00:19:33.160 --> 00:19:35.160
+On the embedding of this embedding model.
+
+00:19:35.160 --> 00:19:37.160
+So here we don't look for similarities.
+
+00:19:37.160 --> 00:19:39.160
+Because similarity search will be done automatically.
+
+00:19:39.160 --> 00:19:41.160
+I will explain it through an example.
+
+00:19:41.160 --> 00:19:43.160
+Let's say.
+
+00:19:43.160 --> 00:19:45.160
+We have.
+
+00:19:45.160 --> 00:19:47.160
+A particular query.
+
+00:19:47.160 --> 00:19:49.160
+Let's say this is my query.
+
+00:19:49.160 --> 00:19:51.160
+And this is my query's vector.
+
+00:19:51.160 --> 00:19:53.160
+Now to answer this query.
+
+00:19:53.160 --> 00:19:55.160
+I have 5 more.
+
+00:19:55.160 --> 00:19:57.160
+Vectors requirement.
+
+00:19:57.160 --> 00:19:59.160
+5 more chunks requirement.
+
+00:19:59.160 --> 00:20:01.160
+So if my embedding model.
+
+00:20:01.160 --> 00:20:03.160
+Is working properly.
+
+00:20:03.160 --> 00:20:05.160
+Here these 5 facts.
+
+00:20:05.160 --> 00:20:07.160
+Can capture and represent them in vectors.
+
+00:20:07.160 --> 00:20:09.160
+Then obviously.
+
+00:20:09.160 --> 00:20:11.160
+Semantic meaning of all.
+
+00:20:11.160 --> 00:20:13.160
+Will be similar.
+
+00:20:13.160 --> 00:20:15.160
+You understand this thing.
+
+00:20:15.160 --> 00:20:17.160
+That if I want to answer.
+
+00:20:17.160 --> 00:20:19.160
+A particular question.
+
+00:20:19.160 --> 00:20:21.160
+I need 5 pieces of information.
+
+00:20:21.160 --> 00:20:23.160
+So that query and those 5 pieces of information.
+
+00:20:23.160 --> 00:20:25.160
+The semantic similarity.
+
+00:20:25.160 --> 00:20:27.160
+Will be quite same.
+
+00:20:27.160 --> 00:20:29.160
+Okay.
+
+00:20:29.160 --> 00:20:31.160
+So what will happen here.
+
+00:20:31.160 --> 00:20:33.160
+Here my.
+
+00:20:33.160 --> 00:20:35.160
+These 5 pieces of information.
+
+00:20:35.160 --> 00:20:37.160
+Will be in my query's neighborhood.
+
+00:20:39.160 --> 00:20:41.160
+It will be in the local.
+
+00:20:41.160 --> 00:20:43.160
+Neighborhood of my query.
+
+00:20:43.160 --> 00:20:45.160
+And how will it be able to make sure.
+
+00:20:45.160 --> 00:20:47.160
+That it is in the local neighborhood.
+
+00:20:47.160 --> 00:20:49.160
+It will be able to make sure.
+
+00:20:49.160 --> 00:20:51.160
+If my embedding model is working properly.
+
+00:20:51.160 --> 00:20:53.160
+If my embedding model is losing some information.
+
+00:20:53.160 --> 00:20:55.160
+Then what will happen.
+
+00:20:55.160 --> 00:20:57.160
+Here some query.
+
+00:20:57.160 --> 00:20:59.160
+Can be misrepresented.
+
+00:20:59.160 --> 00:21:01.160
+Sorry I am saying query.
+
+00:21:01.160 --> 00:21:03.160
+Here some embedding will be misrepresented.
+
+00:21:03.160 --> 00:21:05.160
+And it will be far from your query.
+
+00:21:05.160 --> 00:21:07.160
+So if it is far.
+
+00:21:07.160 --> 00:21:09.160
+It will not be retrieved here.
+
+00:21:09.160 --> 00:21:11.160
+During retrieval.
+
+00:21:11.160 --> 00:21:13.160
+Okay.
+
+00:21:13.160 --> 00:21:15.160
+Here along with embedding model.
+
+00:21:15.160 --> 00:21:17.160
+You see other things too.
+
+00:21:17.160 --> 00:21:19.160
+Like your.
+
+00:21:19.160 --> 00:21:21.160
+Topk's value.
+
+00:21:21.160 --> 00:21:23.160
+Because if you need 5 pieces of information.
+
+00:21:23.160 --> 00:21:25.160
+To answer this query properly.
+
+00:21:25.160 --> 00:21:27.160
+But you have set 3 here.
+
+00:21:27.160 --> 00:21:29.160
+If your topk is 3.
+
+00:21:29.160 --> 00:21:31.160
+So you can do anything.
+
+00:21:31.160 --> 00:21:33.160
+If only 3 pieces of information will come.
+
+00:21:33.160 --> 00:21:35.160
+Then the recall will be less.
+
+00:21:35.160 --> 00:21:37.160
+So generally what happens.
+
+00:21:37.160 --> 00:21:39.160
+If your recall is less.
+
+00:21:39.160 --> 00:21:41.160
+Then you increase the circle.
+
+00:21:41.160 --> 00:21:43.160
+So that you can retrieve more results.
+
+00:21:43.160 --> 00:21:45.160
+So that you can achieve that completeness.
+
+00:21:45.160 --> 00:21:47.160
+Basically.
+
+00:21:47.160 --> 00:21:49.160
+I hope you are understanding this point.
+
+00:21:49.160 --> 00:21:51.160
+And what can you do here.
+
+00:21:51.160 --> 00:21:53.160
+You can increase the size of your chunk.
+
+00:21:57.160 --> 00:21:59.160
+What are we doing in every vector.
+
+00:21:59.160 --> 00:22:01.160
+We are storing information in every vector.
+
+00:22:01.160 --> 00:22:03.160
+So what you did.
+
+00:22:03.160 --> 00:22:05.160
+You increased the window of information.
+
+00:22:05.160 --> 00:22:07.160
+That here I am storing a lot of information.
+
+00:22:07.160 --> 00:22:09.160
+In a particular chunk.
+
+00:22:09.160 --> 00:22:11.160
+So there is a high possibility.
+
+00:22:11.160 --> 00:22:13.160
+That complete information is available there.
+
+00:22:13.160 --> 00:22:15.160
+But there is a tradeoff to increase the size of the chunk.
+
+00:22:15.160 --> 00:22:17.160
+What is the tradeoff to increase the size of the chunk.
+
+00:22:17.160 --> 00:22:19.160
+If you increase the size of the chunk.
+
+00:22:19.160 --> 00:22:21.160
+Then your embedding model.
+
+00:22:21.160 --> 00:22:23.160
+There.
+
+00:22:23.160 --> 00:22:25.160
+In a lossless way.
+
+00:22:25.160 --> 00:22:27.160
+It will not be able to convert all the information into a vector.
+
+00:22:27.160 --> 00:22:29.160
+Because embedding model.
+
+00:22:29.160 --> 00:22:31.160
+At the end of the day.
+
+00:22:31.160 --> 00:22:33.160
+They do compression.
+
+00:22:33.160 --> 00:22:35.160
+So you have to make a balance here.
+
+00:22:35.160 --> 00:22:37.160
+It is not like you make the size of the chunk very massive.
+
+00:22:37.160 --> 00:22:39.160
+That I want to bring all the information here.
+
+00:22:39.160 --> 00:22:41.160
+Because you have to create a balance.
+
+00:22:41.160 --> 00:22:43.160
+If you keep increasing your chunk size.
+
+00:22:43.160 --> 00:22:45.160
+Then your embedding model.
+
+00:22:45.160 --> 00:22:47.160
+Faithfully will not be able to capture all the information.
+
+00:22:47.160 --> 00:22:49.160
+I hope this point is clear to you.
+
+00:22:49.160 --> 00:22:51.160
+That what we are doing in recall.
+
+00:22:51.160 --> 00:22:53.160
+Now let's talk about the point number 2.
+
+00:22:53.160 --> 00:22:55.160
+Point number 2.
+
+00:22:55.160 --> 00:22:57.160
+What is in point number 2.
+
+00:22:57.160 --> 00:22:59.160
+Point number 2 is that.
+
+00:22:59.160 --> 00:23:01.160
+The results we are bringing.
+
+00:23:01.160 --> 00:23:03.160
+How many results are there.
+
+00:23:03.160 --> 00:23:05.160
+How many of them are relevant to you.
+
+00:23:05.160 --> 00:23:07.160
+Relevant results.
+
+00:23:07.160 --> 00:23:09.160
+In point number 1.
+
+00:23:09.160 --> 00:23:11.160
+We were not factor in relevancy.
+
+00:23:11.160 --> 00:23:13.160
+We were saying that.
+
+00:23:13.160 --> 00:23:15.160
+We need x pieces of information.
+
+00:23:15.160 --> 00:23:17.160
+If they are coming to us.
+
+00:23:17.160 --> 00:23:19.160
+Then we will high score it.
+
+00:23:19.160 --> 00:23:21.160
+Is it right or wrong?
+
+00:23:21.160 --> 00:23:23.160
+How is the rest?
+
+00:23:23.160 --> 00:23:25.160
+It does not matter to us.
+
+00:23:25.160 --> 00:23:27.160
+Whereas.
+
+00:23:27.160 --> 00:23:29.160
+In relevant results.
+
+00:23:29.160 --> 00:23:31.160
+Where we are seeing relevancy.
+
+00:23:31.160 --> 00:23:33.160
+Contextual relevancy.
+
+00:23:35.160 --> 00:23:37.160
+In this contextual relevancy.
+
+00:23:37.160 --> 00:23:39.160
+We see that our.
+
+00:23:39.160 --> 00:23:41.160
+Signal to noise ratio.
+
+00:23:45.160 --> 00:23:47.160
+Signal to noise ratio means.
+
+00:23:47.160 --> 00:23:49.160
+That you have.
+
+00:23:49.160 --> 00:23:51.160
+How many useful results are coming.
+
+00:23:51.160 --> 00:23:53.160
+And how many useless results are coming.
+
+00:23:53.160 --> 00:23:55.160
+Out of the total results you are getting.
+
+00:23:55.160 --> 00:23:57.160
+Let's say you have 10 results.
+
+00:23:57.160 --> 00:23:59.160
+And out of those 10 results.
+
+00:23:59.160 --> 00:24:01.160
+3 are relevant.
+
+00:24:01.160 --> 00:24:03.160
+Whereas 3 are non relevant.
+
+00:24:03.160 --> 00:24:05.160
+So your relevancy will be.
+
+00:24:05.160 --> 00:24:07.160
+7 out of 10.
+
+00:24:07.160 --> 00:24:09.160
+Now.
+
+00:24:09.160 --> 00:24:11.160
+You will think.
+
+00:24:11.160 --> 00:24:13.160
+Why do we need to increase this relevancy.
+
+00:24:13.160 --> 00:24:15.160
+What is the benefit of it.
+
+00:24:15.160 --> 00:24:17.160
+What is the benefit of increasing the relevancy.
+
+00:24:17.160 --> 00:24:19.160
+So we understood.
+
+00:24:19.160 --> 00:24:21.160
+That our results should have relevant results.
+
+00:24:21.160 --> 00:24:23.160
+But what will we get by increasing it.
+
+00:24:23.160 --> 00:24:25.160
+What will benefit our application.
+
+00:24:25.160 --> 00:24:27.160
+By increasing your application.
+
+00:24:27.160 --> 00:24:29.160
+That your context.
+
+00:24:31.160 --> 00:24:33.160
+Your context purity will increase.
+
+00:24:33.160 --> 00:24:35.160
+Purity means.
+
+00:24:35.160 --> 00:24:37.160
+If your answer.
+
+00:24:37.160 --> 00:24:39.160
+To make a perfect answer.
+
+00:24:39.160 --> 00:24:41.160
+If.
+
+00:24:41.160 --> 00:24:43.160
+You need some information.
+
+00:24:43.160 --> 00:24:45.160
+And that specific information.
+
+00:24:45.160 --> 00:24:47.160
+You have put in your context.
+
+00:24:47.160 --> 00:24:49.160
+You will not put extra things.
+
+00:24:49.160 --> 00:24:51.160
+So your LLM.
+
+00:24:51.160 --> 00:24:53.160
+That generator.
+
+00:24:53.160 --> 00:24:55.160
+Will not be confused.
+
+00:24:55.160 --> 00:24:57.160
+Because what you have done there.
+
+00:24:57.160 --> 00:24:59.160
+You have put there.
+
+00:24:59.160 --> 00:25:01.160
+The exact information.
+
+00:25:01.160 --> 00:25:03.160
+The relevant information.
+
+00:25:03.160 --> 00:25:05.160
+That is put in your context.
+
+00:25:05.160 --> 00:25:07.160
+So basically what you are doing here.
+
+00:25:07.160 --> 00:25:09.160
+The entropy of your context.
+
+00:25:09.160 --> 00:25:11.160
+You are reducing it.
+
+00:25:11.160 --> 00:25:13.160
+You are basically.
+
+00:25:13.160 --> 00:25:15.160
+Reducing your context pollution.
+
+00:25:15.160 --> 00:25:17.160
+You will say a word.
+
+00:25:17.160 --> 00:25:19.160
+Context pollution.
+
+00:25:19.160 --> 00:25:21.160
+What is the meaning of Context pollution.
+
+00:25:21.160 --> 00:25:23.160
+Pollution is.
+
+00:25:23.160 --> 00:25:25.160
+Where its value should be less.
+
+00:25:25.160 --> 00:25:27.160
+It should increase a lot.
+
+00:25:27.160 --> 00:25:29.160
+So if you.
+
+00:25:29.160 --> 00:25:31.160
+Increase the Context pollution.
+
+00:25:31.160 --> 00:25:33.160
+What you are doing.
+
+00:25:33.160 --> 00:25:35.160
+You are using your irrelevant results.
+
+00:25:35.160 --> 00:25:37.160
+More inside the context.
+
+00:25:37.160 --> 00:25:39.160
+As compared to your relevant results.
+
+00:25:39.160 --> 00:25:41.160
+Now what is the disadvantage of this.
+
+00:25:41.160 --> 00:25:43.160
+The disadvantage of this is.
+
+00:25:43.160 --> 00:25:45.160
+Let's say your relevance is.
+
+00:25:45.160 --> 00:25:47.160
+20%
+
+00:25:47.160 --> 00:25:49.160
+You have added the noisy chunks.
+
+00:25:49.160 --> 00:25:51.160
+In your context.
+
+00:25:51.160 --> 00:25:53.160
+So.
+
+00:25:53.160 --> 00:25:55.160
+Your work information.
+
+00:25:55.160 --> 00:25:57.160
+Will be hidden.
+
+00:25:57.160 --> 00:25:59.160
+In your context.
+
+00:25:59.160 --> 00:26:01.160
+And your LLM will have to work extra.
+
+00:26:01.160 --> 00:26:03.160
+To retrieve that work information.
+
+00:26:03.160 --> 00:26:05.160
+Out of your context.
+
+00:26:05.160 --> 00:26:07.160
+So in this case.
+
+00:26:07.160 --> 00:26:09.160
+LLMs generally miss out.
+
+00:26:09.160 --> 00:26:11.160
+On work information.
+
+00:26:11.160 --> 00:26:13.160
+In some cases.
+
+00:26:13.160 --> 00:26:15.160
+They misinterpret work information.
+
+00:26:15.160 --> 00:26:17.160
+And.
+
+00:26:17.160 --> 00:26:19.160
+In this case.
+
+00:26:19.160 --> 00:26:21.160
+Your LLMs.
+
+00:26:21.160 --> 00:26:23.160
+Hallucinate.
+
+00:26:23.160 --> 00:26:25.160
+So what we have to do.
+
+00:26:25.160 --> 00:26:27.160
+We have to increase.
+
+00:26:27.160 --> 00:26:29.160
+The relevance of our retrieval.
+
+00:26:29.160 --> 00:26:31.160
+In our context.
+
+00:26:31.160 --> 00:26:33.160
+By increasing the relevance.
+
+00:26:33.160 --> 00:26:35.160
+Our context will be pure.
+
+00:26:35.160 --> 00:26:37.160
+Only with work information.
+
+00:26:37.160 --> 00:26:39.160
+And if your context is filled with work information.
+
+00:26:39.160 --> 00:26:41.160
+Then you can.
+
+00:26:41.160 --> 00:26:43.160
+Generate good responses.
+
+00:26:43.160 --> 00:26:45.160
+Because you are only showing.
+
+00:26:45.160 --> 00:26:47.160
+Your work information.
+
+00:26:47.160 --> 00:26:49.160
+You are not giving your work information.
+
+00:26:49.160 --> 00:26:51.160
+You are not confusing your LLM.
+
+00:26:51.160 --> 00:26:53.160
+I hope you understood this point.
+
+00:26:53.160 --> 00:26:55.160
+So if you ever.
+
+00:26:55.160 --> 00:26:57.160
+Want to increase relevant results.
+
+00:26:57.160 --> 00:26:59.160
+In your context.
+
+00:26:59.160 --> 00:27:01.160
+If your relevance score is decreasing.
+
+00:27:01.160 --> 00:27:03.160
+Then what will you do here.
+
+00:27:03.160 --> 00:27:05.160
+You will.
+
+00:27:05.160 --> 00:27:07.160
+Fine-grain your information.
+
+00:27:07.160 --> 00:27:09.160
+Fine-grain your information.
+
+00:27:09.160 --> 00:27:11.160
+What does that mean?
+
+00:27:11.160 --> 00:27:13.160
+That you will reduce your chunk size.
+
+00:27:13.160 --> 00:27:15.160
+Because.
+
+00:27:15.160 --> 00:27:17.160
+Your textual chunks.
+
+00:27:17.160 --> 00:27:19.160
+If you reduce chunk size.
+
+00:27:19.160 --> 00:27:21.160
+Then what will happen.
+
+00:27:21.160 --> 00:27:23.160
+Your work information.
+
+00:27:23.160 --> 00:27:25.160
+Will be a chunk.
+
+00:27:25.160 --> 00:27:27.160
+And noisy information.
+
+00:27:27.160 --> 00:27:29.160
+Because noisy is not bad information.
+
+00:27:29.160 --> 00:27:31.160
+Noisy is not relevant for the given query.
+
+00:27:31.160 --> 00:27:33.160
+If you have a big paragraph.
+
+00:27:33.160 --> 00:27:35.160
+In that.
+
+00:27:35.160 --> 00:27:37.160
+Let's say 10 pieces of information.
+
+00:27:37.160 --> 00:27:39.160
+So it doesn't mean.
+
+00:27:39.160 --> 00:27:41.160
+That out of 10 pieces of information.
+
+00:27:41.160 --> 00:27:43.160
+5 are good. 5 are bad.
+
+00:27:43.160 --> 00:27:45.160
+10 out of 10 are good.
+
+00:27:45.160 --> 00:27:47.160
+10 out of 10.
+
+00:27:47.160 --> 00:27:49.160
+They are good information.
+
+00:27:49.160 --> 00:27:51.160
+But they are not relevant information.
+
+00:27:51.160 --> 00:27:53.160
+Only 5 of them are relevant.
+
+00:27:53.160 --> 00:27:55.160
+So the relevance changes according to your query.
+
+00:27:55.160 --> 00:27:57.160
+The kind of question you are asking.
+
+00:27:57.160 --> 00:27:59.160
+According to that.
+
+00:27:59.160 --> 00:28:01.160
+The criteria of relevance.
+
+00:28:01.160 --> 00:28:03.160
+Changes.
+
+00:28:03.160 --> 00:28:05.160
+Any particular information.
+
+00:28:05.160 --> 00:28:07.160
+Will be relevant for any query.
+
+00:28:07.160 --> 00:28:09.160
+And there is another information.
+
+00:28:09.160 --> 00:28:11.160
+Which was irrelevant before.
+
+00:28:11.160 --> 00:28:13.160
+So what you do.
+
+00:28:13.160 --> 00:28:15.160
+You reduce your chunk size.
+
+00:28:15.160 --> 00:28:17.160
+By reducing chunk size.
+
+00:28:17.160 --> 00:28:19.160
+Your pieces of information.
+
+00:28:19.160 --> 00:28:21.160
+Will be atomized.
+
+00:28:21.160 --> 00:28:23.160
+Basically you break down them.
+
+00:28:25.160 --> 00:28:27.160
+By breaking down.
+
+00:28:27.160 --> 00:28:29.160
+There is a separation of concern.
+
+00:28:29.160 --> 00:28:31.160
+You have separated the information.
+
+00:28:31.160 --> 00:28:33.160
+Now.
+
+00:28:33.160 --> 00:28:35.160
+Compiling good information.
+
+00:28:35.160 --> 00:28:37.160
+Is easier.
+
+00:28:37.160 --> 00:28:39.160
+It is like you are breaking your.
+
+00:28:39.160 --> 00:28:41.160
+Context into bullet points.
+
+00:28:41.160 --> 00:28:43.160
+So it is easier to fetch.
+
+00:28:43.160 --> 00:28:45.160
+The bullet points of work.
+
+00:28:45.160 --> 00:28:47.160
+And second.
+
+00:28:47.160 --> 00:28:49.160
+You will reduce chunk overlap.
+
+00:28:49.160 --> 00:28:51.160
+Because in overlap.
+
+00:28:51.160 --> 00:28:53.160
+You are bringing information.
+
+00:28:53.160 --> 00:28:55.160
+Of your neighbor's chunk.
+
+00:28:55.160 --> 00:28:57.160
+If you reduce the value of overlap.
+
+00:28:57.160 --> 00:28:59.160
+Then you are.
+
+00:28:59.160 --> 00:29:01.160
+Reducing the information of the next chunk.
+
+00:29:01.160 --> 00:29:03.160
+You are integrating it.
+
+00:29:03.160 --> 00:29:05.160
+And you can also reduce the top.
+
+00:29:05.160 --> 00:29:07.160
+K.
+
+00:29:07.160 --> 00:29:09.160
+It is possible that your chunk size and overlap.
+
+00:29:09.160 --> 00:29:11.160
+Is fine.
+
+00:29:11.160 --> 00:29:13.160
+But your top K is too much.
+
+00:29:13.160 --> 00:29:15.160
+You can retrieve 10 chunks.
+
+00:29:15.160 --> 00:29:17.160
+Out of that.
+
+00:29:17.160 --> 00:29:19.160
+3 are useless. 7 are useless.
+
+00:29:19.160 --> 00:29:21.160
+So if you keep your top K.
+
+00:29:21.160 --> 00:29:23.160
+5 or 4 or 3.
+
+00:29:23.160 --> 00:29:25.160
+Then it is possible that your.
+
+00:29:25.160 --> 00:29:27.160
+Context is more pure.
+
+00:29:27.160 --> 00:29:29.160
+You just retrieve relevant information.
+
+00:29:29.160 --> 00:29:31.160
+Irrelevant information.
+
+00:29:31.160 --> 00:29:33.160
+Will be missed out.
+
+00:29:33.160 --> 00:29:35.160
+I hope this thing is getting clear.
+
+00:29:35.160 --> 00:29:37.160
+Is this thing getting clear guys?
+
+00:29:41.160 --> 00:29:43.160
+Is it getting clear guys?
+
+00:29:43.160 --> 00:29:45.160
+Now I will ask questions Sumit.
+
+00:29:45.160 --> 00:29:47.160
+I will give you time to ask your questions.
+
+00:29:47.160 --> 00:29:49.160
+Whatever we discussed is getting clear.
+
+00:29:49.160 --> 00:29:51.160
+Why is it getting clear?
+
+00:29:51.160 --> 00:29:53.160
+Behind every metric.
+
+00:29:55.160 --> 00:29:57.160
+I am looking at the chat.
+
+00:29:57.160 --> 00:29:59.160
+Great.
+
+00:30:01.160 --> 00:30:03.160
+So now if you have any metric value.
+
+00:30:03.160 --> 00:30:05.160
+Then you can judge.
+
+00:30:05.160 --> 00:30:07.160
+Which parameters I have to tweak.
+
+00:30:07.160 --> 00:30:09.160
+Recall.
+
+00:30:09.160 --> 00:30:11.160
+What to tweak.
+
+00:30:11.160 --> 00:30:13.160
+If the relevancy is like this.
+
+00:30:13.160 --> 00:30:15.160
+Contextual relevancy.
+
+00:30:15.160 --> 00:30:17.160
+Here you will not tweak your embedding model.
+
+00:30:17.160 --> 00:30:19.160
+Because your embedding model.
+
+00:30:19.160 --> 00:30:21.160
+Is not creating any issue.
+
+00:30:21.160 --> 00:30:23.160
+What issue is coming here.
+
+00:30:23.160 --> 00:30:25.160
+That you are bringing some extra information.
+
+00:30:25.160 --> 00:30:27.160
+With your work chunk.
+
+00:30:27.160 --> 00:30:29.160
+So you have to remove that extra.
+
+00:30:29.160 --> 00:30:31.160
+Is it getting clear?
+
+00:30:31.160 --> 00:30:33.160
+And third comes.
+
+00:30:33.160 --> 00:30:35.160
+Precision metric.
+
+00:30:35.160 --> 00:30:37.160
+Which we are going to read.
+
+00:30:37.160 --> 00:30:39.160
+Contextual Precision.
+
+00:30:39.160 --> 00:30:41.160
+So we have seen the completeness.
+
+00:30:41.160 --> 00:30:43.160
+Now your search results.
+
+00:30:43.160 --> 00:30:45.160
+Ranks also matter.
+
+00:30:45.160 --> 00:30:47.160
+Let's say I have given my query.
+
+00:30:47.160 --> 00:30:49.160
+To Google.
+
+00:30:49.160 --> 00:30:51.160
+So the official page of Deep eval.
+
+00:30:51.160 --> 00:30:53.160
+Is coming first on rank or not.
+
+00:30:53.160 --> 00:30:55.160
+Is it coming first on rank or not.
+
+00:30:55.160 --> 00:30:57.160
+Is it coming first on sponsored links.
+
+00:30:57.160 --> 00:30:59.160
+And deep eval page is hidden below it.
+
+00:30:59.160 --> 00:31:01.160
+So that is not a good result.
+
+00:31:01.160 --> 00:31:03.160
+So here order of results.
+
+00:31:03.160 --> 00:31:05.160
+Matters.
+
+00:31:07.160 --> 00:31:09.160
+Ok.
+
+00:31:09.160 --> 00:31:11.160
+So basically you check this order of results.
+
+00:31:11.160 --> 00:31:13.160
+Through your contextual precision.
+
+00:31:19.160 --> 00:31:21.160
+Clear.
+
+00:31:21.160 --> 00:31:23.160
+And in this particular thing.
+
+00:31:23.160 --> 00:31:25.160
+You.
+
+00:31:25.160 --> 00:31:27.160
+Which you are retrieving.
+
+00:31:27.160 --> 00:31:29.160
+In this thing.
+
+00:31:29.160 --> 00:31:31.160
+Your things should be relevant.
+
+00:31:31.160 --> 00:31:33.160
+It's not like you have fixed the order.
+
+00:31:33.160 --> 00:31:35.160
+But the results are bad.
+
+00:31:35.160 --> 00:31:37.160
+You have to check the relevancy.
+
+00:31:39.160 --> 00:31:41.160
+Ok.
+
+00:31:41.160 --> 00:31:43.160
+So here two things matter.
+
+00:31:43.160 --> 00:31:45.160
+First is relevancy.
+
+00:31:45.160 --> 00:31:47.160
+Which is the results are relevant.
+
+00:31:47.160 --> 00:31:49.160
+And they are top ranking.
+
+00:31:49.160 --> 00:31:51.160
+So the top ranking.
+
+00:31:51.160 --> 00:31:53.160
+Results should be relevant.
+
+00:31:53.160 --> 00:31:55.160
+Sponsored links should not be there.
+
+00:31:55.160 --> 00:31:57.160
+I hope this point is clear for you.
+
+00:31:57.160 --> 00:31:59.160
+And whenever we talk about contextual precision.
+
+00:31:59.160 --> 00:32:01.160
+We do not target our embedding model.
+
+00:32:01.160 --> 00:32:03.160
+Because it's work is not about ranking.
+
+00:32:03.160 --> 00:32:05.160
+And neither we work for chunk size and chunk overlap.
+
+00:32:05.160 --> 00:32:07.160
+And neither we work for chunk size and chunk overlap.
+
+00:32:07.160 --> 00:32:09.160
+And neither we work for chunk size and chunk overlap.
+
+00:32:09.160 --> 00:32:11.160
+Our main goal is.
+
+00:32:11.160 --> 00:32:13.160
+To test our re-ranker.
+
+00:32:13.160 --> 00:32:15.160
+To test our re-ranker.
+
+00:32:15.160 --> 00:32:17.160
+Because this is the job of my re-ranker.
+
+00:32:17.160 --> 00:32:19.160
+Because this is the job of my re-ranker.
+
+00:32:19.160 --> 00:32:21.160
+What is re-ranker.
+
+00:32:21.160 --> 00:32:23.160
+Re-ranker is basically a component in your rack pipeline.
+
+00:32:23.160 --> 00:32:25.160
+Re-ranker is basically a component in your rack pipeline.
+
+00:32:25.160 --> 00:32:27.160
+Which after your score.
+
+00:32:27.160 --> 00:32:29.160
+Which after your score.
+
+00:32:29.160 --> 00:32:31.160
+Which after your similarity score.
+
+00:32:31.160 --> 00:32:33.160
+After that in a particular order.
+
+00:32:33.160 --> 00:32:35.160
+It gives your results in output.
+
+00:32:35.160 --> 00:32:37.160
+It gives your results in output.
+
+00:32:37.160 --> 00:32:39.160
+Now.
+
+00:32:39.160 --> 00:32:41.160
+Top ranking results should be good.
+
+00:32:41.160 --> 00:32:43.160
+That is basically because.
+
+00:32:43.160 --> 00:32:45.160
+Whenever you build your context.
+
+00:32:45.160 --> 00:32:47.160
+So your LLM.
+
+00:32:47.160 --> 00:32:49.160
+That is the starting pieces of your context.
+
+00:32:49.160 --> 00:32:51.160
+That is the starting pieces of your context.
+
+00:32:51.160 --> 00:32:52.160
+So.
+
+00:32:52.160 --> 00:32:54.160
+This inputs more focus on it.
+
+00:32:54.160 --> 00:32:56.160
+And.
+
+00:32:56.160 --> 00:32:58.160
+The information in the end of your context.
+
+00:32:58.160 --> 00:33:00.160
+Focuses more on that point.
+
+00:33:00.160 --> 00:33:02.160
+So how can you see your context.
+
+00:33:02.160 --> 00:33:03.160
+I will tell you.
+
+00:33:03.160 --> 00:33:04.160
+So.
+
+00:33:04.160 --> 00:33:06.160
+This is your retrieved context.
+
+00:33:06.160 --> 00:33:08.160
+First You give you retrieved context to your LLM.
+
+00:33:08.160 --> 00:33:10.160
+And below that.
+
+00:33:10.160 --> 00:33:12.160
+You give your query.
+
+00:33:12.160 --> 00:33:13.160
+To end.
+
+00:33:13.160 --> 00:33:15.160
+Which is your user query.
+
+00:33:15.160 --> 00:33:17.160
+So this query.
+
+00:33:17.160 --> 00:33:19.160
+This is the last part of your context.
+
+00:33:19.160 --> 00:33:23.160
+the starting point of the information
+
+00:33:23.160 --> 00:33:26.160
+is the focus of your LLM
+
+00:33:26.160 --> 00:33:30.160
+and the focus of your LLM is very less on the middle part
+
+00:33:30.160 --> 00:33:34.160
+and there is a proper term for this
+
+00:33:34.160 --> 00:33:37.160
+which is called lost in the middle problem
+
+00:33:42.160 --> 00:33:47.160
+and you must have seen that when you search on Google
+
+00:33:47.160 --> 00:33:50.160
+and after searching on Google
+
+00:33:50.160 --> 00:33:53.160
+if you see sponsored links
+
+00:33:53.160 --> 00:33:56.160
+and after that you see a link which is relevant to your query
+
+00:33:56.160 --> 00:33:59.160
+then you scroll down many times
+
+00:33:59.160 --> 00:34:02.160
+meaning your focus is not on this point
+
+00:34:02.160 --> 00:34:05.160
+you feel where is my result
+
+00:34:05.160 --> 00:34:08.159
+but your result is here, it may be on the second or third number
+
+00:34:08.159 --> 00:34:11.159
+but because you see irrelevant results above
+
+00:34:11.159 --> 00:34:14.159
+then your focus gets missed
+
+00:34:14.159 --> 00:34:17.159
+LLM is the top and bottom of your context
+
+00:34:17.159 --> 00:34:20.159
+and it focuses more on it
+
+00:34:20.159 --> 00:34:23.159
+whereas the information of the middle
+
+00:34:23.159 --> 00:34:26.159
+focuses less on it
+
+00:34:26.159 --> 00:34:29.159
+so we basically test our re-ranker here
+
+00:34:29.159 --> 00:34:32.159
+so if your precision is less
+
+00:34:32.159 --> 00:34:35.159
+basically what does it mean that your retriever
+
+00:34:35.159 --> 00:34:38.159
+is not able to rank the results properly
+
+00:34:38.159 --> 00:34:41.159
+what you can do here is you can use a re-ranker
+
+00:34:41.159 --> 00:34:44.159
+you can change the hyperparameters
+
+00:34:44.159 --> 00:34:47.159
+you can tweak your re-ranker
+
+00:34:47.159 --> 00:34:50.159
+and increase your precision
+
+00:34:50.159 --> 00:34:53.159
+I hope you understood this
+
+00:34:53.159 --> 00:34:56.159
+did you understand guys?
+
+00:34:59.160 --> 00:35:02.160
+now I will take your questions for 2 minutes
+
+00:35:02.160 --> 00:35:05.160
+and then we will move forward
+
+00:35:12.160 --> 00:35:15.160
+questions guys?
+
+00:35:23.160 --> 00:35:26.160
+what is the best recall value we can say
+
+00:35:26.160 --> 00:35:29.160
+in production grade? again through experimentation
+
+00:35:29.160 --> 00:35:32.160
+you will know that there is no best recall value
+
+00:35:32.160 --> 00:35:35.160
+we always try to do one
+
+00:35:35.160 --> 00:35:38.160
+that our recall value is 1
+
+00:35:41.160 --> 00:35:44.160
+are these metrics applied together
+
+00:35:44.160 --> 00:35:47.160
+or we decide individually based on cases
+
+00:35:47.160 --> 00:35:50.160
+you apply metrics together
+
+00:35:50.160 --> 00:35:53.160
+on your entire application
+
+00:35:53.160 --> 00:35:56.160
+but your metrics check different things
+
+00:35:56.160 --> 00:35:59.160
+so if you know which component
+
+00:35:59.160 --> 00:36:02.160
+is being targeted by each metric
+
+00:36:02.160 --> 00:36:05.160
+then you can individually tweak it
+
+00:36:05.160 --> 00:36:08.160
+if its value is less
+
+00:36:11.160 --> 00:36:14.160
+and we have also discussed
+
+00:36:14.160 --> 00:36:17.160
+in which direction you have to tweak
+
+00:36:17.160 --> 00:36:20.160
+basically the direction of gradient descent
+
+00:36:20.160 --> 00:36:23.160
+we have discussed that
+
+00:36:23.160 --> 00:36:26.160
+that you have to increase or decrease chunk size
+
+00:36:26.160 --> 00:36:29.160
+in the case of recall if the recall is less
+
+00:36:29.160 --> 00:36:32.160
+then you have to increase chunk size
+
+00:36:32.160 --> 00:36:35.160
+you are retrieving less information
+
+00:36:35.160 --> 00:36:38.160
+whereas in the case of relevancy you have to decrease chunk size
+
+00:36:38.160 --> 00:36:41.160
+so we have discussed this in advance track course
+
+00:36:41.160 --> 00:36:44.160
+there is a module on reranker
+
+00:36:44.160 --> 00:36:47.160
+reranker is basically a different component
+
+00:36:47.160 --> 00:36:50.160
+it is also a transformer model
+
+00:36:50.160 --> 00:36:53.160
+which is based on your cross encoder
+
+00:36:53.160 --> 00:36:56.160
+I will give you a little gist
+
+00:36:56.160 --> 00:36:59.160
+how reranker can do better ranking
+
+00:36:59.160 --> 00:37:02.160
+what your retriever does here
+
+00:37:02.160 --> 00:37:05.160
+in your retriever, similarities course is calculated
+
+00:37:05.160 --> 00:37:08.160
+you know that
+
+00:37:08.160 --> 00:37:11.160
+and on the basis of that
+
+00:37:11.160 --> 00:37:14.160
+you return your outputs in descending order
+
+00:37:14.160 --> 00:37:17.160
+what reranker does is
+
+00:37:17.160 --> 00:37:20.160
+it calculates the similarities again
+
+00:37:20.160 --> 00:37:23.160
+your retriever is basically a bi-encoder
+
+00:37:23.160 --> 00:37:26.160
+what bi-encoder means is
+
+00:37:26.160 --> 00:37:29.160
+that here you
+
+00:37:29.160 --> 00:37:32.160
+make your vector
+
+00:37:32.160 --> 00:37:35.160
+you separate the query
+
+00:37:35.160 --> 00:37:38.160
+and you separate the vector of your documents
+
+00:37:38.160 --> 00:37:41.160
+and you compare the dot product
+
+00:37:41.160 --> 00:37:44.160
+with a particular metric
+
+00:37:44.160 --> 00:37:47.160
+you do comparison
+
+00:37:47.160 --> 00:37:50.160
+whenever your query vector is generated
+
+00:37:50.160 --> 00:37:53.160
+it can't see the vectors of the documents
+
+00:37:53.160 --> 00:37:56.160
+and similar situation is that
+
+00:37:56.160 --> 00:37:59.160
+it doesn't know which query it is querying
+
+00:37:59.160 --> 00:38:02.160
+here you have a cross encoder
+
+00:38:02.160 --> 00:38:05.160
+which rerankers basically use
+
+00:38:05.160 --> 00:38:08.160
+you have two components
+
+00:38:08.160 --> 00:38:11.160
+one is query and other is documents
+
+00:38:11.160 --> 00:38:14.160
+and basically the vectors
+
+00:38:14.160 --> 00:38:17.160
+that you make here
+
+00:38:17.160 --> 00:38:20.160
+when you make document vectors
+
+00:38:20.160 --> 00:38:23.160
+they see your query and when you make query vector
+
+00:38:23.160 --> 00:38:26.160
+they see your documents vector
+
+00:38:26.160 --> 00:38:29.160
+and you can calculate it easily
+
+00:38:29.160 --> 00:38:32.160
+and it is very much similar to your cross encoder
+
+00:38:32.160 --> 00:38:35.160
+in your transformers
+
+00:38:35.160 --> 00:38:38.160
+you must have studied encoder, decoder, architecture
+
+00:38:38.160 --> 00:38:41.160
+and attention scores
+
+00:38:41.160 --> 00:38:44.160
+I hope this thing is clear to you
+
+00:38:44.160 --> 00:38:47.160
+you can use the BERT model to create a reranker
+
+00:38:47.160 --> 00:38:50.160
+because it is based on your encoder, decoder, architecture
+
+00:38:50.160 --> 00:38:53.160
+basically here cross attention type is happening
+
+00:38:53.160 --> 00:38:56.160
+how do we evaluate if the chunking is done correctly
+
+00:38:56.160 --> 00:38:59.160
+how do you know if it is done correctly or not
+
+00:38:59.160 --> 00:39:02.160
+that will be known after evaluation
+
+00:39:02.160 --> 00:39:05.160
+evaluation is done basically because
+
+00:39:05.160 --> 00:39:08.160
+whatever components you are setting here
+
+00:39:08.160 --> 00:39:11.160
+whatever hyperparameter values you are setting
+
+00:39:11.160 --> 00:39:14.160
+are those values correct or not
+
+00:39:14.160 --> 00:39:17.160
+so you can evaluate
+
+00:39:17.160 --> 00:39:20.160
+whether those values are correct or not
+
+00:39:20.160 --> 00:39:23.160
+you don't set values on gut feeling
+
+00:39:23.160 --> 00:39:26.160
+you evaluate properly
+
+00:39:26.160 --> 00:39:29.160
+and check after evaluating
+
+00:39:29.160 --> 00:39:32.160
+is this thing clear
+
+00:39:32.160 --> 00:39:35.160
+Bayesian optimization
+
+00:39:35.160 --> 00:39:38.160
+no sorry, you don't use Bayesian optimization
+
+00:39:38.160 --> 00:39:41.160
+or any technique that you use in machine learning
+
+00:39:41.160 --> 00:39:44.160
+the reason is simple that
+
+00:39:44.160 --> 00:39:47.160
+the outputs that are coming to you
+
+00:39:47.160 --> 00:39:50.160
+those are not deterministic, they are probabilistic
+
+00:39:50.160 --> 00:39:53.160
+so you have to tweak manually
+
+00:39:56.160 --> 00:39:59.160
+in Bayesian optimization, the score that comes to you
+
+00:39:59.160 --> 00:40:02.160
+no matter how many iterations you run there
+
+00:40:02.160 --> 00:40:05.160
+the score will be standard, scores also change here
+
+00:40:05.160 --> 00:40:08.160
+because the whole technique is probabilistic
+
+00:40:09.160 --> 00:40:12.160
+and you don't have to do so many iterations
+
+00:40:12.160 --> 00:40:15.160
+when you get scores
+
+00:40:15.160 --> 00:40:18.160
+you tweak only a few parameters
+
+00:40:18.160 --> 00:40:21.160
+means you don't make too many changes
+
+00:40:25.160 --> 00:40:28.160
+any more questions guys
+
+00:40:28.160 --> 00:40:31.160
+or continue, is this clear
+
+00:40:31.160 --> 00:40:34.160
+that what we have to tweak
+
+00:40:35.160 --> 00:40:38.160
+in which direction
+
+00:40:38.160 --> 00:40:41.160
+if this point is clear
+
+00:40:41.160 --> 00:40:44.160
+then when we calculate our baseline scores
+
+00:40:44.160 --> 00:40:47.160
+and improve our application
+
+00:40:47.160 --> 00:40:50.160
+then you will understand where to hit the hammer
+
+00:40:54.160 --> 00:40:57.160
+which nut to hit
+
+00:40:57.160 --> 00:41:00.160
+how much to hit so that our results improve
+
+00:41:00.160 --> 00:41:03.160
+again it is all experimentation
+
+00:41:03.160 --> 00:41:06.160
+how much to do is also an experimentation part
+
+00:41:06.160 --> 00:41:09.160
+you can't tell your results by looking at your results
+
+00:41:09.160 --> 00:41:12.160
+you will understand that my chunk size is more
+
+00:41:12.160 --> 00:41:15.160
+my noisy chunks are retrieved
+
+00:41:15.160 --> 00:41:18.160
+I have to reduce the chunk size
+
+00:41:18.160 --> 00:41:21.160
+but how much do I have to reduce, 100, 50, according to characters
+
+00:41:21.160 --> 00:41:24.160
+according to tokens, that is an experimentation part
+
+00:41:24.160 --> 00:41:27.160
+so you tweak each and every metric
+
+00:41:27.160 --> 00:41:30.160
+and you do things according to it
+
+00:41:30.160 --> 00:41:33.160
+metrics like nd, cg, mrr are also used
+
+00:41:33.160 --> 00:41:36.160
+elaborate this a little, sorry which metrics are these
+
+00:41:40.160 --> 00:41:43.160
+mrr is your matroshka
+
+00:41:43.160 --> 00:41:46.160
+is that the relevancy
+
+00:41:49.160 --> 00:41:52.160
+mean reciprocal ranking
+
+00:41:52.160 --> 00:41:55.160
+mean reciprocal ranking is used in your rrf
+
+00:41:55.160 --> 00:41:58.160
+I have not heard this metric
+
+00:41:58.160 --> 00:42:01.160
+but if there is a metric
+
+00:42:01.160 --> 00:42:04.160
+which tests the ranking then it can get the ranking
+
+00:42:10.160 --> 00:42:13.160
+because reciprocal ranking
+
+00:42:13.160 --> 00:42:16.160
+we do it there
+
+00:42:16.160 --> 00:42:19.160
+in the rack fusion
+
+00:42:19.160 --> 00:42:22.160
+we do multiple results
+
+00:42:22.160 --> 00:42:25.160
+and then we do the normalised discounted cumulative gain
+
+00:42:25.160 --> 00:42:28.160
+I have not heard about this
+
+00:42:28.160 --> 00:42:31.160
+I will read about this and then I can answer
+
+00:42:31.160 --> 00:42:34.160
+again these are custom metrics
+
+00:42:34.160 --> 00:42:37.160
+ok
+
+00:42:37.160 --> 00:42:40.160
+now the metrics
+
+00:42:40.160 --> 00:42:43.160
+which we are focusing on are basically LLM as a judge
+
+00:42:43.160 --> 00:42:46.160
+metrics
+
+00:42:46.160 --> 00:42:49.160
+let's move ahead
+
+00:42:49.160 --> 00:42:52.160
+now let's discuss
+
+00:42:52.160 --> 00:42:55.160
+about contextual precision
+
+00:42:55.160 --> 00:42:58.160
+we discussed recall and relevancy
+
+00:42:58.160 --> 00:43:01.160
+this is our metric which is
+
+00:43:01.160 --> 00:43:04.160
+your metric for the retrievers
+
+00:43:04.160 --> 00:43:07.160
+now as we discussed
+
+00:43:07.160 --> 00:43:10.160
+what is contextual precision targeting
+
+00:43:10.160 --> 00:43:13.160
+it is basically targeting your rank of results
+
+00:43:13.160 --> 00:43:16.160
+now what do you do in this metric
+
+00:43:16.160 --> 00:43:19.160
+I will tell you what you do
+
+00:43:19.160 --> 00:43:22.160
+you don't just target rank
+
+00:43:22.160 --> 00:43:25.160
+you take two things together
+
+00:43:25.160 --> 00:43:28.160
+you target
+
+00:43:28.160 --> 00:43:31.160
+your top results
+
+00:43:31.160 --> 00:43:34.160
+listen carefully
+
+00:43:34.160 --> 00:43:37.160
+top results means these are your high ranking
+
+00:43:37.160 --> 00:43:40.160
+their rank is highest
+
+00:43:40.160 --> 00:43:43.160
+top 3, top 2, top 5
+
+00:43:43.160 --> 00:43:46.160
+all these are your high ranking results
+
+00:43:46.160 --> 00:43:49.160
+they should be relevant
+
+00:43:49.160 --> 00:43:52.160
+what is the goal of contextual precision
+
+00:43:52.160 --> 00:43:55.160
+the goal of contextual precision is simple
+
+00:43:55.160 --> 00:43:58.160
+what you have to do is all your relevant results
+
+00:43:58.160 --> 00:44:01.160
+where are relevant results
+
+00:44:01.160 --> 00:44:04.160
+relevant results of your retriever
+
+00:44:04.160 --> 00:44:07.160
+means your retrieved chunks
+
+00:44:07.160 --> 00:44:10.160
+let's say that your retrieved
+
+00:44:10.160 --> 00:44:13.160
+10 chunks
+
+00:44:13.160 --> 00:44:16.160
+4 were relevant
+
+00:44:16.160 --> 00:44:19.160
+6 were irrelevant
+
+00:44:19.160 --> 00:44:22.160
+your goal is when you get final results
+
+00:44:22.160 --> 00:44:25.160
+which is your ranked results
+
+00:44:25.160 --> 00:44:28.160
+above that
+
+00:44:28.160 --> 00:44:31.160
+the first, second, third and fourth rank results
+
+00:44:31.160 --> 00:44:34.160
+those should be all your relevant results
+
+00:44:34.160 --> 00:44:37.160
+if all these results are relevant
+
+00:44:37.160 --> 00:44:40.160
+then your precision score will be 1
+
+00:44:40.160 --> 00:44:43.160
+and if the order is not correct
+
+00:44:43.160 --> 00:44:46.160
+then your precision will start to hit
+
+00:44:46.160 --> 00:44:49.160
+I hope this point is clear to you
+
+00:44:49.160 --> 00:44:52.160
+let's read the definition
+
+00:44:52.160 --> 00:44:55.160
+this is a tricky metric
+
+00:44:55.160 --> 00:44:58.160
+so keep it focused
+
+00:44:58.160 --> 00:45:01.160
+we will calculate this formula with our hands
+
+00:45:01.160 --> 00:45:04.160
+and implement it in the code
+
+00:45:04.160 --> 00:45:07.160
+what does this check?
+
+00:45:07.160 --> 00:45:10.160
+where ever you see notes, they are your chunks
+
+00:45:10.160 --> 00:45:13.160
+your relevant chunks in your retrieval context
+
+00:45:13.160 --> 00:45:16.160
+where are we checking?
+
+00:45:16.160 --> 00:45:19.160
+in our retriever output
+
+00:45:19.160 --> 00:45:22.160
+are ranked higher than the irrelevant ones
+
+00:45:22.160 --> 00:45:25.160
+so your precision metric is ready
+
+00:45:25.160 --> 00:45:28.160
+for this that your retrieved results
+
+00:45:28.160 --> 00:45:31.160
+will have relevant chunks and irrelevant chunks
+
+00:45:31.160 --> 00:45:34.160
+if you want to increase your precision
+
+00:45:34.160 --> 00:45:37.160
+then you have to bring relevant chunks
+
+00:45:37.160 --> 00:45:40.160
+above your list
+
+00:45:40.160 --> 00:45:43.160
+as I said that you are searching the web
+
+00:45:43.160 --> 00:45:46.160
+so your work result
+
+00:45:46.160 --> 00:45:49.160
+should be above the deep eval
+
+00:45:49.160 --> 00:45:52.160
+not that there should be a sponsored link
+
+00:45:52.160 --> 00:45:55.160
+because it is an irrelevant result
+
+00:45:55.160 --> 00:45:58.160
+I hope you understood this point
+
+00:45:58.160 --> 00:46:01.160
+and the other API references are on the second number
+
+00:46:01.160 --> 00:46:04.160
+here it is possible that
+
+00:46:04.160 --> 00:46:07.160
+your particular metric page is on the third number
+
+00:46:07.160 --> 00:46:10.160
+which are more related to your deep eval
+
+00:46:10.160 --> 00:46:13.160
+after that your sponsored links are coming
+
+00:46:13.160 --> 00:46:16.160
+after that you may be getting something else
+
+00:46:16.160 --> 00:46:19.160
+blog or reddit link
+
+00:46:19.160 --> 00:46:22.160
+your precision will be maximized
+
+00:46:22.160 --> 00:46:25.160
+so it is not asking
+
+00:46:25.160 --> 00:46:28.160
+whether your retrieved work stuff
+
+00:46:28.160 --> 00:46:31.160
+is relevant or not
+
+00:46:31.160 --> 00:46:34.160
+it is asking whether your retrieved work stuff
+
+00:46:34.160 --> 00:46:37.160
+is top ranking
+
+00:46:37.160 --> 00:46:40.160
+precision is targeting this
+
+00:46:40.160 --> 00:46:43.160
+so I would like to reiterate again
+
+00:46:43.160 --> 00:46:46.160
+that our three metrics are checking
+
+00:46:46.160 --> 00:46:49.160
+three characteristics of retriever
+
+00:46:49.160 --> 00:46:52.160
+I will tell you again, this is confusion
+
+00:46:52.160 --> 00:46:55.160
+if you test a retriever
+
+00:46:55.160 --> 00:46:58.160
+then you don't test standalone metrics
+
+00:46:58.160 --> 00:47:01.160
+you test them together
+
+00:47:01.160 --> 00:47:04.160
+because you want to improve three properties of your retriever
+
+00:47:04.160 --> 00:47:07.160
+first property is that whatever retriever is retrieving
+
+00:47:07.160 --> 00:47:10.160
+is of use, so we check it through the relevancy metric
+
+00:47:10.160 --> 00:47:13.160
+second property is that whatever retriever is retrieving
+
+00:47:13.160 --> 00:47:16.160
+is complete, meaning there should be no missing information
+
+00:47:16.160 --> 00:47:19.160
+which we would have had
+
+00:47:19.160 --> 00:47:22.160
+so it should be complete, relevant
+
+00:47:22.160 --> 00:47:25.160
+and top ranking
+
+00:47:27.160 --> 00:47:30.160
+so this top ranking criteria
+
+00:47:30.160 --> 00:47:33.160
+is our precision
+
+00:47:33.160 --> 00:47:36.160
+is it clear now?
+
+00:47:36.160 --> 00:47:39.160
+now this is the formula to calculate
+
+00:47:39.160 --> 00:47:42.160
+this formula may seem a little confusing
+
+00:47:42.160 --> 00:47:45.160
+now I will calculate this formula
+
+00:47:45.160 --> 00:47:48.160
+with my hand
+
+00:47:48.160 --> 00:47:51.160
+so I will tell you how LLM as a judge
+
+00:47:51.160 --> 00:47:54.160
+is doing this work
+
+00:47:54.160 --> 00:47:57.160
+I hope this point is clear to you
+
+00:47:57.160 --> 00:48:00.160
+so let's take an example
+
+00:48:00.160 --> 00:48:03.160
+and this is the example
+
+00:48:03.160 --> 00:48:06.160
+so we will do our calculation here
+
+00:48:06.160 --> 00:48:09.160
+I will show you the example
+
+00:48:09.160 --> 00:48:12.160
+our input is what is linear regression
+
+00:48:12.160 --> 00:48:15.160
+so this is my query
+
+00:48:15.160 --> 00:48:18.160
+so this is my answer key
+
+00:48:18.160 --> 00:48:21.160
+so this is basically my golden pair
+
+00:48:21.160 --> 00:48:24.160
+so this is basically my golden pair
+
+00:48:24.160 --> 00:48:27.160
+so linear regression is a supervised
+
+00:48:27.160 --> 00:48:30.160
+learning algorithm that models
+
+00:48:30.160 --> 00:48:33.160
+the relationship between dependent variable
+
+00:48:33.160 --> 00:48:36.160
+and one or more independent variables
+
+00:48:36.160 --> 00:48:39.160
+by fitting a straight line to the data
+
+00:48:39.160 --> 00:48:42.160
+typically using least squares to minimize the error
+
+00:48:42.160 --> 00:48:45.160
+so this is the definition of linear regression
+
+00:48:45.160 --> 00:48:48.160
+this is my grounded response
+
+00:48:48.160 --> 00:48:51.160
+what does this mean?
+
+00:48:51.160 --> 00:48:54.160
+that I am expecting from my rag application
+
+00:48:54.160 --> 00:48:57.160
+for this particular question
+
+00:48:57.160 --> 00:49:00.160
+that I get this answer
+
+00:49:00.160 --> 00:49:03.160
+this answer is relevant, complete and perfect
+
+00:49:03.160 --> 00:49:06.160
+is it clear now?
+
+00:49:06.160 --> 00:49:09.160
+now I have to take this answer key
+
+00:49:09.160 --> 00:49:12.160
+and take this input and test our retriever
+
+00:49:12.160 --> 00:49:15.160
+what is the characteristic of the retriever
+
+00:49:15.160 --> 00:49:18.160
+we have to check that
+
+00:49:18.160 --> 00:49:21.160
+our top ranked results
+
+00:49:21.160 --> 00:49:24.160
+those should be relevant
+
+00:49:24.160 --> 00:49:27.160
+we have to check this
+
+00:49:27.160 --> 00:49:30.160
+we have to check that the top results
+
+00:49:30.160 --> 00:49:33.160
+top 5, top 10 should be relevant
+
+00:49:33.160 --> 00:49:36.160
+if it is relevant then our precision is high
+
+00:49:36.160 --> 00:49:39.160
+if it is irrelevant then our precision is low
+
+00:49:39.160 --> 00:49:42.160
+I hope this point is clear to you
+
+00:49:42.160 --> 00:49:45.160
+so first of all we will fix one thing
+
+00:49:45.160 --> 00:49:48.160
+whenever you have to calculate the precision
+
+00:49:48.160 --> 00:49:51.160
+or whenever you have to calculate the recall
+
+00:49:51.160 --> 00:49:54.160
+in the case of recall you generally
+
+00:49:54.160 --> 00:49:57.160
+don't focus so much on this
+
+00:49:57.160 --> 00:50:00.160
+but when you have to calculate the precision
+
+00:50:00.160 --> 00:50:03.160
+your focus is that how many top results
+
+00:50:03.160 --> 00:50:06.160
+you are getting
+
+00:50:06.160 --> 00:50:09.160
+because your retriever may be giving you
+
+00:50:09.160 --> 00:50:12.160
+20 results or 30 results
+
+00:50:12.160 --> 00:50:15.160
+what is your target?
+
+00:50:15.160 --> 00:50:18.160
+top 3, top 5, top 10
+
+00:50:18.160 --> 00:50:21.160
+so first of all
+
+00:50:21.160 --> 00:50:24.160
+we fix our top k value
+
+00:50:24.160 --> 00:50:27.160
+let's say for this particular example
+
+00:50:27.160 --> 00:50:30.160
+we are taking the top k value as 5
+
+00:50:31.160 --> 00:50:34.160
+the top value is 5
+
+00:50:34.160 --> 00:50:37.160
+we are focusing on top 5 ranked results
+
+00:50:37.160 --> 00:50:40.160
+whether they are relevant or not
+
+00:50:40.160 --> 00:50:43.160
+so whenever you have to calculate the precision
+
+00:50:43.160 --> 00:50:46.160
+for a particular top k value
+
+00:50:46.160 --> 00:50:49.160
+you calculate it like this
+
+00:50:49.160 --> 00:50:52.160
+precision at the rate k
+
+00:50:52.160 --> 00:50:55.160
+so this is the way to write
+
+00:50:55.160 --> 00:50:58.160
+the contextual precision
+
+00:50:58.160 --> 00:51:01.160
+you will write it like this
+
+00:51:01.160 --> 00:51:04.160
+contextual precision at the rate 5
+
+00:51:04.160 --> 00:51:07.160
+you write it like this
+
+00:51:07.160 --> 00:51:10.160
+and there you calculate the individual
+
+00:51:10.160 --> 00:51:13.160
+precision of each result
+
+00:51:13.160 --> 00:51:16.160
+I know this is a little confusing
+
+00:51:16.160 --> 00:51:19.160
+I will explain it to you in a better way
+
+00:51:19.160 --> 00:51:22.160
+this point is clear that you write
+
+00:51:22.160 --> 00:51:25.160
+contextual precision at the rate top k
+
+00:51:25.160 --> 00:51:28.160
+now what is next?
+
+00:51:28.160 --> 00:51:31.160
+this is the result of my retriever
+
+00:51:31.160 --> 00:51:34.160
+linear regression assumes linear relationship
+
+00:51:34.160 --> 00:51:37.160
+this is chunk no.1
+
+00:51:37.160 --> 00:51:40.160
+this is chunk no.2, logistic regression
+
+00:51:40.160 --> 00:51:43.160
+these are not serial numbers
+
+00:51:43.160 --> 00:51:46.160
+these are your ranks
+
+00:51:46.160 --> 00:51:49.160
+so for this particular input
+
+00:51:49.160 --> 00:51:52.160
+I gave this input to my rag application
+
+00:51:52.160 --> 00:51:55.160
+and it gave me an answer
+
+00:51:55.160 --> 00:51:58.160
+I already had an answer
+
+00:51:58.160 --> 00:52:01.160
+and I got the output of retriever
+
+00:52:01.160 --> 00:52:04.160
+and how is the output of retriever?
+
+00:52:04.160 --> 00:52:07.160
+it is a list
+
+00:52:07.160 --> 00:52:10.160
+the first element in the list was at index 0
+
+00:52:10.160 --> 00:52:13.160
+and so on
+
+00:52:13.160 --> 00:52:16.160
+I got my 5 results here
+
+00:52:16.160 --> 00:52:19.160
+now what I have to do here
+
+00:52:19.160 --> 00:52:22.160
+is to check that
+
+00:52:22.160 --> 00:52:25.160
+how many of the top 5 results
+
+00:52:25.160 --> 00:52:28.160
+are relevant to me
+
+00:52:28.160 --> 00:52:31.160
+and for that I will use
+
+00:52:31.160 --> 00:52:34.160
+contextual precision
+
+00:52:34.160 --> 00:52:37.160
+contextual precision at 5
+
+00:52:37.160 --> 00:52:40.160
+so what is the formula for this?
+
+00:52:40.160 --> 00:52:43.160
+I will tell you the formula
+
+00:52:43.160 --> 00:52:46.160
+first you write 1 upon number of relevant chunks
+
+00:52:46.160 --> 00:52:49.160
+and then you do a summation
+
+00:52:49.160 --> 00:52:52.160
+you do summation from i equal to 1 to k
+
+00:52:52.160 --> 00:52:55.160
+if k is 5 then how many times will this summation open?
+
+00:52:55.160 --> 00:52:58.160
+this summation will open 5 times
+
+00:52:58.160 --> 00:53:01.160
+and then you calculate some things
+
+00:53:01.160 --> 00:53:04.160
+first is your precision at the rate k
+
+00:53:04.160 --> 00:53:07.160
+and then you calculate the rate of the
+
+00:53:07.160 --> 00:53:10.160
+top 5 results
+
+00:53:10.160 --> 00:53:13.160
+and then you calculate the rate of the
+
+00:53:13.160 --> 00:53:16.160
+precision at the rate k
+
+00:53:16.160 --> 00:53:19.160
+multiplied by your relevancy factor
+
+00:53:19.160 --> 00:53:22.160
+now let's break down this formula
+
+00:53:22.160 --> 00:53:25.160
+I know it is confusing
+
+00:53:25.160 --> 00:53:28.160
+and it might seem difficult to you
+
+00:53:28.160 --> 00:53:31.160
+but we will break it down step by step
+
+00:53:31.160 --> 00:53:34.160
+now what we have to do is
+
+00:53:34.160 --> 00:53:37.160
+we have to check that our top 5 results
+
+00:53:37.160 --> 00:53:40.160
+which results are relevant to us
+
+00:53:40.160 --> 00:53:43.160
+so our first goal is
+
+00:53:43.160 --> 00:53:46.160
+to check for relevancy
+
+00:53:46.160 --> 00:53:49.160
+now our goal is not to calculate
+
+00:53:49.160 --> 00:53:52.160
+precision
+
+00:53:52.160 --> 00:53:55.160
+our goal is that we get some results
+
+00:53:55.160 --> 00:53:58.160
+we have to tell whether the result is
+
+00:53:58.160 --> 00:54:01.160
+relevant or not
+
+00:54:01.160 --> 00:54:04.160
+so first we will take
+
+00:54:04.160 --> 00:54:07.160
+every retrieved chunk
+
+00:54:07.160 --> 00:54:10.160
+let's say we took chunk number 1
+
+00:54:10.160 --> 00:54:13.160
+which is chunk number 1?
+
+00:54:13.160 --> 00:54:16.160
+this is chunk number 1
+
+00:54:16.160 --> 00:54:19.160
+linear regression assumes a linear relationship between input
+
+00:54:19.160 --> 00:54:22.160
+feature and target variable and fits a line
+
+00:54:22.160 --> 00:54:25.160
+by minimizing sum of squared residuals
+
+00:54:25.160 --> 00:54:28.160
+so we took chunk number 1
+
+00:54:28.160 --> 00:54:31.160
+and along with it we took our input
+
+00:54:31.160 --> 00:54:34.160
+which is our query and our expected output
+
+00:54:35.160 --> 00:54:38.160
+these 3 pieces of information
+
+00:54:38.160 --> 00:54:41.160
+we got to our LLM
+
+00:54:41.160 --> 00:54:44.160
+which is our LLM as a judge
+
+00:54:44.160 --> 00:54:47.160
+we simply told this LLM in our prompt
+
+00:54:47.160 --> 00:54:50.160
+that this is my retrieved chunk
+
+00:54:50.160 --> 00:54:53.160
+this is the input query and this is its grounded answer
+
+00:54:53.160 --> 00:54:56.160
+you tell me whether this particular chunk
+
+00:54:56.160 --> 00:54:59.160
+is relevant or not
+
+00:54:59.160 --> 00:55:02.160
+give me a Boolean value
+
+00:55:02.160 --> 00:55:05.160
+simply I gave this task to my LLM
+
+00:55:05.160 --> 00:55:08.160
+that for each chunk
+
+00:55:08.160 --> 00:55:11.160
+tell me whether this chunk is relevant or not
+
+00:55:11.160 --> 00:55:14.160
+is it clear now?
+
+00:55:14.160 --> 00:55:17.160
+I am looking at the chat, we will do it step by step
+
+00:55:17.160 --> 00:55:20.160
+clear
+
+00:55:20.160 --> 00:55:23.160
+I will take the questions, don't worry about the questions
+
+00:55:23.160 --> 00:55:26.160
+I will take the questions, you understand it once
+
+00:55:26.160 --> 00:55:29.160
+I will take all the questions, we will go slowly
+
+00:55:30.160 --> 00:55:33.160
+what are we checking here?
+
+00:55:33.160 --> 00:55:36.160
+we are not checking any ranking
+
+00:55:36.160 --> 00:55:39.160
+we have all the results, I say we have 10 results
+
+00:55:39.160 --> 00:55:42.160
+20 results, 100 results, we simply have to check the relevancy
+
+00:55:42.160 --> 00:55:45.160
+to check the relevancy
+
+00:55:45.160 --> 00:55:48.160
+we gave 3 pieces of information to our LLM
+
+00:55:48.160 --> 00:55:51.160
+we took a chunk
+
+00:55:51.160 --> 00:55:54.160
+we are taking rank wise because it is in order
+
+00:55:54.160 --> 00:55:57.160
+so we ran a loop, we took rank 1 chunk
+
+00:55:57.160 --> 00:56:00.160
+output and expected output, which will be static
+
+00:56:00.160 --> 00:56:03.160
+for each chunk, we are giving it to our LLM
+
+00:56:03.160 --> 00:56:06.160
+and we are asking our LLM whether this particular chunk is relevant or not
+
+00:56:06.160 --> 00:56:09.160
+now you must be thinking that
+
+00:56:09.160 --> 00:56:12.160
+for this relevancy
+
+00:56:12.160 --> 00:56:15.160
+why did you give these two attributes of your golden data set
+
+00:56:15.160 --> 00:56:18.160
+to the input?
+
+00:56:18.160 --> 00:56:21.160
+we could have given only input to check the relevancy
+
+00:56:21.160 --> 00:56:24.160
+we could have given our input query, what is our input query?
+
+00:56:24.160 --> 00:56:27.160
+what is linear regression?
+
+00:56:27.160 --> 00:56:30.160
+and what is our chunk? linear regression assumes a linear relationship
+
+00:56:30.160 --> 00:56:33.160
+so by looking at the input and output, we can understand that it is relevant
+
+00:56:33.160 --> 00:56:36.160
+why did you give this perfect answer
+
+00:56:36.160 --> 00:56:39.160
+your grounded answer
+
+00:56:39.160 --> 00:56:42.160
+the reason for giving this is simply
+
+00:56:42.160 --> 00:56:45.160
+that you do not check the relevance of your chunk on the basis of your input
+
+00:56:45.160 --> 00:56:48.160
+because on the basis of the input
+
+00:56:48.160 --> 00:56:51.160
+your chunk may be relevant
+
+00:56:51.160 --> 00:56:54.160
+so your chunk is bringing the answer of your query
+
+00:56:54.160 --> 00:56:57.160
+but we also have to check that
+
+00:56:57.160 --> 00:57:00.160
+whether the answer is factually correct or not
+
+00:57:00.160 --> 00:57:03.160
+we have to check this too
+
+00:57:03.160 --> 00:57:06.160
+it is like that I asked
+
+00:57:06.160 --> 00:57:09.160
+in my search engine
+
+00:57:09.160 --> 00:57:12.160
+that I want a deep eval documentation
+
+00:57:12.160 --> 00:57:15.160
+take the documentation
+
+00:57:18.160 --> 00:57:21.160
+now your search engine
+
+00:57:21.160 --> 00:57:24.160
+instead of giving the actual documentation link
+
+00:57:24.160 --> 00:57:27.160
+gave a block link
+
+00:57:27.160 --> 00:57:30.160
+here it may be a github repo link
+
+00:57:30.160 --> 00:57:33.160
+in which your documentation has been used
+
+00:57:33.160 --> 00:57:36.160
+it has been referred
+
+00:57:36.160 --> 00:57:39.160
+so now where deep eval is being discussed
+
+00:57:39.160 --> 00:57:42.160
+so here we have the actual information
+
+00:57:42.160 --> 00:57:45.160
+but is this my original documentation
+
+00:57:45.160 --> 00:57:48.160
+is it factually correct? the answer is no
+
+00:57:48.160 --> 00:57:51.160
+so I will mark this particular result irrelevant
+
+00:57:57.160 --> 00:58:00.160
+this is the information of the deep eval
+
+00:58:00.160 --> 00:58:03.160
+but the actual thing I want is not coming to me
+
+00:58:03.160 --> 00:58:06.160
+so what we do here is
+
+00:58:06.160 --> 00:58:09.160
+we give our expected output of our answer
+
+00:58:09.160 --> 00:58:12.160
+to both our LLM and say that this is our input
+
+00:58:12.160 --> 00:58:15.160
+and this is its exact answer
+
+00:58:15.160 --> 00:58:18.160
+these are the facts that should be in your answer
+
+00:58:18.160 --> 00:58:21.160
+and this is the chunk that I have
+
+00:58:21.160 --> 00:58:24.160
+now tell me the comparison
+
+00:58:24.160 --> 00:58:27.160
+that is this thing relevant or not
+
+00:58:27.160 --> 00:58:30.160
+I have given you all the pieces of information
+
+00:58:30.160 --> 00:58:33.160
+check for relevancy, is it clear guys?
+
+00:58:33.160 --> 00:58:36.160
+is the point clear to you that why we are giving
+
+00:58:36.160 --> 00:58:39.160
+both the input and expected output
+
+00:58:39.160 --> 00:58:42.160
+because we have to check the factual correctness
+
+00:58:42.160 --> 00:58:45.160
+is it clear? great
+
+00:58:45.160 --> 00:58:48.160
+if you will also see the deep eval documentation
+
+00:58:48.160 --> 00:58:51.160
+I will show you the documentation
+
+00:58:51.160 --> 00:58:54.160
+if you go to contextual precision
+
+00:58:54.160 --> 00:58:57.160
+and if you go down, what is required in the arguments
+
+00:58:57.160 --> 00:59:00.160
+you have to give the input, the expected output
+
+00:59:00.160 --> 00:59:03.160
+and the context also
+
+00:59:03.160 --> 00:59:06.160
+but if you go to the how it is calculated segment
+
+00:59:06.160 --> 00:59:09.160
+then you can see clearly
+
+00:59:09.160 --> 00:59:12.160
+if I can show you that exact point
+
+00:59:12.160 --> 00:59:15.160
+see who is targeting this
+
+00:59:15.160 --> 00:59:18.160
+we have already seen this
+
+00:59:18.160 --> 00:59:21.160
+what are the required inputs
+
+00:59:21.160 --> 00:59:24.160
+this is our required inputs
+
+00:59:24.160 --> 00:59:27.160
+where is the particular segment, yes here it is
+
+00:59:27.160 --> 00:59:30.160
+you can see clearly
+
+00:59:30.160 --> 00:59:33.160
+this is the point
+
+00:59:33.160 --> 00:59:36.160
+the contextual precision metric first uses an LLM
+
+00:59:36.160 --> 00:59:39.160
+we are reading that you will use your LLM
+
+00:59:39.160 --> 00:59:42.160
+to determine each node in the retrieval context
+
+00:59:42.160 --> 00:59:45.160
+so you will take every node
+
+00:59:45.160 --> 00:59:48.160
+every chunk in your retrieval context
+
+00:59:48.160 --> 00:59:51.160
+and ask your LLM that is this particular chunk
+
+00:59:51.160 --> 00:59:54.160
+relevant or not, now we are not talking about
+
+00:59:54.160 --> 00:59:57.160
+LLM, we are simply asking
+
+00:59:57.160 --> 01:00:00.160
+if we have 20 results of retrieval as output
+
+01:00:00.160 --> 01:00:03.160
+then we are giving every chunk to our LLM
+
+01:00:03.160 --> 01:00:06.160
+and also taking input and retrieval
+
+01:00:06.160 --> 01:00:09.160
+and asking if this chunk is relevant
+
+01:00:09.160 --> 01:00:12.160
+simply we are calculating the relevance
+
+01:00:12.160 --> 01:00:15.160
+whether it is relevant to the input
+
+01:00:15.160 --> 01:00:18.160
+but on what basis, if it is relevant to the input
+
+01:00:18.160 --> 01:00:21.160
+then we have to check based on the information
+
+01:00:22.160 --> 01:00:25.160
+so we have to check two things
+
+01:00:25.160 --> 01:00:28.160
+in our chunk that it is relevant to the input
+
+01:00:28.160 --> 01:00:31.160
+and the facts that are told in it
+
+01:00:31.160 --> 01:00:34.160
+should also be in our expected output
+
+01:00:34.160 --> 01:00:37.160
+we are also checking factual correctness
+
+01:00:37.160 --> 01:00:40.160
+is it clear now, ok
+
+01:00:40.160 --> 01:00:43.160
+so what have we done here, we have only 5
+
+01:00:43.160 --> 01:00:46.160
+chunks here, not 20, so for these 5
+
+01:00:46.160 --> 01:00:49.160
+chunks we have calculated the relevance
+
+01:00:49.160 --> 01:00:52.160
+and the relevance is not a score
+
+01:00:52.160 --> 01:00:55.160
+we are not calculating the metric
+
+01:00:55.160 --> 01:00:58.160
+relevance is simply your boolean value
+
+01:00:58.160 --> 01:01:01.160
+either it is true or false
+
+01:01:01.160 --> 01:01:04.160
+so in our formula, there can be only two values
+
+01:01:04.160 --> 01:01:07.160
+of relevance, either it can be 1 or 0
+
+01:01:07.160 --> 01:01:10.160
+ok, now what we have to calculate next
+
+01:01:10.160 --> 01:01:13.160
+next thing is for every k
+
+01:01:13.160 --> 01:01:16.160
+we have to calculate the precision at the k
+
+01:01:17.160 --> 01:01:20.160
+so here every k is my chunk
+
+01:01:26.160 --> 01:01:29.160
+every chunk is my k
+
+01:01:29.160 --> 01:01:32.160
+I have 5 chunks
+
+01:01:32.160 --> 01:01:35.160
+so I will open it 5 times
+
+01:01:35.160 --> 01:01:38.160
+what will I get after opening 5 times
+
+01:01:38.160 --> 01:01:41.160
+I will get after opening 5 times
+
+01:01:41.160 --> 01:01:44.160
+precision at the rate k
+
+01:01:44.160 --> 01:01:47.160
+for that particular chunk
+
+01:01:47.160 --> 01:01:50.160
+and its relevance value
+
+01:01:50.160 --> 01:01:53.160
+now let's talk about
+
+01:01:53.160 --> 01:01:56.160
+precision at the rate k
+
+01:01:56.160 --> 01:01:59.160
+this is different from contextual precision
+
+01:01:59.160 --> 01:02:02.160
+that k and this k are different
+
+01:02:02.160 --> 01:02:05.160
+this k is all the chunks
+
+01:02:08.160 --> 01:02:11.160
+and the main one of the formula
+
+01:02:11.160 --> 01:02:14.160
+is your top k chunks
+
+01:02:14.160 --> 01:02:17.160
+so k is also different
+
+01:02:17.160 --> 01:02:20.160
+if you see in the documentation
+
+01:02:20.160 --> 01:02:23.160
+k is the i plus 1th node
+
+01:02:23.160 --> 01:02:26.160
+in the retrieval context
+
+01:02:26.160 --> 01:02:29.160
+all your chunks come in this
+
+01:02:29.160 --> 01:02:32.160
+i plus 1th is what
+
+01:02:32.160 --> 01:02:35.160
+because this is a list, so what is i
+
+01:02:35.160 --> 01:02:38.160
+i is your index value plus 1
+
+01:02:38.160 --> 01:02:41.160
+so this is your i plus 1
+
+01:02:41.160 --> 01:02:44.160
+and your outer k is your top k
+
+01:02:44.160 --> 01:02:47.160
+that how many chunks you are
+
+01:02:47.160 --> 01:02:50.160
+calculating the precision
+
+01:02:50.160 --> 01:02:53.160
+no problem, we are breaking down this formula
+
+01:02:53.160 --> 01:02:56.160
+you will understand things slowly
+
+01:02:56.160 --> 01:02:59.160
+now I have to calculate
+
+01:02:59.160 --> 01:03:02.160
+precision at the rate k
+
+01:03:02.160 --> 01:03:05.160
+so let's talk about this
+
+01:03:05.160 --> 01:03:08.160
+this is the formula of precision in machine learning
+
+01:03:08.160 --> 01:03:11.160
+which is tp by tp plus fp
+
+01:03:11.160 --> 01:03:14.160
+in the denominator
+
+01:03:14.160 --> 01:03:17.160
+what is this term
+
+01:03:17.160 --> 01:03:20.160
+this is all your predicted values
+
+01:03:20.160 --> 01:03:23.160
+predicted positives
+
+01:03:23.160 --> 01:03:26.160
+you calculate the actual true positives
+
+01:03:26.160 --> 01:03:29.160
+of the predicted positives
+
+01:03:29.160 --> 01:03:32.160
+so you are calculating the same thing here
+
+01:03:32.160 --> 01:03:35.160
+what is the meaning of precision at k
+
+01:03:35.160 --> 01:03:38.160
+precision for chunk no.1
+
+01:03:38.160 --> 01:03:41.160
+means what
+
+01:03:41.160 --> 01:03:44.160
+that out of your total chunks
+
+01:03:44.160 --> 01:03:47.160
+how many chunks are relevant
+
+01:03:47.160 --> 01:03:50.160
+here
+
+01:03:50.160 --> 01:03:53.160
+so here are your
+
+01:03:53.160 --> 01:03:56.160
+relevant chunks
+
+01:03:56.160 --> 01:03:59.160
+upon your total chunks
+
+01:03:59.160 --> 01:04:02.160
+basically what you are doing here
+
+01:04:02.160 --> 01:04:05.160
+you are
+
+01:04:05.160 --> 01:04:08.160
+making cuts here
+
+01:04:08.160 --> 01:04:11.160
+you have retrieved data
+
+01:04:11.160 --> 01:04:14.160
+this is your retrieval context, this is a list
+
+01:04:14.160 --> 01:04:17.160
+so what you are doing is when you are
+
+01:04:17.160 --> 01:04:20.160
+calculating at the rate 1
+
+01:04:20.160 --> 01:04:23.160
+so there you are seeing that in my list
+
+01:04:23.160 --> 01:04:26.160
+there should be only one chunk
+
+01:04:26.160 --> 01:04:29.160
+so in my list there should be two chunks
+
+01:04:29.160 --> 01:04:32.160
+when you are calculating at the rate 3
+
+01:04:32.160 --> 01:04:35.160
+there should be three chunks
+
+01:04:35.160 --> 01:04:38.160
+so basically what you will do is
+
+01:04:38.160 --> 01:04:41.160
+you will make cuts here
+
+01:04:41.160 --> 01:04:44.160
+in precision at the rate 1
+
+01:04:44.160 --> 01:04:47.160
+you will consider this particular chunk
+
+01:04:47.160 --> 01:04:50.160
+in precision at the rate 2
+
+01:04:50.160 --> 01:04:53.160
+you will consider these three
+
+01:04:53.160 --> 01:04:56.160
+so we are calculating this
+
+01:04:56.160 --> 01:04:59.160
+so now we are
+
+01:04:59.160 --> 01:05:02.160
+breaking down our summation
+
+01:05:02.160 --> 01:05:05.160
+so let me write it again
+
+01:05:05.160 --> 01:05:08.160
+this is my i equal to 1 to k
+
+01:05:08.160 --> 01:05:11.160
+where k equals 5 and we are calculating
+
+01:05:11.160 --> 01:05:14.160
+some dangerous thing which is precision
+
+01:05:14.160 --> 01:05:17.160
+at the rate k multiplied by your relevancy factor
+
+01:05:17.160 --> 01:05:20.160
+now we are
+
+01:05:20.160 --> 01:05:23.160
+calculating this whole thing
+
+01:05:23.160 --> 01:05:26.160
+so we know that its value will be 1 or 0
+
+01:05:26.160 --> 01:05:29.160
+and this llm will tell us
+
+01:05:29.160 --> 01:05:32.160
+so we are calculating the precision at the rate k
+
+01:05:32.160 --> 01:05:35.160
+so let's start calculating
+
+01:05:35.160 --> 01:05:38.160
+so first we will calculate our k
+
+01:05:38.160 --> 01:05:41.160
+so what will be the value of k? k will be 1
+
+01:05:41.160 --> 01:05:44.160
+so first we will calculate precision at the rate 1
+
+01:05:44.160 --> 01:05:47.160
+precision at the rate 1 means
+
+01:05:47.160 --> 01:05:50.160
+we have to calculate the total chunks
+
+01:05:50.160 --> 01:05:53.160
+so obviously because I am working with one chunk
+
+01:05:53.160 --> 01:05:56.160
+in my list
+
+01:05:56.160 --> 01:05:59.160
+so total chunks are 1
+
+01:05:59.160 --> 01:06:02.160
+and I have to tell that
+
+01:06:02.160 --> 01:06:05.160
+is this particular chunk of work or not
+
+01:06:05.160 --> 01:06:08.160
+so this particular chunk is talking about linear regression
+
+01:06:08.160 --> 01:06:11.160
+so linear regression is assuming linear relationship
+
+01:06:11.160 --> 01:06:14.160
+between input features and target variable
+
+01:06:14.160 --> 01:06:17.160
+so this is my relevant chunk
+
+01:06:17.160 --> 01:06:20.160
+so what is the value of precision at the rate 1?
+
+01:06:20.160 --> 01:06:23.160
+it is coming out to be 1 upon 1
+
+01:06:23.160 --> 01:06:26.160
+which is 1
+
+01:06:26.160 --> 01:06:29.160
+now let's calculate precision at the rate 2
+
+01:06:29.160 --> 01:06:32.160
+I will calculate 2 and then I will ask you
+
+01:06:32.160 --> 01:06:35.160
+to calculate with me
+
+01:06:35.160 --> 01:06:38.160
+let me calculate 2 for you
+
+01:06:38.160 --> 01:06:41.160
+so what is the first chunk in precision at the rate 2?
+
+01:06:41.160 --> 01:06:44.160
+so let's calculate the second chunk
+
+01:06:44.160 --> 01:06:47.160
+logistic regression is used for classification task
+
+01:06:47.160 --> 01:06:50.160
+not regression despite the name
+
+01:06:50.160 --> 01:06:53.160
+is this particular chunk of work to answer your query
+
+01:06:53.160 --> 01:06:56.160
+which is on linear regression
+
+01:06:56.160 --> 01:06:59.160
+I am looking at the chart, you will tell me
+
+01:06:59.160 --> 01:07:02.160
+is it of work?
+
+01:07:02.160 --> 01:07:05.160
+no right? this is irrelevant chunk
+
+01:07:05.160 --> 01:07:08.160
+so what will be the value of precision at the rate 2?
+
+01:07:08.160 --> 01:07:11.160
+so what are the total chunks in the list?
+
+01:07:11.160 --> 01:07:14.160
+you have 2 chunks, first is linear regression
+
+01:07:14.160 --> 01:07:17.160
+and second is logistic regression
+
+01:07:17.160 --> 01:07:20.160
+so how many are there in total?
+
+01:07:20.160 --> 01:07:23.160
+these are all predictive positives, how many are of work?
+
+01:07:23.160 --> 01:07:26.160
+work is only 1
+
+01:07:26.160 --> 01:07:29.160
+so what is precision at the rate 2? it is 0.5
+
+01:07:29.160 --> 01:07:32.160
+now let's calculate precision at the rate 3
+
+01:07:32.160 --> 01:07:35.160
+and mind you guys
+
+01:07:35.160 --> 01:07:38.160
+you have to calculate precision at the rate 3 for every chunk
+
+01:07:38.160 --> 01:07:41.160
+so if you have 20 in retrieved chunk
+
+01:07:41.160 --> 01:07:44.160
+then you have to calculate precision at the rate 1 to 20
+
+01:07:44.160 --> 01:07:47.160
+is this clear? now you will tell me
+
+01:07:47.160 --> 01:07:50.160
+for precision at the rate 3
+
+01:07:50.160 --> 01:07:53.160
+I will show you the data
+
+01:07:53.160 --> 01:07:56.160
+in linear regression the model estimates coefficients
+
+01:07:56.160 --> 01:07:59.160
+slope intercept that best fit the training data
+
+01:07:59.160 --> 01:08:02.160
+using least square method
+
+01:08:02.160 --> 01:08:05.160
+so this is on linear regression
+
+01:08:05.160 --> 01:08:08.160
+and the facts listed in this are in my expected output
+
+01:08:08.160 --> 01:08:11.160
+here we are talking about least square
+
+01:08:11.160 --> 01:08:14.160
+fitting straight line, so all that is visible
+
+01:08:14.160 --> 01:08:17.160
+so yes this particular chunk is also relevant
+
+01:08:17.160 --> 01:08:20.160
+so now if I have to calculate precision at the rate 3
+
+01:08:20.160 --> 01:08:23.160
+so how many total chunks will be there?
+
+01:08:23.160 --> 01:08:26.160
+I am looking at the chart, you will tell me
+
+01:08:26.160 --> 01:08:29.160
+yes, people told me right
+
+01:08:29.160 --> 01:08:32.160
+it is 2 by 3
+
+01:08:32.160 --> 01:08:35.160
+now let's calculate precision at the rate 4
+
+01:08:35.160 --> 01:08:38.160
+I hope you are understanding these things
+
+01:08:38.160 --> 01:08:41.160
+how to calculate this
+
+01:08:41.160 --> 01:08:44.160
+so it's good, now you will pick this particular formula
+
+01:08:44.160 --> 01:08:47.160
+now you will not have to scare me
+
+01:08:47.160 --> 01:08:50.160
+precision at the rate 4
+
+01:08:50.160 --> 01:08:53.160
+precision at the rate 4 is about decision tree
+
+01:08:53.160 --> 01:08:56.160
+reading it is clear that it is useless
+
+01:08:56.160 --> 01:08:59.160
+so this is the precision
+
+01:08:59.160 --> 01:09:02.160
+this was coming out to be
+
+01:09:02.160 --> 01:09:05.160
+0.67 and this is 2 by 4
+
+01:09:05.160 --> 01:09:08.160
+which is 0.5
+
+01:09:08.160 --> 01:09:11.160
+now let's calculate precision
+
+01:09:11.160 --> 01:09:14.160
+at the rate 5
+
+01:09:14.160 --> 01:09:17.160
+so let me show you the last chunk
+
+01:09:17.160 --> 01:09:20.160
+last chunk is also on linear regression
+
+01:09:20.160 --> 01:09:23.160
+we are talking about supervised
+
+01:09:23.160 --> 01:09:26.160
+dependent variables which are in my expected output
+
+01:09:26.160 --> 01:09:29.160
+so this is also a relevant chunk
+
+01:09:29.160 --> 01:09:32.160
+so how much is the total at the rate 5
+
+01:09:32.160 --> 01:09:35.160
+total was 5, relevant is 3
+
+01:09:35.160 --> 01:09:38.160
+so it is coming out to be 3 by 5
+
+01:09:38.160 --> 01:09:41.160
+which is my 60%
+
+01:09:41.160 --> 01:09:44.160
+so what have we done here
+
+01:09:44.160 --> 01:09:47.160
+we have calculated these precisions
+
+01:09:47.160 --> 01:09:50.160
+now we will open this summation
+
+01:09:50.160 --> 01:09:53.160
+so in this we have to do two things
+
+01:09:53.160 --> 01:09:56.160
+we have to open the precisions
+
+01:09:56.160 --> 01:09:59.160
+and also multiply this relevant factor
+
+01:09:59.160 --> 01:10:02.160
+which can be either 1 or 0
+
+01:10:02.160 --> 01:10:05.160
+it has to be only boolean
+
+01:10:05.160 --> 01:10:08.160
+so basically what we are doing here is
+
+01:10:08.160 --> 01:10:11.160
+we are summing this precisions at the rate k
+
+01:10:11.160 --> 01:10:14.160
+what does summation mean? we are adding them
+
+01:10:14.160 --> 01:10:17.160
+but which precisions are we adding?
+
+01:10:17.160 --> 01:10:20.160
+we are adding only those precisions
+
+01:10:20.160 --> 01:10:23.160
+which are relevant because if the value of Rf is 1
+
+01:10:23.160 --> 01:10:26.160
+which is relevant then this whole thing will be 1
+
+01:10:26.160 --> 01:10:29.160
+means it will be positive
+
+01:10:29.160 --> 01:10:32.160
+if its value is 0 then this whole thing will be 0
+
+01:10:32.160 --> 01:10:35.160
+in the bracket
+
+01:10:35.160 --> 01:10:38.160
+so what are we doing? what were we going to do?
+
+01:10:38.160 --> 01:10:41.160
+we wanted that we need top ranking chunks
+
+01:10:41.160 --> 01:10:44.160
+all our chunks should be top ranking
+
+01:10:44.160 --> 01:10:47.160
+but which chunks should be top ranking?
+
+01:10:47.160 --> 01:10:50.160
+relevant ones
+
+01:10:50.160 --> 01:10:53.160
+so whenever we are calculating the precisions
+
+01:10:53.160 --> 01:10:56.160
+we are only factoring in the relevant ones
+
+01:10:56.160 --> 01:10:59.160
+we are calculating the irrelevant ones as 0
+
+01:10:59.160 --> 01:11:02.160
+so you can calculate here
+
+01:11:02.160 --> 01:11:05.160
+so the first chunk was relevant
+
+01:11:05.160 --> 01:11:08.160
+so this will be multiplied by 1
+
+01:11:08.160 --> 01:11:11.160
+and this will be our precision 1
+
+01:11:11.160 --> 01:11:14.160
+so the second chunk was irrelevant
+
+01:11:14.160 --> 01:11:17.160
+so because we are doing it for the second chunk
+
+01:11:17.160 --> 01:11:20.160
+so this should be Rk not Rf
+
+01:11:20.160 --> 01:11:23.160
+so for the second chunk what will be the relevance?
+
+01:11:23.160 --> 01:11:26.160
+so this will be 0
+
+01:11:26.160 --> 01:11:29.160
+for the third chunk which was relevant
+
+01:11:29.160 --> 01:11:32.160
+yes it was relevant so its factor is 1
+
+01:11:32.160 --> 01:11:35.160
+and this will be our 6
+
+01:11:35.160 --> 01:11:38.160
+fourth chunk was relevant
+
+01:11:38.160 --> 01:11:41.160
+so this was irrelevant
+
+01:11:41.160 --> 01:11:44.160
+so this will be 0
+
+01:11:44.160 --> 01:11:47.160
+5 was relevant, yes it was relevant
+
+01:11:47.160 --> 01:11:50.160
+so this will be 1 and it will be 0.6
+
+01:11:50.160 --> 01:11:53.160
+now what you have to do is
+
+01:11:53.160 --> 01:11:56.160
+add the relevant chunks
+
+01:11:56.160 --> 01:11:59.160
+so you have to add 1 plus 0.67
+
+01:11:59.160 --> 01:12:02.160
+plus your 0.6
+
+01:12:02.160 --> 01:12:05.160
+once you calculate it and tell me
+
+01:12:05.160 --> 01:12:08.160
+1.27
+
+01:12:08.160 --> 01:12:11.160
+right
+
+01:12:11.160 --> 01:12:14.160
+is this calculation ok guys?
+
+01:12:14.160 --> 01:12:17.160
+check and tell me
+
+01:12:20.160 --> 01:12:23.160
+this is 1.27 and this is 2.27
+
+01:12:26.160 --> 01:12:29.160
+2.266, yes we have rounded it
+
+01:12:29.160 --> 01:12:32.160
+its ok, we have made the calculation easy
+
+01:12:32.160 --> 01:12:35.160
+so 2.27 right
+
+01:12:35.160 --> 01:12:38.160
+now what you have to do is
+
+01:12:38.160 --> 01:12:41.160
+you have the summation term
+
+01:12:41.160 --> 01:12:44.160
+so you have this dangerous formula
+
+01:12:44.160 --> 01:12:47.160
+this whole thing
+
+01:12:47.160 --> 01:12:50.160
+this whole thing was dangerous
+
+01:12:50.160 --> 01:12:53.160
+you have calculated this
+
+01:12:53.160 --> 01:12:56.160
+and what is the final output?
+
+01:12:56.160 --> 01:12:59.160
+your final output is 2.27
+
+01:12:59.160 --> 01:13:02.160
+now what you have to do is
+
+01:13:02.160 --> 01:13:05.160
+simply divide it by what?
+
+01:13:05.160 --> 01:13:08.160
+by the number of your relevant nodes
+
+01:13:08.160 --> 01:13:11.160
+relevant nodes means
+
+01:13:11.160 --> 01:13:14.160
+what was the value of top k?
+
+01:13:14.160 --> 01:13:17.160
+we were taking the value of top k as 5
+
+01:13:17.160 --> 01:13:20.160
+so tell me how many of your 5 nodes are relevant
+
+01:13:20.160 --> 01:13:23.160
+our total is 5 and top is also 5
+
+01:13:23.160 --> 01:13:26.160
+so we have 3
+
+01:13:26.160 --> 01:13:29.160
+so we have 3
+
+01:13:29.160 --> 01:13:32.160
+what is its output?
+
+01:13:32.160 --> 01:13:35.160
+someone will tell us
+
+01:13:35.160 --> 01:13:38.160
+we can actually calculate here
+
+01:13:38.160 --> 01:13:41.160
+so it will be 2.27
+
+01:13:41.160 --> 01:13:44.160
+by 3
+
+01:13:44.160 --> 01:13:47.160
+I think it should be equal to
+
+01:13:47.160 --> 01:13:50.160
+0.75
+
+01:13:50.160 --> 01:13:53.160
+0.76 ok
+
+01:13:53.160 --> 01:13:56.160
+so here your output is 0.76
+
+01:13:56.160 --> 01:13:59.160
+and this is your contextual
+
+01:13:59.160 --> 01:14:02.160
+so what is the final output?
+
+01:14:02.160 --> 01:14:05.160
+contextual
+
+01:14:05.160 --> 01:14:08.160
+precision for your top 5
+
+01:14:08.160 --> 01:14:11.160
+which is this
+
+01:14:11.160 --> 01:14:14.160
+is coming out to be 0.76
+
+01:14:14.160 --> 01:14:17.160
+is it clear guys?
+
+01:14:17.160 --> 01:14:20.160
+how do we calculate the precision?
+
+01:14:20.160 --> 01:14:23.160
+let's see if it is clear
+
+01:14:26.160 --> 01:14:29.160
+I am looking at the chat
+
+01:14:29.160 --> 01:14:32.160
+is it clear?
+
+01:14:32.160 --> 01:14:35.160
+great
+
+01:14:35.160 --> 01:14:38.160
+now let's replicate this in the code
+
+01:14:38.160 --> 01:14:41.160
+so I have already written the code today
+
+01:14:41.160 --> 01:14:44.160
+so that there is no mistake
+
+01:14:44.160 --> 01:14:47.160
+exactly this case we are replicating
+
+01:14:47.160 --> 01:14:50.160
+so this is exactly the same code
+
+01:14:50.160 --> 01:14:53.160
+guys now I will take questions
+
+01:14:53.160 --> 01:14:56.160
+give me some time, let me explain this code to you
+
+01:14:56.160 --> 01:14:59.160
+and I will show you one thing
+
+01:14:59.160 --> 01:15:02.160
+and then I will take questions
+
+01:15:02.160 --> 01:15:05.160
+so what are we doing here?
+
+01:15:05.160 --> 01:15:08.160
+we are importing our contextual precision metric
+
+01:15:08.160 --> 01:15:11.160
+it is the same, we are making our test case
+
+01:15:11.160 --> 01:15:14.160
+this is my linear regression input
+
+01:15:14.160 --> 01:15:17.160
+so this is the retrieval context inside the list
+
+01:15:17.160 --> 01:15:20.160
+so I have retrieved these 5 chunks
+
+01:15:20.160 --> 01:15:23.160
+so I made my test case and gave it to my metric
+
+01:15:23.160 --> 01:15:26.160
+and finally I am measuring my metric
+
+01:15:26.160 --> 01:15:29.160
+so let's do one thing here, let me open a new terminal
+
+01:15:29.160 --> 01:15:32.160
+and let's run this file
+
+01:15:32.160 --> 01:15:35.160
+ok
+
+01:15:35.160 --> 01:15:38.160
+I will simply write uvrun and the file name is
+
+01:15:38.160 --> 01:15:41.160
+test
+
+01:15:41.160 --> 01:15:44.160
+precision metric dot p1
+
+01:15:44.160 --> 01:15:47.160
+ok it is exactly the same code
+
+01:15:47.160 --> 01:15:50.160
+so we are not seeing this again
+
+01:15:50.160 --> 01:15:53.160
+my file is running
+
+01:15:53.160 --> 01:15:56.160
+what is the score guys?
+
+01:16:00.160 --> 01:16:03.160
+exactly the same as we calculated with our hands
+
+01:16:03.160 --> 01:16:06.160
+ok let's see the full output
+
+01:16:06.160 --> 01:16:09.160
+so what was our first chunk?
+
+01:16:09.160 --> 01:16:12.160
+so what was our first chunk?
+
+01:16:12.160 --> 01:16:15.160
+so what was the verdict?
+
+01:16:15.160 --> 01:16:18.160
+that yes this chunk is relevant
+
+01:16:18.160 --> 01:16:21.160
+so it is explained
+
+01:16:21.160 --> 01:16:24.160
+so what was the second chunk?
+
+01:16:24.160 --> 01:16:27.160
+so here we have explained that the logistic regression chunk
+
+01:16:27.160 --> 01:16:30.160
+is useless because it is talking about classification task
+
+01:16:30.160 --> 01:16:33.160
+not regression
+
+01:16:33.160 --> 01:16:36.160
+third was on linear regression so it is of use
+
+01:16:36.160 --> 01:16:39.160
+and fifth was on real linear regression
+
+01:16:39.160 --> 01:16:42.160
+and it is of use
+
+01:16:42.160 --> 01:16:45.160
+so what is our final score?
+
+01:16:45.160 --> 01:16:48.160
+0.76
+
+01:16:48.160 --> 01:16:51.160
+and it is because your first node
+
+01:16:51.160 --> 01:16:54.160
+means the first ranked chunk
+
+01:16:54.160 --> 01:16:57.160
+it is relevant and well ranked
+
+01:16:57.160 --> 01:17:00.160
+with linear regression assumes a linear relationship between
+
+01:17:00.160 --> 01:17:03.160
+the input feature and target variable
+
+01:17:03.160 --> 01:17:06.160
+so when you will pause the video and watch the recording
+
+01:17:06.160 --> 01:17:09.160
+so here the whole reason is given
+
+01:17:09.160 --> 01:17:12.160
+why your precision score is this
+
+01:17:12.160 --> 01:17:15.160
+is this clear?
+
+01:17:15.160 --> 01:17:18.160
+now let me show you one thing
+
+01:17:18.160 --> 01:17:21.160
+and what we have to do is cut this particular thing
+
+01:17:21.160 --> 01:17:24.160
+ok if I can cut this one
+
+01:17:24.160 --> 01:17:27.160
+why it didn't cut
+
+01:17:27.160 --> 01:17:30.160
+it is cut
+
+01:17:30.160 --> 01:17:33.160
+so I will paste it here
+
+01:17:33.160 --> 01:17:36.160
+I simply put the first
+
+01:17:36.160 --> 01:17:39.160
+linear regression chunk
+
+01:17:39.160 --> 01:17:42.160
+in second position
+
+01:17:42.160 --> 01:17:45.160
+and the logistic regression chunk in the top
+
+01:17:45.160 --> 01:17:48.160
+now I will show you this particular file
+
+01:17:48.160 --> 01:17:51.160
+and I will show you that if you
+
+01:17:51.160 --> 01:17:54.160
+give any irrelevant chunk a high rank
+
+01:17:54.160 --> 01:17:57.160
+then how your precision will be affected
+
+01:17:57.160 --> 01:18:00.160
+let's see
+
+01:18:00.160 --> 01:18:03.160
+what is the result
+
+01:18:03.160 --> 01:18:06.160
+now we had 75%
+
+01:18:06.160 --> 01:18:09.160
+now see
+
+01:18:09.160 --> 01:18:12.160
+the chunk is there
+
+01:18:12.160 --> 01:18:15.160
+I didn't change any chunk
+
+01:18:15.160 --> 01:18:18.160
+I didn't add a single comma
+
+01:18:18.160 --> 01:18:21.160
+I simply changed their order
+
+01:18:21.160 --> 01:18:24.160
+and my precision is wasted
+
+01:18:24.160 --> 01:18:27.160
+so the first rank is irrelevant
+
+01:18:27.160 --> 01:18:30.160
+is it clear guys?
+
+01:18:30.160 --> 01:18:33.160
+see how much hit I took
+
+01:18:33.160 --> 01:18:36.160
+from 76% to 58%
+
+01:18:36.160 --> 01:18:39.160
+let me show you one more thing
+
+01:18:39.160 --> 01:18:42.160
+let's resume the order
+
+01:18:42.160 --> 01:18:45.160
+let's do one thing
+
+01:18:45.160 --> 01:18:48.160
+let's not touch this first chunk
+
+01:18:48.160 --> 01:18:51.160
+let's touch this third chunk
+
+01:18:51.160 --> 01:18:54.160
+I cut it
+
+01:18:54.160 --> 01:18:57.160
+and let's do one thing
+
+01:18:57.160 --> 01:19:00.160
+let's keep the second and third chunk useless
+
+01:19:00.160 --> 01:19:03.160
+and the fourth chunk is relevant
+
+01:19:03.160 --> 01:19:06.160
+so what I did here is that the first chunk is relevant
+
+01:19:06.160 --> 01:19:09.160
+second and third chunk is useless
+
+01:19:09.160 --> 01:19:12.160
+let's run it again
+
+01:19:12.160 --> 01:19:15.160
+I am just changing the order
+
+01:19:15.160 --> 01:19:18.160
+so when I changed the first chunk
+
+01:19:18.160 --> 01:19:21.160
+see
+
+01:19:21.160 --> 01:19:24.160
+which order I changed here
+
+01:19:24.160 --> 01:19:27.160
+I changed third to fourth
+
+01:19:27.160 --> 01:19:30.160
+so I didn't take so much hit
+
+01:19:30.160 --> 01:19:33.160
+I changed one chunk earlier
+
+01:19:33.160 --> 01:19:36.160
+but now I changed lower rank chunk
+
+01:19:36.160 --> 01:19:39.160
+so my score is taking less hit
+
+01:19:39.160 --> 01:19:42.160
+can you understand this?
+
+01:19:42.160 --> 01:19:45.160
+so what we have to do here
+
+01:19:45.160 --> 01:19:48.160
+precision focuses on this
+
+01:19:48.160 --> 01:19:51.160
+that the top chunk should be relevant
+
+01:19:51.160 --> 01:19:54.160
+let me show you one more thing
+
+01:19:54.160 --> 01:19:57.160
+let me copy these two
+
+01:19:57.160 --> 01:20:00.160
+let me copy these two
+
+01:20:00.160 --> 01:20:03.160
+let me copy these two
+
+01:20:03.160 --> 01:20:06.160
+and let me paste this
+
+01:20:06.160 --> 01:20:09.160
+and let me paste this
+
+01:20:09.160 --> 01:20:12.160
+again I didn't change anything
+
+01:20:12.160 --> 01:20:15.160
+so what I did here is that
+
+01:20:15.160 --> 01:20:18.160
+all the top chunks are relevant
+
+01:20:18.160 --> 01:20:21.160
+top 3 results are relevant
+
+01:20:21.160 --> 01:20:24.160
+and bottom 2 are irrelevant
+
+01:20:24.160 --> 01:20:27.160
+let's calculate the precision
+
+01:20:34.160 --> 01:20:37.160
+bingo!
+
+01:20:37.160 --> 01:20:40.160
+what is the precision?
+
+01:20:40.160 --> 01:20:43.160
+why is this?
+
+01:20:43.160 --> 01:20:46.160
+my retrieval context has 2 bad results
+
+01:20:46.160 --> 01:20:49.160
+this is because precision is targeting
+
+01:20:49.160 --> 01:20:52.160
+the top ranking results
+
+01:20:52.160 --> 01:20:55.160
+should be relevant
+
+01:20:55.160 --> 01:20:58.160
+irrelevant results should be in your context
+
+01:20:58.160 --> 01:21:01.160
+but not at the top
+
+01:21:01.160 --> 01:21:04.160
+your retriever or reranker should make sure
+
+01:21:04.160 --> 01:21:07.160
+that all the results are at the top
+
+01:21:07.160 --> 01:21:10.160
+so the garbage is added
+
+01:21:10.160 --> 01:21:13.160
+but who will penalize this garbage?
+
+01:21:13.160 --> 01:21:16.160
+this garbage will penalize my relevancy
+
+01:21:16.160 --> 01:21:19.160
+if I had calculated relevancy
+
+01:21:19.160 --> 01:21:22.160
+on this test case
+
+01:21:22.160 --> 01:21:25.160
+then obviously I would not have good results
+
+01:21:25.160 --> 01:21:28.160
+let's do one thing
+
+01:21:28.160 --> 01:21:31.160
+let's calculate
+
+01:21:31.160 --> 01:21:34.160
+so what I have to do is
+
+01:21:34.160 --> 01:21:37.160
+import here
+
+01:21:37.160 --> 01:21:40.160
+contextual relevancy
+
+01:21:40.160 --> 01:21:43.160
+let's run this
+
+01:21:43.160 --> 01:21:46.160
+directly
+
+01:21:46.160 --> 01:21:49.160
+so contextual relevancy
+
+01:21:49.160 --> 01:21:52.160
+I am not turning on verbose
+
+01:21:52.160 --> 01:21:55.160
+and I am simply measuring my test case
+
+01:21:55.160 --> 01:21:58.160
+let's rerun it
+
+01:21:58.160 --> 01:22:01.160
+now the score you will get
+
+01:22:01.160 --> 01:22:04.160
+is the relevancy
+
+01:22:11.160 --> 01:22:14.160
+no print
+
+01:22:14.160 --> 01:22:17.160
+did I have to print?
+
+01:22:17.160 --> 01:22:20.160
+why didn't it print?
+
+01:22:20.160 --> 01:22:23.160
+what does it give in output?
+
+01:22:23.160 --> 01:22:26.160
+it gives a float in output
+
+01:22:26.160 --> 01:22:29.160
+let's save it in a variable
+
+01:22:29.160 --> 01:22:32.160
+we didn't print anything
+
+01:22:32.160 --> 01:22:35.160
+but we didn't get anything
+
+01:22:39.160 --> 01:22:42.160
+let's run it again
+
+01:22:42.160 --> 01:22:45.160
+contextual relevancy metric
+
+01:22:48.160 --> 01:22:51.160
+no result
+
+01:22:51.160 --> 01:22:54.160
+why is this happening?
+
+01:22:54.160 --> 01:22:57.160
+are we missing something?
+
+01:22:57.160 --> 01:23:00.160
+we are giving expected output
+
+01:23:00.160 --> 01:23:03.160
+we have to give our input and retrieval context
+
+01:23:03.160 --> 01:23:06.160
+there is expected output
+
+01:23:06.160 --> 01:23:09.160
+so it doesn't matter
+
+01:23:09.160 --> 01:23:12.160
+actual output is blank
+
+01:23:21.160 --> 01:23:24.160
+why is the result not coming?
+
+01:23:24.160 --> 01:23:27.160
+can someone tell me
+
+01:23:27.160 --> 01:23:30.160
+why is the result not coming?
+
+01:23:30.160 --> 01:23:33.160
+we didn't print above
+
+01:23:33.160 --> 01:23:36.160
+let's print
+
+01:23:36.160 --> 01:23:39.160
+I think it will come
+
+01:23:39.160 --> 01:23:42.160
+maybe the result was coming because of verbosity
+
+01:23:42.160 --> 01:23:45.160
+it is not coming because verbosity is not on
+
+01:23:45.160 --> 01:23:48.160
+yes it can be
+
+01:23:48.160 --> 01:23:51.160
+how much is it?
+
+01:23:51.160 --> 01:23:54.160
+it is very less
+
+01:23:54.160 --> 01:23:57.160
+now I will simply
+
+01:23:57.160 --> 01:24:00.160
+remove this noisy information
+
+01:24:00.160 --> 01:24:03.160
+like these two chunks
+
+01:24:03.160 --> 01:24:06.160
+I will comment out
+
+01:24:06.160 --> 01:24:09.160
+if I run relevancy again
+
+01:24:21.160 --> 01:24:24.160
+why is it taking so much time?
+
+01:24:24.160 --> 01:24:27.160
+what happened?
+
+01:24:47.160 --> 01:24:50.160
+it is not coming
+
+01:24:50.160 --> 01:24:53.160
+see it is increasing
+
+01:24:53.160 --> 01:24:56.160
+still there is some extra pieces of information
+
+01:24:56.160 --> 01:24:59.160
+now we are talking about relevancy
+
+01:24:59.160 --> 01:25:02.160
+I will calculate recall
+
+01:25:05.160 --> 01:25:08.160
+now I will call it recall
+
+01:25:08.160 --> 01:25:11.160
+now I will call it recall
+
+01:25:18.160 --> 01:25:21.160
+let's see what is the score in recall
+
+01:25:21.160 --> 01:25:24.160
+recall checks completeness
+
+01:25:24.160 --> 01:25:27.160
+what is matching between my expected output
+
+01:25:27.160 --> 01:25:30.160
+and my retrieval context
+
+01:25:30.160 --> 01:25:33.160
+recall is 100% because all the information
+
+01:25:33.160 --> 01:25:36.160
+in my expected output is in my retrieval context
+
+01:25:36.160 --> 01:25:39.160
+recall doesn't matter if there are irrelevant chunks
+
+01:25:39.160 --> 01:25:42.160
+relevancy was also making a difference
+
+01:25:42.160 --> 01:25:45.160
+now if I comment in
+
+01:25:45.160 --> 01:25:48.160
+I have corrected it
+
+01:25:48.160 --> 01:25:51.160
+recall will also come 100%
+
+01:25:51.160 --> 01:25:54.160
+because it is complete
+
+01:25:54.160 --> 01:25:57.160
+my retrieval context is complete
+
+01:25:57.160 --> 01:26:00.160
+right or wrong doesn't matter
+
+01:26:00.160 --> 01:26:03.160
+I hope you are able to draw proper comparisons
+
+01:26:06.160 --> 01:26:09.160
+can you do it?
+
+01:26:14.160 --> 01:26:17.160
+I will take you to one more note
+
+01:26:17.160 --> 01:26:20.160
+just give me one minute
+
+01:26:20.160 --> 01:26:23.160
+let's calculate it again
+
+01:26:23.160 --> 01:26:26.160
+I want to show you how one precision came
+
+01:26:26.160 --> 01:26:29.160
+by doing hands on calculation
+
+01:26:29.160 --> 01:26:32.160
+basically we took the second and fourth
+
+01:26:32.160 --> 01:26:35.160
+in bottom two
+
+01:26:35.160 --> 01:26:38.160
+precision at the rate 1 will be what
+
+01:26:38.160 --> 01:26:41.160
+I will calculate it here
+
+01:26:41.160 --> 01:26:44.160
+it will be 1 by 1
+
+01:26:44.160 --> 01:26:47.160
+it is one and one is relevant multiplied by 1
+
+01:26:47.160 --> 01:26:50.160
+precision at the rate 2
+
+01:26:50.160 --> 01:26:53.160
+2 by 2
+
+01:26:53.160 --> 01:26:56.160
+top two are relevant multiplied by 1
+
+01:26:56.160 --> 01:26:59.160
+because second one is relevant
+
+01:26:59.160 --> 01:27:02.160
+precision at the rate 3
+
+01:27:02.160 --> 01:27:05.160
+precision at the rate 3
+
+01:27:05.160 --> 01:27:08.160
+how much?
+
+01:27:08.160 --> 01:27:11.160
+top three are relevant multiplied by 1
+
+01:27:11.160 --> 01:27:14.160
+which is again 1
+
+01:27:14.160 --> 01:27:17.160
+precision at the rate 4
+
+01:27:17.160 --> 01:27:20.160
+fourth chunk is irrelevant
+
+01:27:20.160 --> 01:27:23.160
+at the rate 5
+
+01:27:23.160 --> 01:27:26.160
+what I have to do is add them
+
+01:27:26.160 --> 01:27:29.160
+3 divided by what
+
+01:27:29.160 --> 01:27:32.160
+I have to do in top three
+
+01:27:32.160 --> 01:27:35.160
+100% precision
+
+01:27:39.160 --> 01:27:42.160
+I hope you are able to calculate
+
+01:27:42.160 --> 01:27:45.160
+what are the three retrieval metrics targeting
+
+01:27:45.160 --> 01:27:48.160
+on what basis they are doing the calculations
+
+01:27:48.160 --> 01:27:51.160
+and you will never get confused
+
+01:27:51.160 --> 01:27:54.160
+between relevancy, precision and recall
+
+01:27:54.160 --> 01:27:57.160
+recall is testing for your completeness
+
+01:27:57.160 --> 01:28:00.160
+and relevancy is checking for your relevancy
+
+01:28:00.160 --> 01:28:03.160
+how much is the noise and signal
+
+01:28:03.160 --> 01:28:06.160
+is it clear guys?
+
+01:28:06.160 --> 01:28:09.160
+if every concept is clear
+
+01:28:09.160 --> 01:28:12.160
+today's class was more clear
+
+01:28:12.160 --> 01:28:15.160
+I hope
+
+01:28:15.160 --> 01:28:18.160
+if there was any confusion in the last class
+
+01:28:18.160 --> 01:28:21.160
+then today it was clear
+
+01:28:21.160 --> 01:28:24.160
+I have done practical things in the code
+
+01:28:24.160 --> 01:28:27.160
+I am checking the questions
+
+01:28:27.160 --> 01:28:30.160
+in the last class
+
+01:28:30.160 --> 01:28:33.160
+what we could do to improve
+
+01:28:33.160 --> 01:28:36.160
+contextual precision, I have already discussed this
+
+01:28:36.160 --> 01:28:39.160
+simply you have to top rank relevant chunks
+
+01:28:39.160 --> 01:28:42.160
+you have to improve your re-ranker
+
+01:28:42.160 --> 01:28:45.160
+because re-ranker re-ranks
+
+01:28:45.160 --> 01:28:48.160
+whatever you have retrieved
+
+01:28:48.160 --> 01:28:51.160
+then it is called re-ranker
+
+01:28:51.160 --> 01:28:54.160
+it re-rank the retriever results
+
+01:28:54.160 --> 01:28:57.160
+it re-evaluates and re-ranks
+
+01:28:57.160 --> 01:29:00.160
+so if you want to increase the precision
+
+01:29:00.160 --> 01:29:03.160
+then don't mess with the retriever
+
+01:29:03.160 --> 01:29:06.160
+improve your re-ranker
+
+01:29:09.160 --> 01:29:12.160
+moving forward, retriever based metrics are clear
+
+01:29:12.160 --> 01:29:15.160
+right clear in the chat
+
+01:29:15.160 --> 01:29:18.160
+and then we will move forward
+
+01:29:18.160 --> 01:29:21.160
+we will go to generator based metrics
+
+01:29:21.160 --> 01:29:24.160
+generator based metrics are generally simpler
+
+01:29:24.160 --> 01:29:27.160
+as compared to retriever based metrics
+
+01:29:27.160 --> 01:29:30.160
+so let me give you an idea
+
+01:29:30.160 --> 01:29:33.160
+which hyper parameters you use in generator
+
+01:29:33.160 --> 01:29:36.160
+which hyper parameters
+
+01:29:36.160 --> 01:29:39.160
+you focus on
+
+01:29:39.160 --> 01:29:42.160
+so what are you doing in generator based metrics
+
+01:29:42.160 --> 01:29:45.160
+you are providing two things to the generator
+
+01:29:45.160 --> 01:29:48.160
+one is you are providing your retrieved context
+
+01:29:48.160 --> 01:29:51.160
+whatever you have ranked from re-ranker
+
+01:29:51.160 --> 01:29:54.160
+whatever you are getting in output
+
+01:29:54.160 --> 01:29:57.160
+from retriever re-ranker
+
+01:29:57.160 --> 01:30:00.160
+you are passing it directly
+
+01:30:00.160 --> 01:30:03.160
+you don't mess with the retrieved context
+
+01:30:03.160 --> 01:30:06.160
+so we evaluate this retrieved context
+
+01:30:06.160 --> 01:30:09.160
+through our retriever based metrics
+
+01:30:09.160 --> 01:30:12.160
+so we have already seen and read its evaluation
+
+01:30:12.160 --> 01:30:15.160
+and we will evaluate it through those three metrics
+
+01:30:15.160 --> 01:30:18.160
+along with that you are giving a query
+
+01:30:18.160 --> 01:30:21.160
+again as I told you
+
+01:30:21.160 --> 01:30:24.160
+you don't have any control over this query
+
+01:30:24.160 --> 01:30:27.160
+this query will be provided by your user
+
+01:30:27.160 --> 01:30:30.160
+you can't evaluate it in any way
+
+01:30:30.160 --> 01:30:33.160
+it is not in your control
+
+01:30:33.160 --> 01:30:36.160
+what is in your control
+
+01:30:36.160 --> 01:30:39.160
+there is an important step before generator
+
+01:30:40.160 --> 01:30:43.160
+what you do in this augmentation step
+
+01:30:43.160 --> 01:30:46.160
+in this augmentation step you basically
+
+01:30:46.160 --> 01:30:49.160
+assemble everything
+
+01:30:49.160 --> 01:30:52.160
+assemble into what, assemble into a prompt
+
+01:30:52.160 --> 01:30:55.160
+in this prompt you define the role of your chatbot
+
+01:30:55.160 --> 01:30:58.160
+in this prompt you set some instructions
+
+01:30:58.160 --> 01:31:01.160
+in this prompt you define some rules
+
+01:31:01.160 --> 01:31:04.160
+in this prompt you also define
+
+01:31:04.160 --> 01:31:07.160
+a fallback mechanism
+
+01:31:07.160 --> 01:31:09.480
+also define a fallback mechanism
+
+01:31:09.480 --> 01:31:11.960
+that if you don't get the answer then what to do
+
+01:31:11.960 --> 01:31:14.160
+so here you set a fallback
+
+01:31:15.120 --> 01:31:18.120
+answer or fallback mechanism
+
+01:31:18.120 --> 01:31:21.360
+and also you add many things in this prompt
+
+01:31:21.360 --> 01:31:24.340
+and along with that you define these things
+
+01:31:24.340 --> 01:31:28.240
+in your prompt along with that you are also assembling your context
+
+01:31:31.639 --> 01:31:34.639
+where are you sending your retrieved context in your prompt
+
+01:31:34.640 --> 01:31:37.640
+where are you sending it, which position are you sending it
+
+01:31:37.640 --> 01:31:40.640
+which position are you sending your query in
+
+01:31:40.640 --> 01:31:43.640
+are you facing any loss in the middle problem
+
+01:31:43.640 --> 01:31:46.640
+keep all these things in this prompt
+
+01:31:46.640 --> 01:31:49.640
+and what is this prompt
+
+01:31:49.640 --> 01:31:52.640
+this will be your input to the LLM
+
+01:31:52.640 --> 01:31:55.640
+as I told you LLM
+
+01:31:55.640 --> 01:31:58.640
+in your rag application case
+
+01:31:58.640 --> 01:32:01.640
+there is a little bit of a blank component
+
+01:32:01.640 --> 01:32:04.640
+generally there is nothing
+
+01:32:04.640 --> 01:32:07.640
+you already have a trained LLM
+
+01:32:07.640 --> 01:32:10.640
+you are using that LLM by calling API
+
+01:32:10.640 --> 01:32:13.640
+you can't make any special changes in it
+
+01:32:13.640 --> 01:32:16.640
+we are not talking about fine tuning here
+
+01:32:16.640 --> 01:32:19.640
+what can we do in LLM
+
+01:32:19.640 --> 01:32:22.640
+we can tweak some parameters like temperature
+
+01:32:22.640 --> 01:32:25.640
+top k, top p, these parameters are in our control
+
+01:32:25.640 --> 01:32:28.640
+but overall how is LLM working internally
+
+01:32:28.640 --> 01:32:31.640
+are you interested for the application or not
+
+01:32:31.640 --> 01:32:34.640
+now this is not a rag based application concern
+
+01:32:34.640 --> 01:32:37.640
+rag based application concern is that the input you are giving to your LLM
+
+01:32:37.640 --> 01:32:40.640
+and some hyper parameters of LLM
+
+01:32:40.640 --> 01:32:43.640
+like temperature, top k, top p
+
+01:32:43.640 --> 01:32:46.640
+on that your LLM response matters
+
+01:32:46.640 --> 01:32:49.640
+so basically
+
+01:32:49.640 --> 01:32:52.640
+you are evaluating these two things
+
+01:32:52.640 --> 01:32:55.640
+through your generator matrix
+
+01:32:55.640 --> 01:32:58.640
+now in generator you have two matrix
+
+01:32:58.640 --> 01:33:01.640
+the first matrix is your answer relevancy
+
+01:33:05.640 --> 01:33:08.640
+from the name only we can understand
+
+01:33:08.640 --> 01:33:11.640
+that you are checking here that your answer is relevant or not
+
+01:33:11.640 --> 01:33:14.640
+like what were you checking in contextual relevancy
+
+01:33:14.640 --> 01:33:17.640
+that your retrieved context is relevant or not
+
+01:33:17.640 --> 01:33:20.640
+always remember that whenever you are doing generator based
+
+01:33:20.640 --> 01:33:23.640
+evaluations
+
+01:33:23.640 --> 01:33:26.640
+you can use retrieved chunks
+
+01:33:29.640 --> 01:33:32.640
+as an input in the evaluation
+
+01:33:32.640 --> 01:33:35.640
+because it is going to your LLM
+
+01:33:35.640 --> 01:33:38.640
+but you can't change anything in it
+
+01:33:38.640 --> 01:33:41.640
+it is already available to you
+
+01:33:41.640 --> 01:33:44.640
+now you can't change anything in it
+
+01:33:44.640 --> 01:33:47.640
+you have to use it exactly as it is
+
+01:33:47.640 --> 01:33:50.640
+so first is your answer relevancy
+
+01:33:50.640 --> 01:33:53.640
+now you check for a given input
+
+01:33:53.640 --> 01:33:56.640
+for a given input or query
+
+01:33:56.640 --> 01:33:59.640
+is the answer or response generated by your LLM
+
+01:33:59.640 --> 01:34:02.640
+is it relevant for query or not
+
+01:34:02.640 --> 01:34:05.640
+and second matrix is your faithfulness
+
+01:34:10.640 --> 01:34:13.640
+in faithfulness you basically check
+
+01:34:13.640 --> 01:34:16.640
+that is your response
+
+01:34:16.640 --> 01:34:19.640
+grounded or not
+
+01:34:20.640 --> 01:34:23.640
+now we will cover both these matrix in detail
+
+01:34:23.640 --> 01:34:26.640
+we will cover faithfulness in a while
+
+01:34:26.640 --> 01:34:29.640
+first we will cover answer relevancy
+
+01:34:29.640 --> 01:34:32.640
+what are we checking in answer relevancy
+
+01:34:32.640 --> 01:34:35.640
+that for my query that my LLM has
+
+01:34:35.640 --> 01:34:38.640
+generated response is it a correct response or not
+
+01:34:38.640 --> 01:34:41.640
+is it relevant or not
+
+01:34:41.640 --> 01:34:44.640
+so let's read its definition once
+
+01:34:44.640 --> 01:34:47.640
+answer relevancy tells that it checks whether the
+
+01:34:47.640 --> 01:34:50.640
+answer generated by your LLM
+
+01:34:50.640 --> 01:34:53.640
+whether it actually addresses the input
+
+01:34:53.640 --> 01:34:56.640
+question nothing more nothing less
+
+01:34:56.640 --> 01:34:59.640
+it is just checking that whether your query
+
+01:34:59.640 --> 01:35:02.640
+or response
+
+01:35:02.640 --> 01:35:05.640
+are related or not
+
+01:35:05.640 --> 01:35:08.640
+whether this response is relevant or not
+
+01:35:08.640 --> 01:35:11.640
+that's it, you are not checking here
+
+01:35:11.640 --> 01:35:14.640
+that the facts claimed in this response
+
+01:35:14.640 --> 01:35:17.640
+are correct or not
+
+01:35:17.640 --> 01:35:20.640
+for that you use correctness
+
+01:35:20.640 --> 01:35:23.640
+this is not a correctness matrix, this is a relevancy matrix
+
+01:35:23.640 --> 01:35:26.640
+in relevancy you just have to check
+
+01:35:26.640 --> 01:35:29.640
+whether it is making the right sound or not
+
+01:35:29.640 --> 01:35:32.640
+is it clear
+
+01:35:32.640 --> 01:35:35.640
+so it is purely about relationship
+
+01:35:35.640 --> 01:35:38.640
+between input and actual output
+
+01:35:38.640 --> 01:35:41.640
+simply you are checking its relationship
+
+01:35:41.640 --> 01:35:44.640
+it does not check if the answer is
+
+01:35:44.640 --> 01:35:47.640
+factually correct or grounded in context
+
+01:35:47.640 --> 01:35:50.640
+these two things you do not check in relevancy
+
+01:35:50.640 --> 01:35:53.640
+whether it is factually correct or grounded in context
+
+01:35:53.640 --> 01:35:56.640
+this is the work of faithfulness
+
+01:35:56.640 --> 01:35:59.640
+the work of relevancy is that your answer
+
+01:35:59.640 --> 01:36:02.640
+is aligned with the query or not
+
+01:36:02.640 --> 01:36:05.640
+that's it, a model can produce
+
+01:36:05.640 --> 01:36:08.640
+a relevant but wrong answer, it is possible
+
+01:36:08.640 --> 01:36:11.640
+that the claim in this response is wrong
+
+01:36:11.640 --> 01:36:14.640
+but it is relevant, let me give you an example
+
+01:36:14.640 --> 01:36:17.640
+let's build a campusX chatbot
+
+01:36:17.640 --> 01:36:20.640
+now someone asked the chatbot
+
+01:36:20.640 --> 01:36:23.640
+what is the fee of the advanced FRAG course
+
+01:36:23.640 --> 01:36:26.640
+chatbot asked the chatbot
+
+01:36:26.640 --> 01:36:29.640
+the chatbot told the fee that the fee of the
+
+01:36:29.640 --> 01:36:32.640
+advanced FRAG course is 10,000 rupees
+
+01:36:32.640 --> 01:36:35.640
+so is this particular answer
+
+01:36:35.640 --> 01:36:38.640
+relevant yes it is relevant
+
+01:36:38.640 --> 01:36:41.640
+I asked the query to tell me the fee of this course
+
+01:36:41.640 --> 01:36:44.640
+so I am getting a fee in the answer
+
+01:36:44.640 --> 01:36:47.640
+I am getting a value
+
+01:36:47.640 --> 01:36:50.640
+it is relevant but is it factually correct
+
+01:36:50.640 --> 01:36:53.640
+no it is not factually correct
+
+01:36:53.640 --> 01:36:56.640
+the fee of the advanced FRAG is 2000 rupees
+
+01:36:56.640 --> 01:36:59.640
+so you do not check the factual correctness
+
+01:36:59.640 --> 01:37:02.640
+if you go to check relevancy
+
+01:37:02.640 --> 01:37:05.640
+then it will be a completely relevant answer
+
+01:37:05.640 --> 01:37:08.640
+but is it factually correct
+
+01:37:08.640 --> 01:37:11.640
+no
+
+01:37:11.640 --> 01:37:14.640
+is this particular point clear
+
+01:37:14.640 --> 01:37:17.640
+this is a very important point
+
+01:37:17.640 --> 01:37:20.640
+you do not check the facts
+
+01:37:20.640 --> 01:37:23.640
+you check simply that the question is getting an answer
+
+01:37:23.640 --> 01:37:26.640
+that answer is correct, wrong, doesn't matter
+
+01:37:26.640 --> 01:37:29.640
+is it on topic or not
+
+01:37:29.640 --> 01:37:32.640
+is it clear
+
+01:37:32.640 --> 01:37:35.640
+great
+
+01:37:35.640 --> 01:37:38.640
+great
+
+01:37:38.640 --> 01:37:41.640
+now let's see how you do the calculation
+
+01:37:41.640 --> 01:37:44.640
+calculation is very simple
+
+01:37:44.640 --> 01:37:47.640
+you have to give two things in the input
+
+01:37:47.640 --> 01:37:50.640
+your actual query which is your input in the case of LLM
+
+01:37:50.640 --> 01:37:53.640
+test case and at the same time you have to give your actual output
+
+01:37:53.640 --> 01:37:56.640
+actual output is the response of the LLM
+
+01:37:56.640 --> 01:37:59.640
+you give these two things
+
+01:37:59.640 --> 01:38:02.640
+first of all LLM takes your actual output
+
+01:38:02.640 --> 01:38:05.640
+and breaks it down
+
+01:38:05.640 --> 01:38:08.640
+breaks it down and decomposes into facts
+
+01:38:08.640 --> 01:38:11.640
+into statements
+
+01:38:14.640 --> 01:38:17.640
+we have already done this many times
+
+01:38:17.640 --> 01:38:20.640
+your LLM has caught the response of your FRAG application
+
+01:38:20.640 --> 01:38:23.640
+and breaks it down into statements
+
+01:38:23.640 --> 01:38:26.640
+you have broken it down into facts
+
+01:38:26.640 --> 01:38:29.640
+now you will run a loop
+
+01:38:29.640 --> 01:38:32.640
+you will take every fact and check it with the query
+
+01:38:32.640 --> 01:38:35.640
+that is it relevant or not
+
+01:38:35.640 --> 01:38:38.640
+you will simply compare
+
+01:38:38.640 --> 01:38:41.640
+that is this particular fact able to give the answer of your input query
+
+01:38:41.640 --> 01:38:44.640
+that answer is correct, wrong, doesn't matter
+
+01:38:44.640 --> 01:38:47.640
+is it on topic or not
+
+01:38:47.640 --> 01:38:50.640
+if you see the role of LLM as a judge
+
+01:38:50.640 --> 01:38:53.640
+so the judge LLM reads the actual output
+
+01:38:53.640 --> 01:38:56.640
+what is the actual output?
+
+01:38:56.640 --> 01:38:59.640
+response of your application
+
+01:38:59.640 --> 01:39:02.640
+which my LLM generator is generating
+
+01:39:02.640 --> 01:39:05.640
+and decomposes it, breaks down your response into
+
+01:39:05.640 --> 01:39:08.640
+list of individual statements or facts
+
+01:39:08.640 --> 01:39:11.640
+claims is facts, not just naive sentence splitting
+
+01:39:11.640 --> 01:39:14.640
+sentence splitting is not done
+
+01:39:14.640 --> 01:39:17.640
+here you extract the atomic ideas
+
+01:39:17.640 --> 01:39:20.640
+after that you check
+
+01:39:20.640 --> 01:39:23.640
+relevancy, there is no score for relevancy
+
+01:39:23.640 --> 01:39:26.640
+it is a boolean value
+
+01:39:26.640 --> 01:39:29.640
+you are simply checking whether it is relevant or not
+
+01:39:29.640 --> 01:39:32.640
+not checking how relevant it is
+
+01:39:32.640 --> 01:39:35.640
+for each statement the judge LLM decides
+
+01:39:35.640 --> 01:39:38.640
+is this statement relevant to answer the input
+
+01:39:38.640 --> 01:39:41.640
+is it aligned with the input or not
+
+01:39:41.640 --> 01:39:44.640
+it labels each relevant or irrelevant
+
+01:39:44.640 --> 01:39:47.640
+deep eval implementation also allows a verdict
+
+01:39:47.640 --> 01:39:50.640
+you get a verdict for partial
+
+01:39:50.640 --> 01:39:53.640
+but in general cases you will get relevant or irrelevant
+
+01:39:53.640 --> 01:39:56.640
+it is a boolean value
+
+01:39:56.640 --> 01:39:59.640
+you can tweak it, after that you get a reason
+
+01:39:59.640 --> 01:40:02.640
+and finally you calculate the score
+
+01:40:02.640 --> 01:40:05.640
+now what is the formula for this?
+
+01:40:05.640 --> 01:40:08.640
+formula is number of relevant statements
+
+01:40:08.640 --> 01:40:11.640
+divided by total number of statements
+
+01:40:11.640 --> 01:40:14.640
+in this formula, your LLM as a judge
+
+01:40:14.640 --> 01:40:17.640
+extracts 10 facts
+
+01:40:17.640 --> 01:40:20.640
+using decomposition, from that you will check
+
+01:40:20.640 --> 01:40:23.640
+comparing each of the facts with your query
+
+01:40:23.640 --> 01:40:26.640
+that how many facts are relevant
+
+01:40:26.640 --> 01:40:29.640
+so in the numerator you will get relevant facts
+
+01:40:29.640 --> 01:40:32.640
+let's say 6 facts are relevant out of 10
+
+01:40:32.640 --> 01:40:35.640
+so how much will be the relevancy score? 0.6
+
+01:40:35.640 --> 01:40:38.640
+it is a very simple metric
+
+01:40:38.640 --> 01:40:41.640
+we are not checking the facts, we are simply checking
+
+01:40:41.640 --> 01:40:44.640
+whether our query has the answer or not
+
+01:40:44.640 --> 01:40:47.640
+is it clear now?
+
+01:40:47.640 --> 01:40:50.640
+let's understand it through an example
+
+01:40:50.640 --> 01:40:53.640
+this is our input query
+
+01:40:53.640 --> 01:40:56.640
+what is boosting in machine learning
+
+01:40:56.640 --> 01:40:59.640
+and how does it work
+
+01:40:59.640 --> 01:41:02.640
+and I got this particular response from my LLM
+
+01:41:02.640 --> 01:41:05.640
+that boosting is an ensemble technique that combines
+
+01:41:05.640 --> 01:41:08.640
+multiple weak learners to form a strong learner
+
+01:41:08.640 --> 01:41:11.640
+it trains models sequentially
+
+01:41:11.640 --> 01:41:14.640
+where each new model focuses on correcting the errors
+
+01:41:14.640 --> 01:41:17.640
+made by previous one
+
+01:41:17.640 --> 01:41:20.640
+AdaBoost was one of the most popular boosting algorithms
+
+01:41:20.640 --> 01:41:23.640
+Random forest on the other hand
+
+01:41:23.640 --> 01:41:26.640
+built trees independently and averaged their results
+
+01:41:26.640 --> 01:41:29.640
+Gradient boosting uses gradient descent to minimize
+
+01:41:29.640 --> 01:41:32.640
+the loss function when adding new learners
+
+01:41:32.640 --> 01:41:35.640
+the facts that we are told here
+
+01:41:35.640 --> 01:41:38.640
+are they correct or not?
+
+01:41:38.640 --> 01:41:41.640
+we are not checking now whether AdaBoost is the most popular
+
+01:41:41.640 --> 01:41:44.640
+we are not going to correct it
+
+01:41:44.640 --> 01:41:47.640
+we are checking whether this particular statement
+
+01:41:47.640 --> 01:41:50.640
+aligns with our input
+
+01:41:50.640 --> 01:41:53.640
+we got this particular response and gave it to our LLM as a judge
+
+01:41:53.640 --> 01:41:56.640
+the job of LLM as a judge is to extract some statements
+
+01:41:56.640 --> 01:41:59.640
+like it extracted these 5 statements
+
+01:41:59.640 --> 01:42:02.640
+and extracted the last statement from my answer
+
+01:42:02.640 --> 01:42:05.640
+there is no retrieved context here
+
+01:42:05.640 --> 01:42:08.640
+now it will capture every statement
+
+01:42:08.640 --> 01:42:11.640
+and compare it with my input query
+
+01:42:11.640 --> 01:42:14.640
+whether this particular statement aligns with my input query
+
+01:42:14.640 --> 01:42:17.640
+or not
+
+01:42:17.640 --> 01:42:20.640
+so let's see what is my input query
+
+01:42:20.640 --> 01:42:23.640
+we are talking about boosting and how does it work
+
+01:42:23.640 --> 01:42:26.640
+boosting is an ensemble technique that combines multiple weak learners
+
+01:42:26.640 --> 01:42:29.640
+whether the particular fact aligns with my input query
+
+01:42:29.640 --> 01:42:32.640
+is it correct or not? I don't know
+
+01:42:32.640 --> 01:42:35.640
+but yes it gives the answer to boosting
+
+01:42:35.640 --> 01:42:38.640
+it trains modern sequentially
+
+01:42:38.640 --> 01:42:41.640
+it is my boosting algorithm
+
+01:42:41.640 --> 01:42:44.640
+when we use LLM it matches with the intent of our query
+
+01:42:44.640 --> 01:42:47.640
+we don't actually need keyword matching
+
+01:42:47.640 --> 01:42:50.640
+or fact matching
+
+01:42:50.640 --> 01:42:53.640
+this is the power of your LLM as a judge
+
+01:42:53.640 --> 01:42:56.640
+so the LLM focuses on correcting the errors of the previous one
+
+01:42:56.640 --> 01:42:59.640
+so this is exactly what boosting does
+
+01:42:59.640 --> 01:43:02.640
+it gives the answer to my question
+
+01:43:02.640 --> 01:43:05.640
+add a boost gives the answer directly
+
+01:43:05.640 --> 01:43:08.640
+random forest is a bagging technique
+
+01:43:08.640 --> 01:43:11.640
+this fact is irrelevant
+
+01:43:11.640 --> 01:43:14.640
+gradient boosting uses gradient descent to minimize loss
+
+01:43:14.640 --> 01:43:17.640
+this is relevant
+
+01:43:17.640 --> 01:43:20.640
+so basically I extracted 5 facts
+
+01:43:20.640 --> 01:43:23.640
+so my answer is 4
+
+01:43:23.640 --> 01:43:26.640
+so my answer relevancy value is 80%
+
+01:43:26.640 --> 01:43:29.640
+so what are you doing in answer relevancy?
+
+01:43:29.640 --> 01:43:32.640
+you are calculating the signal to noise ratio
+
+01:43:32.640 --> 01:43:35.640
+again
+
+01:43:35.640 --> 01:43:38.640
+which you were doing in your contextual relevancy
+
+01:43:38.640 --> 01:43:41.640
+you were doing it on the basis of context
+
+01:43:41.640 --> 01:43:44.640
+you were relating the context and input
+
+01:43:44.640 --> 01:43:47.640
+here you are relating the answer and input
+
+01:43:47.640 --> 01:43:50.640
+so you are relating the answer and input
+
+01:43:50.640 --> 01:43:53.640
+so you are relating the facts that are useful and useless
+
+01:43:53.640 --> 01:43:56.640
+that is it
+
+01:43:56.640 --> 01:43:59.640
+that is your answer relevancy
+
+01:43:59.640 --> 01:44:02.640
+let me show you its code
+
+01:44:02.640 --> 01:44:05.640
+we have used the same example
+
+01:44:05.640 --> 01:44:08.640
+here is my answer relevancy
+
+01:44:08.640 --> 01:44:11.640
+let me remove this extra code
+
+01:44:11.640 --> 01:44:14.640
+because I will share this code with you
+
+01:44:15.640 --> 01:44:18.640
+this is the example of boosting
+
+01:44:18.640 --> 01:44:21.640
+this is my actual output
+
+01:44:21.640 --> 01:44:24.640
+there are only 2 things in the input
+
+01:44:24.640 --> 01:44:27.640
+here I made my test case and I am simply measuring it
+
+01:44:27.640 --> 01:44:30.640
+so let's clear the terminal
+
+01:44:30.640 --> 01:44:38.640
+I will write qv run test answer relevancy.py
+
+01:44:38.640 --> 01:44:41.640
+run is happening, let's see its output
+
+01:44:42.640 --> 01:44:45.640
+we extracted 5 statements
+
+01:44:45.640 --> 01:44:48.640
+80% score is coming
+
+01:44:48.640 --> 01:44:51.640
+my LLM has also extracted 5 statements
+
+01:44:51.640 --> 01:44:54.640
+so when you keep your verbose output
+
+01:44:54.640 --> 01:44:57.640
+you can see individual statements
+
+01:44:57.640 --> 01:45:00.640
+train model is coming sequentially
+
+01:45:00.640 --> 01:45:03.640
+random forest is irrelevant
+
+01:45:03.640 --> 01:45:06.640
+now each statement is checked with your query
+
+01:45:06.640 --> 01:45:09.640
+what is the verdict? yes
+
+01:45:09.640 --> 01:45:12.640
+4th statement is no
+
+01:45:12.640 --> 01:45:15.640
+it is because random forest is a different ensemble method
+
+01:45:15.640 --> 01:45:18.640
+and it is not boosting
+
+01:45:18.640 --> 01:45:21.640
+it does not align with my query
+
+01:45:21.640 --> 01:45:24.640
+so verdict is no, this is fail
+
+01:45:24.640 --> 01:45:27.640
+and finally the last statement is pass
+
+01:45:27.640 --> 01:45:30.640
+and 80% is my relevancy
+
+01:45:30.640 --> 01:45:33.640
+is this clear?
+
+01:45:33.640 --> 01:45:36.640
+no query doesn't contain the argument
+
+01:45:36.640 --> 01:45:39.640
+your augmented prompt contains the query
+
+01:45:39.640 --> 01:45:42.640
+if you remember our application
+
+01:45:42.640 --> 01:45:45.640
+I can show you rag workflow
+
+01:45:45.640 --> 01:45:48.640
+so you will see our augmented prompt
+
+01:45:48.640 --> 01:45:51.640
+here is our prompt
+
+01:45:51.640 --> 01:45:54.640
+in this context and query are part of the prompt
+
+01:45:54.640 --> 01:45:57.640
+these are your dynamic information
+
+01:45:57.640 --> 01:46:00.640
+which we are feeding at runtime
+
+01:46:00.640 --> 01:46:03.640
+so this is my query
+
+01:46:03.640 --> 01:46:06.640
+so this is my query
+
+01:46:06.640 --> 01:46:09.640
+is this metric clear?
+
+01:46:09.640 --> 01:46:12.640
+yes
+
+01:46:12.640 --> 01:46:15.640
+answer relevancy
+
+01:46:15.640 --> 01:46:18.640
+clear?
+
+01:46:18.640 --> 01:46:21.640
+right clear in the chat
+
+01:46:21.640 --> 01:46:24.640
+this is easy
+
+01:46:24.640 --> 01:46:27.640
+now you know where LLM as a judge is used
+
+01:46:27.640 --> 01:46:30.640
+let's check it in documentation
+
+01:46:30.640 --> 01:46:33.640
+because we are sticking to the documentation
+
+01:46:33.640 --> 01:46:36.640
+so let's check it in documentation
+
+01:46:36.640 --> 01:46:39.640
+answer relevancy metric uses LLM as a judge
+
+01:46:39.640 --> 01:46:42.640
+to measure the quality of your rag pipelines generator
+
+01:46:42.640 --> 01:46:45.640
+by evaluating how relevant the actual output
+
+01:46:45.640 --> 01:46:48.640
+of your application is compared to the input
+
+01:46:48.640 --> 01:46:51.640
+so here we are comparing two things
+
+01:46:51.640 --> 01:46:54.640
+our response which is the actual output vs our input
+
+01:46:54.640 --> 01:46:57.640
+and here we need two things in the input
+
+01:46:57.640 --> 01:47:00.640
+query and actual output
+
+01:47:00.640 --> 01:47:03.640
+how is this calculated?
+
+01:47:03.640 --> 01:47:06.640
+how it is calculated?
+
+01:47:06.640 --> 01:47:09.640
+very simple, first uses LLM to extract all statements
+
+01:47:09.640 --> 01:47:12.640
+made in the actual output
+
+01:47:12.640 --> 01:47:15.640
+before using the same LLM to classify
+
+01:47:15.640 --> 01:47:18.640
+whether each statement is relevant to the input or not
+
+01:47:18.640 --> 01:47:21.640
+simple
+
+01:47:21.640 --> 01:47:24.640
+let's move on to our final metric
+
+01:47:24.640 --> 01:47:27.640
+of the rag pipeline
+
+01:47:27.640 --> 01:47:30.640
+don't think that all these metrics are available
+
+01:47:30.640 --> 01:47:33.640
+you can build your custom metrics for your specific domain
+
+01:47:33.640 --> 01:47:36.640
+but the built in metrics that Raga gives you
+
+01:47:36.640 --> 01:47:39.640
+under the hood
+
+01:47:39.640 --> 01:47:42.640
+are these five
+
+01:47:42.640 --> 01:47:45.640
+two are of your generator and three are of your retriever
+
+01:47:45.640 --> 01:47:48.640
+let's move on
+
+01:47:48.640 --> 01:47:51.640
+and discuss about faithfulness
+
+01:47:51.640 --> 01:47:54.640
+now
+
+01:47:54.640 --> 01:47:57.640
+what does faithfulness check?
+
+01:47:57.640 --> 01:48:00.640
+what was our relevancy checking?
+
+01:48:00.640 --> 01:48:03.640
+the relationship between input and output
+
+01:48:03.640 --> 01:48:06.640
+between generator output
+
+01:48:06.640 --> 01:48:09.640
+faithfulness checks the relationship between
+
+01:48:09.640 --> 01:48:12.640
+the context retrieved context
+
+01:48:12.640 --> 01:48:15.640
+I will write it here
+
+01:48:15.640 --> 01:48:18.640
+between the retrieved context and output
+
+01:48:18.640 --> 01:48:21.640
+what are we doing in the generator?
+
+01:48:21.640 --> 01:48:24.640
+in the generator
+
+01:48:24.640 --> 01:48:27.640
+this is my generator LLM
+
+01:48:27.640 --> 01:48:30.640
+and this is the response in the output
+
+01:48:30.640 --> 01:48:33.640
+we are giving two things in the input
+
+01:48:33.640 --> 01:48:36.640
+we are giving our query and retrieved context
+
+01:48:36.640 --> 01:48:39.640
+so when we go to build metrics
+
+01:48:39.640 --> 01:48:42.640
+for this particular component
+
+01:48:42.640 --> 01:48:45.640
+it is very logical that we will test both
+
+01:48:45.640 --> 01:48:48.640
+inputs of the output
+
+01:48:48.640 --> 01:48:51.640
+we have tested the relationship between the query and response
+
+01:48:51.640 --> 01:48:54.640
+now it's time of my retrieved context
+
+01:48:54.640 --> 01:48:57.640
+relationship with my response
+
+01:48:57.640 --> 01:49:00.640
+and the metric that we use to test that is my faithfulness
+
+01:49:00.640 --> 01:49:03.640
+for that we check faithfulness
+
+01:49:03.640 --> 01:49:06.640
+we basically check
+
+01:49:06.640 --> 01:49:09.640
+that our output
+
+01:49:09.640 --> 01:49:12.640
+our output is our response
+
+01:49:12.640 --> 01:49:15.640
+our response of the application
+
+01:49:15.640 --> 01:49:18.640
+that my LLM generator has made
+
+01:49:18.640 --> 01:49:21.640
+is that output taking the information
+
+01:49:21.640 --> 01:49:24.640
+from my retrieved context
+
+01:49:24.640 --> 01:49:27.640
+or is it using some information
+
+01:49:27.640 --> 01:49:30.640
+that it has put in it
+
+01:49:30.640 --> 01:49:33.640
+our main goal of making rag application
+
+01:49:33.640 --> 01:49:36.640
+is that our LLM
+
+01:49:36.640 --> 01:49:39.640
+responds from our context
+
+01:49:39.640 --> 01:49:42.640
+if I show you my system prompt
+
+01:49:42.640 --> 01:49:45.640
+although we have written a simple system prompt
+
+01:49:45.640 --> 01:49:48.640
+but what have I written here?
+
+01:49:48.640 --> 01:49:51.640
+answer the query based on the given context only
+
+01:49:51.640 --> 01:49:54.640
+I am making sure that
+
+01:49:54.640 --> 01:49:57.640
+the answer is to be done according to this context
+
+01:49:57.640 --> 01:50:00.640
+nothing should be done from outside
+
+01:50:00.640 --> 01:50:03.640
+and this is what I am checking in my faithfulness
+
+01:50:03.640 --> 01:50:06.640
+that the answer that I have got
+
+01:50:06.640 --> 01:50:09.640
+is it from my retrieved context only
+
+01:50:09.640 --> 01:50:12.640
+or some fact has come in my answer
+
+01:50:12.640 --> 01:50:15.640
+which was not available in the context
+
+01:50:15.640 --> 01:50:18.640
+again you are not checking the factual correctness
+
+01:50:18.640 --> 01:50:21.640
+you are checking that
+
+01:50:21.640 --> 01:50:24.640
+whatever fact is listed in your answer
+
+01:50:24.640 --> 01:50:27.640
+it has come from your context only
+
+01:50:27.640 --> 01:50:30.640
+from retrieved context or from outside
+
+01:50:30.640 --> 01:50:33.640
+so check internal vs external
+
+01:50:33.640 --> 01:50:36.640
+if there is any information in your retrieved context
+
+01:50:36.640 --> 01:50:39.640
+which is wrong
+
+01:50:39.640 --> 01:50:42.640
+then that information will also come in your response
+
+01:50:42.640 --> 01:50:45.640
+but your LLM will make sure
+
+01:50:45.640 --> 01:50:48.640
+that the answer is from your context only
+
+01:50:48.640 --> 01:50:51.640
+is this clear?
+
+01:50:51.640 --> 01:50:54.640
+so what does faithfulness check?
+
+01:50:54.640 --> 01:50:57.640
+whether the generated answer is factually consistent
+
+01:50:57.640 --> 01:51:00.640
+it is not saying correct, it is consistent
+
+01:51:00.640 --> 01:51:03.640
+the answer is given based on the retrieved context only
+
+01:51:03.640 --> 01:51:06.640
+or not?
+
+01:51:06.640 --> 01:51:09.640
+with the retrieved context that is
+
+01:51:09.640 --> 01:51:12.640
+is the model hallucinating or making claims
+
+01:51:12.640 --> 01:51:15.640
+that aren't supported by the retrieved context
+
+01:51:15.640 --> 01:51:18.640
+that what has actually been retrieved
+
+01:51:18.640 --> 01:51:21.640
+does my model's response align with it or not?
+
+01:51:21.640 --> 01:51:24.640
+it is not something that hallucinates
+
+01:51:24.640 --> 01:51:27.640
+something else was written in the context
+
+01:51:27.640 --> 01:51:30.640
+so it should not be like that
+
+01:51:30.640 --> 01:51:33.640
+let's say I asked what is the temperature of Delhi
+
+01:51:33.640 --> 01:51:36.640
+it said that AQI is that temperature
+
+01:51:36.640 --> 01:51:39.640
+so AQI is that temperature
+
+01:51:39.640 --> 01:51:42.640
+is basically my model hallucinating
+
+01:51:42.640 --> 01:51:45.640
+you will not include that thing
+
+01:51:45.640 --> 01:51:48.640
+because it is not in your context
+
+01:51:48.640 --> 01:51:51.640
+your actual temperature value you have to tell
+
+01:51:51.640 --> 01:51:54.640
+this is the hallucination detection metric
+
+01:51:54.640 --> 01:51:57.640
+it has nothing to do with whether the answer
+
+01:51:57.640 --> 01:52:00.640
+is relevant or not
+
+01:52:00.640 --> 01:52:03.640
+whether the answer is relevant or not does not matter
+
+01:52:03.640 --> 01:52:06.640
+and nothing to do with whether the retrieved context
+
+01:52:06.640 --> 01:52:09.640
+itself is any good
+
+01:52:09.640 --> 01:52:12.640
+means whether the retrieved context is useful or not
+
+01:52:12.640 --> 01:52:15.640
+I have to simply check and compare
+
+01:52:15.640 --> 01:52:18.640
+that this is my answer and this is my retrieved context
+
+01:52:18.640 --> 01:52:21.640
+whatever important facts I have listed in the answer
+
+01:52:21.640 --> 01:52:24.640
+whether it is coming from the source or not
+
+01:52:24.640 --> 01:52:27.640
+I have to check in my answer whether the points
+
+01:52:27.640 --> 01:52:30.640
+written in my answer are from NCRT or not
+
+01:52:30.640 --> 01:52:33.640
+whether it is written wrong in NCRT or not
+
+01:52:33.640 --> 01:52:36.640
+if it is written in NCRT and it is available in my answer
+
+01:52:36.640 --> 01:52:39.640
+then my answer is grounded
+
+01:52:39.640 --> 01:52:42.640
+is it clear guys?
+
+01:52:42.640 --> 01:52:45.640
+is this point clear?
+
+01:52:45.640 --> 01:52:48.640
+that what we are capturing in faithfulness
+
+01:52:49.640 --> 01:52:52.640
+we are basically capturing
+
+01:52:52.640 --> 01:52:55.640
+that our LLM response
+
+01:52:55.640 --> 01:52:58.640
+is it grounded on our knowledge base
+
+01:52:58.640 --> 01:53:01.640
+or not?
+
+01:53:01.640 --> 01:53:04.640
+or my model has added some extra information externally
+
+01:53:04.640 --> 01:53:07.640
+where will this external information
+
+01:53:07.640 --> 01:53:10.640
+come from?
+
+01:53:10.640 --> 01:53:13.640
+internal information will come from my knowledge base
+
+01:53:13.640 --> 01:53:16.640
+where will external information come from?
+
+01:53:16.640 --> 01:53:19.640
+from parametric knowledge
+
+01:53:19.640 --> 01:53:22.640
+which he learnt during training
+
+01:53:22.640 --> 01:53:25.640
+maybe he learnt during training that
+
+01:53:25.640 --> 01:53:28.640
+AQI is that temperature
+
+01:53:28.640 --> 01:53:31.640
+and he told me that but what I asked him
+
+01:53:31.640 --> 01:53:34.640
+is tell me temperature of Delhi or AQI of Delhi
+
+01:53:34.640 --> 01:53:37.640
+and he told me that AQI is that temperature
+
+01:53:37.640 --> 01:53:40.640
+I don't want that nonsense
+
+01:53:40.640 --> 01:53:43.640
+simply tell me the value of AQI
+
+01:53:43.640 --> 01:53:46.640
+whether I am getting it or not
+
+01:53:46.640 --> 01:53:49.640
+I haven't added anything extra
+
+01:53:49.640 --> 01:53:52.640
+that's it, this is what I capture in faithfulness
+
+01:53:52.640 --> 01:53:55.640
+so how do you use LLM as a judge in faithfulness
+
+01:53:55.640 --> 01:53:58.640
+I will tell you that too
+
+01:53:58.640 --> 01:54:01.640
+what you do is you send your response
+
+01:54:01.640 --> 01:54:04.640
+to your LLM
+
+01:54:04.640 --> 01:54:07.640
+and you say that from this response you extract facts
+
+01:54:07.640 --> 01:54:10.640
+then you take these facts
+
+01:54:10.640 --> 01:54:13.640
+and you send them one by one to your retrieved context
+
+01:54:13.640 --> 01:54:16.640
+and simply you check
+
+01:54:16.640 --> 01:54:19.640
+that whatever facts were in my response
+
+01:54:19.640 --> 01:54:22.640
+have they come from my retrieved context or not
+
+01:54:22.640 --> 01:54:25.640
+that's it, are they supported or not
+
+01:54:25.640 --> 01:54:28.640
+can I attribute them or not
+
+01:54:28.640 --> 01:54:31.640
+that's it, facts are right or wrong
+
+01:54:31.640 --> 01:54:34.640
+doesn't matter, response came, let's say there were 10 facts
+
+01:54:34.640 --> 01:54:37.640
+you extracted 10 of them and checked
+
+01:54:37.640 --> 01:54:40.640
+how many of them came from my context
+
+01:54:40.640 --> 01:54:43.640
+if all came from my context
+
+01:54:43.640 --> 01:54:46.640
+then my response is faithful
+
+01:54:46.640 --> 01:54:49.640
+and if some came less then I will calculate faithfulness
+
+01:54:49.640 --> 01:54:52.640
+formula is very easy
+
+01:54:52.640 --> 01:54:55.640
+total number of claims you put in denominator
+
+01:54:55.640 --> 01:54:58.640
+let's say there were 10
+
+01:54:58.640 --> 01:55:01.640
+and out of these 10 claims
+
+01:55:01.640 --> 01:55:04.640
+8 were from my context
+
+01:55:04.640 --> 01:55:07.640
+and rest came from my LLM's parametric knowledge
+
+01:55:07.640 --> 01:55:10.640
+so my faithfulness score is
+
+01:55:10.640 --> 01:55:13.640
+0.8
+
+01:55:13.640 --> 01:55:16.640
+which means 20% of my LLM is hallucinating in response
+
+01:55:16.640 --> 01:55:19.640
+is it clear guys?
+
+01:55:19.640 --> 01:55:22.640
+let's see how LLM as a judge works
+
+01:55:22.640 --> 01:55:25.640
+what you are doing here is
+
+01:55:25.640 --> 01:55:28.640
+you are taking your actual output and from that
+
+01:55:28.640 --> 01:55:31.640
+extract individual factual claims
+
+01:55:31.640 --> 01:55:34.640
+and after that
+
+01:55:34.640 --> 01:55:37.640
+you are taking each extracted claim
+
+01:55:37.640 --> 01:55:40.640
+and giving your LLM
+
+01:55:40.640 --> 01:55:43.640
+to compare against the retrieved context
+
+01:55:43.640 --> 01:55:46.640
+that whether it came from my context or not
+
+01:55:46.640 --> 01:55:49.640
+now you can get 3 types of verdicts
+
+01:55:49.640 --> 01:55:52.640
+yes means it came from your context
+
+01:55:52.640 --> 01:55:55.640
+no means your model
+
+01:55:55.640 --> 01:55:58.640
+or LLM is hallucinating this fact
+
+01:55:58.640 --> 01:56:01.640
+and third is I don't know
+
+01:56:01.640 --> 01:56:04.640
+means an ambiguous claim came
+
+01:56:04.640 --> 01:56:07.640
+it can't be verified
+
+01:56:07.640 --> 01:56:10.640
+so these 3 are your outputs
+
+01:56:10.640 --> 01:56:13.640
+and after that you are providing your reason
+
+01:56:13.640 --> 01:56:16.640
+and calculating your score
+
+01:56:16.640 --> 01:56:19.640
+is it clear?
+
+01:56:19.640 --> 01:56:22.640
+now let's understand it through an example
+
+01:56:22.640 --> 01:56:25.640
+example is explain how the KNL algorithm works
+
+01:56:25.640 --> 01:56:28.640
+how the value of K affects performance
+
+01:56:28.640 --> 01:56:31.640
+now this is my retrieved context
+
+01:56:31.640 --> 01:56:34.640
+KNN is non-parametric instance based
+
+01:56:34.640 --> 01:56:37.640
+learning algorithm
+
+01:56:37.640 --> 01:56:40.640
+it works by finding clay closest training example
+
+01:56:40.640 --> 01:56:43.640
+I have some chunks here
+
+01:56:43.640 --> 01:56:46.640
+I have these chunks
+
+01:56:46.640 --> 01:56:49.640
+now I have to take my answer
+
+01:56:49.640 --> 01:56:52.640
+this is my response by my LLM
+
+01:56:52.640 --> 01:56:55.640
+this is my response
+
+01:56:55.640 --> 01:56:58.640
+and I extracted 5 pieces of information
+
+01:56:58.640 --> 01:57:01.640
+not 5, more
+
+01:57:01.640 --> 01:57:04.640
+9 pieces of information
+
+01:57:04.640 --> 01:57:07.640
+I extracted 9 pieces of information
+
+01:57:07.640 --> 01:57:10.640
+these are my atomic claims
+
+01:57:10.640 --> 01:57:13.640
+individual claims
+
+01:57:13.640 --> 01:57:16.640
+now I will take each claim
+
+01:57:16.640 --> 01:57:19.640
+and go to my retrieved context
+
+01:57:19.640 --> 01:57:22.640
+and check if this claim
+
+01:57:22.640 --> 01:57:25.640
+is coming from my retrieved context
+
+01:57:25.640 --> 01:57:28.640
+let's check here
+
+01:57:28.640 --> 01:57:31.640
+KNN is a non-parametric algorithm used for classification and regression
+
+01:57:31.640 --> 01:57:34.640
+so here we are talking
+
+01:57:34.640 --> 01:57:37.640
+non-parametric is used for classification and regression
+
+01:57:37.640 --> 01:57:40.640
+so yes, this is my
+
+01:57:40.640 --> 01:57:43.640
+I will mark it with green, this is coming from my retrieved context
+
+01:57:43.640 --> 01:57:46.640
+statement, it predicts a query point
+
+01:57:46.640 --> 01:57:49.640
+and looking at the closest K training points
+
+01:57:49.640 --> 01:57:52.640
+so here it is written
+
+01:57:52.640 --> 01:57:55.640
+finding K closest training examples
+
+01:57:55.640 --> 01:57:58.640
+to a query point, so yes, this point is coming from my retrieved context
+
+01:57:58.640 --> 01:58:01.640
+distance is usually measured using Euclidean
+
+01:58:01.640 --> 01:58:04.640
+so here we are talking about Euclidean distance
+
+01:58:04.640 --> 01:58:07.640
+this claim is also coming from my retrieved context
+
+01:58:07.640 --> 01:58:10.640
+prediction is done via majority vote and averaging
+
+01:58:10.640 --> 01:58:13.640
+let's see this too
+
+01:58:13.640 --> 01:58:16.640
+so yes, this is also happening
+
+01:58:16.640 --> 01:58:19.640
+prediction is done
+
+01:58:19.640 --> 01:58:22.640
+sorry, KNN doesn't learn an explicit model
+
+01:58:22.640 --> 01:58:25.640
+during training and just stores the data
+
+01:58:25.640 --> 01:58:28.640
+let's see, this is also coming
+
+01:58:28.640 --> 01:58:31.640
+so it is also correct
+
+01:58:31.640 --> 01:58:34.640
+it is referred to as a lazy learner because of this
+
+01:58:34.640 --> 01:58:37.640
+lazy learner is happening here
+
+01:58:37.640 --> 01:58:40.640
+it is also correct, fact
+
+01:58:40.640 --> 01:58:43.640
+small value of K makes the model more robust to noisy data
+
+01:58:43.640 --> 01:58:46.640
+ok
+
+01:58:46.640 --> 01:58:49.640
+choice of K, small k makes the model sensitive to noise
+
+01:58:49.640 --> 01:58:52.640
+are you seeing
+
+01:58:52.640 --> 01:58:55.640
+now here my model hallucinates
+
+01:58:55.640 --> 01:58:58.640
+it had information that small k
+
+01:58:58.640 --> 01:59:01.640
+makes your model sensitive
+
+01:59:01.640 --> 01:59:04.640
+ok, you just check your nearest neighbor
+
+01:59:04.640 --> 01:59:07.640
+so you have to take its value
+
+01:59:07.640 --> 01:59:10.640
+so here you are not made robust
+
+01:59:10.640 --> 01:59:13.640
+large k value, but what my model has done here
+
+01:59:13.640 --> 01:59:16.640
+it prints contradictory information in response
+
+01:59:16.640 --> 01:59:19.640
+this was not available in my context
+
+01:59:19.640 --> 01:59:22.640
+so this is a claim that is not grounded
+
+01:59:22.640 --> 01:59:25.640
+which is not available in my retrieved context
+
+01:59:25.640 --> 01:59:28.640
+I don't know whether it is right or wrong
+
+01:59:28.640 --> 01:59:31.640
+what does K do, I don't care
+
+01:59:31.640 --> 01:59:34.640
+it is just not matching
+
+01:59:34.640 --> 01:59:37.640
+feature scaling matters a lot for K&N
+
+01:59:37.640 --> 01:59:40.640
+because it relies on distance calculation
+
+01:59:40.640 --> 01:59:43.640
+distance calculation is sensitive
+
+01:59:43.640 --> 01:59:46.640
+so this is a correct claim
+
+01:59:46.640 --> 01:59:49.640
+K&N has a training time complexity of
+
+01:59:49.640 --> 01:59:52.640
+O n log n
+
+01:59:52.640 --> 01:59:55.640
+so is this thing written here
+
+01:59:55.640 --> 01:59:58.640
+no, this thing is not written here
+
+01:59:58.640 --> 02:00:01.640
+this is extra piece of information that my model has added
+
+02:00:01.640 --> 02:00:04.640
+hallucinating, what I want to check here
+
+02:00:04.640 --> 02:00:07.640
+I want to check the groundedness of my model
+
+02:00:07.640 --> 02:00:10.640
+because I have given a specific instruction to my model
+
+02:00:10.640 --> 02:00:13.640
+that whenever you give a response
+
+02:00:13.640 --> 02:00:16.640
+it should be well grounded in my retrieved context
+
+02:00:16.640 --> 02:00:19.640
+whatever is in the retrieved context
+
+02:00:19.640 --> 02:00:22.640
+just add that in your claims
+
+02:00:22.640 --> 02:00:25.640
+don't think about anything extra
+
+02:00:25.640 --> 02:00:28.640
+and here my model is failing in two of the nine facts
+
+02:00:28.640 --> 02:00:31.640
+so here how much will be my faithfulness value
+
+02:00:31.640 --> 02:00:34.640
+how many claims I have fetched from my response
+
+02:00:34.640 --> 02:00:37.640
+total claims were 9
+
+02:00:37.640 --> 02:00:40.640
+and how much was grounded from that, 7
+
+02:00:40.640 --> 02:00:43.640
+so this is my faithfulness score
+
+02:00:43.640 --> 02:00:46.640
+is this thing clear, how to calculate this
+
+02:00:46.640 --> 02:00:49.640
+faithfulness is clear
+
+02:00:49.640 --> 02:00:52.640
+it is easy
+
+02:00:52.640 --> 02:00:55.640
+if anyone has any doubt
+
+02:00:55.640 --> 02:00:58.640
+you can ask me
+
+02:00:58.640 --> 02:01:01.640
+then we will move in on the code part
+
+02:01:07.640 --> 02:01:10.640
+I am looking at the chat guys
+
+02:01:14.640 --> 02:01:17.640
+what happened guys
+
+02:01:17.640 --> 02:01:20.640
+are you guys tired, bored
+
+02:01:20.640 --> 02:01:23.640
+the chat is not responding
+
+02:01:23.640 --> 02:01:26.640
+are you confused
+
+02:01:26.640 --> 02:01:29.640
+are you confused in your faithfulness
+
+02:01:33.640 --> 02:01:36.640
+am I audible
+
+02:01:36.640 --> 02:01:39.640
+clear, am I audible
+
+02:01:39.640 --> 02:01:42.640
+your response
+
+02:01:42.640 --> 02:01:45.640
+yes
+
+02:01:47.640 --> 02:01:50.640
+we are not checking the correctness of claim
+
+02:01:50.640 --> 02:01:53.640
+we are checking the groundedness
+
+02:01:53.640 --> 02:01:56.640
+because we are telling our model
+
+02:01:56.640 --> 02:01:59.640
+whatever is in the retrieved context
+
+02:01:59.640 --> 02:02:02.640
+answer on that basis
+
+02:02:02.640 --> 02:02:05.640
+you don't have to search on web
+
+02:02:05.640 --> 02:02:08.640
+the fee of advanced track course
+
+02:02:08.640 --> 02:02:11.640
+whatever is the value of the fee
+
+02:02:11.640 --> 02:02:14.640
+you have to claim that value in your answer
+
+02:02:14.640 --> 02:02:17.640
+don't add anything extra
+
+02:02:17.640 --> 02:02:20.640
+it doesn't matter
+
+02:02:20.640 --> 02:02:23.640
+whether it is correct or wrong
+
+02:02:23.640 --> 02:02:26.640
+hallucination is that
+
+02:02:26.640 --> 02:02:29.640
+your model confidently puts wrong facts
+
+02:02:29.640 --> 02:02:32.640
+like this one
+
+02:02:32.640 --> 02:02:35.640
+this time complexity fact
+
+02:02:35.640 --> 02:02:38.640
+this is not available anywhere in my context
+
+02:02:38.640 --> 02:02:41.640
+so it confidently gave me this time complexity
+
+02:02:41.640 --> 02:02:44.640
+where the value of small k
+
+02:02:44.640 --> 02:02:47.640
+is sensitive to your model
+
+02:02:47.640 --> 02:02:50.640
+and it makes it robust
+
+02:02:50.640 --> 02:02:53.640
+is it clear guys
+
+02:02:53.640 --> 02:02:56.640
+yes
+
+02:02:56.640 --> 02:02:59.640
+if your faithfulness score is less
+
+02:02:59.640 --> 02:03:02.640
+we didn't discuss this in the case of relevancy
+
+02:03:02.640 --> 02:03:05.640
+in both generally you change your prompt
+
+02:03:05.640 --> 02:03:08.640
+but first let me tell you that if your faithfulness score is less
+
+02:03:08.640 --> 02:03:11.640
+what you have to do
+
+02:03:11.640 --> 02:03:14.640
+first of all
+
+02:03:14.640 --> 02:03:17.640
+you have to mention
+
+02:03:17.640 --> 02:03:20.640
+your system prompt
+
+02:03:20.640 --> 02:03:23.640
+you have to emphasize
+
+02:03:23.640 --> 02:03:26.640
+that you have to give information only from the context
+
+02:03:26.640 --> 02:03:29.640
+if you feel like
+
+02:03:29.640 --> 02:03:32.640
+I want to add some advice
+
+02:03:32.640 --> 02:03:35.640
+I want to add my two cents
+
+02:03:35.640 --> 02:03:38.640
+then simply mention that I don't know
+
+02:03:38.640 --> 02:03:41.640
+don't make anything from your side
+
+02:03:41.640 --> 02:03:44.640
+if you are feeling restless
+
+02:03:44.640 --> 02:03:47.640
+and feel like feeling a little bit of pain
+
+02:03:47.640 --> 02:03:50.640
+then we have to explicitly mention this in our prompt
+
+02:03:50.640 --> 02:03:53.640
+we have to tighten our generator prompt
+
+02:03:53.640 --> 02:03:56.640
+explicitly instruct the LLM
+
+02:03:56.640 --> 02:03:59.640
+to only use information present in the provided context
+
+02:03:59.640 --> 02:04:02.640
+and say I don't know rather than
+
+02:04:02.640 --> 02:04:05.640
+filling gaps with parametric knowledge
+
+02:04:05.640 --> 02:04:08.640
+you can use only retrieved context and parametric knowledge
+
+02:04:08.640 --> 02:04:11.640
+so we are saying
+
+02:04:11.640 --> 02:04:14.640
+only use retrieved source and don't focus on parametric knowledge
+
+02:04:14.640 --> 02:04:17.640
+because you are in a rag application
+
+02:04:17.640 --> 02:04:20.640
+in the case of rag it is true
+
+02:04:20.640 --> 02:04:23.640
+you can check your retrieval quality
+
+02:04:23.640 --> 02:04:26.640
+because whether your retrieved context is coming correctly
+
+02:04:26.640 --> 02:04:29.640
+or if it has some things written inside it
+
+02:04:29.640 --> 02:04:32.640
+which are confusing your model
+
+02:04:32.640 --> 02:04:35.640
+then your faithfulness will be reduced
+
+02:04:35.640 --> 02:04:38.640
+lower generation temperature
+
+02:04:38.640 --> 02:04:41.640
+if your model has high temperature value
+
+02:04:41.640 --> 02:04:44.640
+then it gives a lot of dynamic outputs
+
+02:04:44.640 --> 02:04:47.640
+it becomes very probabilistic
+
+02:04:47.640 --> 02:04:50.640
+so you can reduce the temperature and make it a little deterministic
+
+02:04:50.640 --> 02:04:53.640
+so that it doesn't add anything creative
+
+02:04:53.640 --> 02:04:56.640
+in your answers
+
+02:04:56.640 --> 02:04:59.640
+you can add citations properly
+
+02:04:59.640 --> 02:05:02.640
+you can add grounded instructions
+
+02:05:02.640 --> 02:05:05.640
+you can add the sources
+
+02:05:05.640 --> 02:05:08.640
+from where this particular fact came from
+
+02:05:08.640 --> 02:05:11.640
+this also increases your groundedness
+
+02:05:11.640 --> 02:05:14.640
+and you can also review chunking strategy
+
+02:05:14.640 --> 02:05:17.640
+it is not like your chunk
+
+02:05:17.640 --> 02:05:20.640
+is cutting mid fact
+
+02:05:20.640 --> 02:05:23.640
+where incomplete information is present
+
+02:05:23.640 --> 02:05:26.640
+because if incomplete information is present in your context
+
+02:05:26.640 --> 02:05:29.640
+then it tries to fill it
+
+02:05:29.640 --> 02:05:32.640
+if you have complete information
+
+02:05:32.640 --> 02:05:35.640
+then LLM makes sure that it doesn't fill the gaps
+
+02:05:35.640 --> 02:05:38.640
+and uses that information
+
+02:05:38.640 --> 02:05:41.640
+so if your LLM is confused
+
+02:05:41.640 --> 02:05:44.640
+then it tries to hallucinate
+
+02:05:44.640 --> 02:05:47.640
+so make sure your retrieved context is good
+
+02:05:47.640 --> 02:05:50.640
+and the system prompt you have defined is a little stringent
+
+02:05:50.640 --> 02:05:53.640
+now let's see how to improve
+
+02:05:53.640 --> 02:05:56.640
+in answer relevancy, response and query are not matching
+
+02:05:56.640 --> 02:05:59.640
+so again you have to fix your prompt
+
+02:05:59.640 --> 02:06:02.640
+you have to write explicitly in the prompt
+
+02:06:02.640 --> 02:06:05.640
+that whatever has been asked, answer it
+
+02:06:05.640 --> 02:06:08.640
+don't add any extra noisy information
+
+02:06:08.640 --> 02:06:11.640
+you have to check
+
+02:06:11.640 --> 02:06:14.640
+is this a retrieval problem or not
+
+02:06:14.640 --> 02:06:17.640
+if there are irrelevant chunks in your context
+
+02:06:17.640 --> 02:06:20.640
+then they will also come in your response
+
+02:06:20.640 --> 02:06:23.640
+so this is the effect of your retriever
+
+02:06:23.640 --> 02:06:26.640
+so if garbage is out in retriever
+
+02:06:26.640 --> 02:06:29.640
+then it will act as garbage in your LLM
+
+02:06:29.640 --> 02:06:32.640
+so you can fix this
+
+02:06:32.640 --> 02:06:35.640
+you can improve your relevancy by reducing verbosity
+
+02:06:35.640 --> 02:06:38.640
+means you can reduce your extra verbosity
+
+02:06:38.640 --> 02:06:41.640
+and tell your model not to be too chatty
+
+02:06:41.640 --> 02:06:44.640
+you can improve accordingly
+
+02:06:44.640 --> 02:06:47.640
+and multipart questions
+
+02:06:47.640 --> 02:06:50.640
+so multipart questions means
+
+02:06:50.640 --> 02:06:53.640
+where you have to decompose your question
+
+02:06:53.640 --> 02:06:56.640
+so you can use query decomposition
+
+02:06:56.640 --> 02:06:59.640
+and improve things
+
+02:06:59.640 --> 02:07:02.640
+so I hope you understood these things
+
+02:07:02.640 --> 02:07:05.640
+how you improve in your matrix
+
+02:07:05.640 --> 02:07:08.640
+this point is clear to you
+
+02:07:08.640 --> 02:07:11.640
+now I will show you in code
+
+02:07:11.640 --> 02:07:14.640
+how you implement faithfulness
+
+02:07:14.640 --> 02:07:17.640
+I will show you some parameters
+
+02:07:17.640 --> 02:07:20.640
+so faithfulness metric uses LLM
+
+02:07:20.640 --> 02:07:23.640
+as a judge to measure the quality of your
+
+02:07:23.640 --> 02:07:26.640
+rack pipeline generator
+
+02:07:26.640 --> 02:07:29.640
+it evaluates that your actual output
+
+02:07:29.640 --> 02:07:32.640
+aligns with the context of your retrieved context
+
+02:07:32.640 --> 02:07:35.640
+where I am getting this context from is from my retriever
+
+02:07:35.640 --> 02:07:38.640
+so does the output of the retriever and the output of the generator
+
+02:07:38.640 --> 02:07:41.640
+match or align or not
+
+02:07:41.640 --> 02:07:44.640
+so in relevancy you check whether the user's input
+
+02:07:44.640 --> 02:07:47.640
+and the output of your application match
+
+02:07:47.640 --> 02:07:50.640
+so you match both the input
+
+02:07:50.640 --> 02:07:53.640
+and output aspects of the generator
+
+02:07:53.640 --> 02:07:56.640
+so you are doing query versus response
+
+02:07:56.640 --> 02:07:59.640
+here you are doing retrieve context versus response
+
+02:07:59.640 --> 02:08:02.640
+so you have to give these 3 inputs
+
+02:08:02.640 --> 02:08:05.640
+so you have to give these 3 inputs
+
+02:08:05.640 --> 02:08:08.640
+so you have done query, output and retrieved context
+
+02:08:08.640 --> 02:08:11.640
+so how is the calculation done here
+
+02:08:11.640 --> 02:08:14.640
+so you tell your LLM to extract
+
+02:08:14.640 --> 02:08:17.640
+all the claims from the actual output
+
+02:08:17.640 --> 02:08:20.640
+and you compare it with the retrieved context
+
+02:08:20.640 --> 02:08:23.640
+which claims are truthful and which are not
+
+02:08:23.640 --> 02:08:26.640
+that's it
+
+02:08:26.640 --> 02:08:29.640
+a claim is considered truthful if it does not contradict
+
+02:08:29.640 --> 02:08:32.640
+any facts present in the retrieval context
+
+02:08:32.640 --> 02:08:35.640
+so now it is clear
+
+02:08:35.640 --> 02:08:38.640
+now here are some parameters which you can set
+
+02:08:38.640 --> 02:08:41.640
+one parameter is written here
+
+02:08:53.640 --> 02:08:56.640
+now what are the parameters here
+
+02:08:56.640 --> 02:08:59.640
+threshold is your passing value
+
+02:08:59.640 --> 02:09:02.640
+you can select the model here, do you want to give a reason or not
+
+02:09:02.640 --> 02:09:05.640
+so these are all common for you
+
+02:09:05.640 --> 02:09:08.640
+but for this particular metric
+
+02:09:08.640 --> 02:09:11.640
+here are some specific parameters
+
+02:09:11.640 --> 02:09:14.640
+like this one
+
+02:09:14.640 --> 02:09:17.640
+you can set an integer value here
+
+02:09:17.640 --> 02:09:20.640
+that from your answer
+
+02:09:20.640 --> 02:09:23.640
+how many facts you have to extract
+
+02:09:23.640 --> 02:09:26.640
+sorry not answer, from retrieval context
+
+02:09:26.640 --> 02:09:29.640
+how many facts you have to extract
+
+02:09:29.640 --> 02:09:32.640
+so basically you set your denominator
+
+02:09:32.640 --> 02:09:35.640
+through this particular value
+
+02:09:35.640 --> 02:09:38.640
+penalize ambiguous claims
+
+02:09:38.640 --> 02:09:41.640
+if you set it true
+
+02:09:41.640 --> 02:09:44.640
+then your ambiguous claims
+
+02:09:44.640 --> 02:09:47.640
+will not be a part of the calculation
+
+02:09:47.640 --> 02:09:50.640
+default is false
+
+02:09:50.640 --> 02:09:53.640
+but generally if you have ambiguous claims
+
+02:09:53.640 --> 02:09:56.640
+then if you set it true
+
+02:09:56.640 --> 02:09:59.640
+now let me show you the whole thing
+
+02:09:59.640 --> 02:10:02.640
+in the code
+
+02:10:02.640 --> 02:10:05.640
+so here is our code
+
+02:10:05.640 --> 02:10:08.640
+exactly the same example we are using
+
+02:10:08.640 --> 02:10:11.640
+faithfulness metric
+
+02:10:11.640 --> 02:10:14.640
+here we are giving our input, this is my actual output
+
+02:10:14.640 --> 02:10:17.640
+and this is my retrieved context
+
+02:10:17.640 --> 02:10:20.640
+here is my faithfulness metric
+
+02:10:20.640 --> 02:10:23.640
+I have turned on verbosity
+
+02:10:23.640 --> 02:10:26.640
+and here I am extracting
+
+02:10:26.640 --> 02:10:29.640
+from my retrieval context 5
+
+02:10:29.640 --> 02:10:32.640
+you can increase or decrease the value
+
+02:10:32.640 --> 02:10:35.640
+let me change the values
+
+02:10:35.640 --> 02:10:38.640
+so let's run it
+
+02:10:38.640 --> 02:10:41.640
+so we are running it
+
+02:10:41.640 --> 02:10:44.640
+faithfulness metric
+
+02:10:44.640 --> 02:10:47.640
+it is running
+
+02:10:48.640 --> 02:10:51.640
+so first of all
+
+02:10:51.640 --> 02:10:54.640
+your facts will be extracted from your response
+
+02:10:54.640 --> 02:10:57.640
+then from your context
+
+02:10:57.640 --> 02:11:00.640
+and then there will be a comparison
+
+02:11:00.640 --> 02:11:03.640
+so see
+
+02:11:03.640 --> 02:11:06.640
+how many truths you have extracted
+
+02:11:06.640 --> 02:11:09.640
+truth is basically coming from your context
+
+02:11:09.640 --> 02:11:12.640
+your context is grounded, that is your ultimate truth
+
+02:11:12.640 --> 02:11:15.640
+so you have extracted
+
+02:11:15.640 --> 02:11:18.640
+from your response 5 truths
+
+02:11:18.640 --> 02:11:21.640
+sorry from your context 5 truths
+
+02:11:21.640 --> 02:11:24.640
+these are your truth values
+
+02:11:24.640 --> 02:11:27.640
+and where are these claims coming from?
+
+02:11:27.640 --> 02:11:30.640
+from your response, now claims can differ from you
+
+02:11:30.640 --> 02:11:33.640
+and you are checking here how much is matching
+
+02:11:33.640 --> 02:11:36.640
+here you can see 100%
+
+02:11:36.640 --> 02:11:39.640
+why 100%? because here
+
+02:11:39.640 --> 02:11:42.640
+we have extracted fewer truths
+
+02:11:42.640 --> 02:11:45.640
+and here we have removed the ambiguous
+
+02:11:45.640 --> 02:11:48.640
+if I take the ambiguous ones in calculation
+
+02:11:48.640 --> 02:11:51.640
+then your score will decrease
+
+02:11:51.640 --> 02:11:54.640
+see
+
+02:11:54.640 --> 02:11:57.640
+I have set it false
+
+02:12:01.640 --> 02:12:04.640
+score has been reduced
+
+02:12:04.640 --> 02:12:07.640
+because I am using the ambiguous ones
+
+02:12:07.640 --> 02:12:10.640
+and I can change the truth extraction limit
+
+02:12:10.640 --> 02:12:13.640
+let's say I have set the truth extraction limit
+
+02:12:13.640 --> 02:12:16.640
+as 7
+
+02:12:16.640 --> 02:12:19.640
+so here the value of my denominator is increasing
+
+02:12:19.640 --> 02:12:22.640
+so basically
+
+02:12:22.640 --> 02:12:25.640
+you can change your ratios through this
+
+02:12:25.640 --> 02:12:28.640
+then 1 came
+
+02:12:28.640 --> 02:12:31.640
+because in the last two I don't know is coming
+
+02:12:31.640 --> 02:12:34.640
+these are your ambiguities
+
+02:12:34.640 --> 02:12:37.640
+these are your 7th truths extracted
+
+02:12:37.640 --> 02:12:40.640
+so you can play with these values
+
+02:12:40.640 --> 02:12:43.640
+and experiment with it
+
+02:12:43.640 --> 02:12:46.640
+and you can basically
+
+02:12:46.640 --> 02:12:49.640
+check this particular code
+
+02:12:49.640 --> 02:12:52.640
+so what I will do is I will run get status
+
+02:12:52.640 --> 02:12:55.640
+so I will share these files with you
+
+02:13:07.640 --> 02:13:10.640
+ok commit
+
+02:13:10.640 --> 02:13:13.640
+ok push
+
+02:13:13.640 --> 02:13:16.640
+so that's it for today
+
+02:13:16.640 --> 02:13:19.640
+we have to cover more things
+
+02:13:19.640 --> 02:13:22.640
+but it is already 10.15
+
+02:13:22.640 --> 02:13:25.640
+so that's it for today
+
+02:13:25.640 --> 02:13:28.640
+in the next session
+
+02:13:28.640 --> 02:13:31.640
+we will do here
+
+02:13:31.640 --> 02:13:34.640
+whatever is the production related code
+
+02:13:34.640 --> 02:13:37.640
+and how you do things in production
+
+02:13:37.640 --> 02:13:40.640
+and we will read that
+
+02:13:40.640 --> 02:13:43.640
+and how you make custom metrics
+
+02:13:43.640 --> 02:13:46.640
+we will read that too
+
+02:13:46.640 --> 02:13:49.640
+so till now we have
+
+02:13:49.640 --> 02:13:52.640
+completed the whole of reading individual metrics
+
+02:13:52.640 --> 02:13:55.640
+and from the next session we will see
+
+02:13:55.640 --> 02:13:58.640
+that in production you have created all the metrics
+
+02:13:58.640 --> 02:14:01.640
+on your data set
+
+02:14:01.640 --> 02:14:04.640
+and how you do evaluations on that
+
+02:14:04.640 --> 02:14:07.640
+and we will read this important concept
+
+02:14:07.640 --> 02:14:10.640
+that is the rack triad
+
+02:14:10.640 --> 02:14:13.640
+when your application is deployed
+
+02:14:13.640 --> 02:14:16.640
+it is in production
+
+02:14:16.640 --> 02:14:19.640
+then you test which metrics
+
+02:14:19.640 --> 02:14:22.640
+because it is not possible to test all the metrics
+
+02:14:22.640 --> 02:14:25.640
+because you don't have your answer key
+
+02:14:25.640 --> 02:14:28.640
+you have to use non reference based metrics
+
+02:14:28.640 --> 02:14:31.640
+and we will understand what is the triad
+
+02:14:34.640 --> 02:14:37.640
+so I am open up to questions
+
+02:14:37.640 --> 02:14:40.640
+you can ask your questions
+
+02:14:40.640 --> 02:14:43.640
+I have some questions too
+
+02:14:46.640 --> 02:14:49.640
+how was today's session?
+
+02:14:49.640 --> 02:14:52.640
+was it good?
+
+02:14:52.640 --> 02:14:55.640
+are things clear?
+
+02:14:55.640 --> 02:14:58.640
+we can check correctness
+
+02:14:58.640 --> 02:15:01.640
+but for that we have to build a custom metric
+
+02:15:01.640 --> 02:15:04.640
+but for correctness you have to give your grounded context
+
+02:15:04.640 --> 02:15:07.640
+because from there you can check your correctness
+
+02:15:07.640 --> 02:15:10.640
+so you have to tell the true facts
+
+02:15:10.640 --> 02:15:13.640
+these are your actual facts
+
+02:15:13.640 --> 02:15:16.640
+and these are your generated facts
+
+02:15:16.640 --> 02:15:19.640
+and you will compare them
+
+02:15:19.640 --> 02:15:22.640
+but if truth extraction is too low
+
+02:15:22.640 --> 02:15:25.640
+then you will get false responses
+
+02:15:25.640 --> 02:15:28.640
+yes, this is possible
+
+02:15:28.640 --> 02:15:31.640
+if you have kept truth extraction low
+
+02:15:31.640 --> 02:15:34.640
+then there will be no comparison
+
+02:15:34.640 --> 02:15:37.640
+so you can set it as none
+
+02:15:37.640 --> 02:15:40.640
+all the facts in default are extract
+
+02:15:40.640 --> 02:15:43.640
+if you look carefully
+
+02:15:43.640 --> 02:15:46.640
+if you leave default as none
+
+02:15:46.640 --> 02:15:49.640
+then all of them will be extract
+
+02:15:49.640 --> 02:15:52.640
+again these are parameter values
+
+02:15:52.640 --> 02:15:55.640
+we have tweaked it
+
+02:15:55.640 --> 02:15:58.640
+because there are no particular examples
+
+02:15:58.640 --> 02:16:01.640
+to test this parameter
+
+02:16:01.640 --> 02:16:04.640
+we will check correctness
+
+02:16:04.640 --> 02:16:07.640
+ok, it was a good session
+
+02:16:07.640 --> 02:16:10.640
+and thank you
+
+02:16:10.640 --> 02:16:13.640
+you are able to build logic
+
+02:16:14.640 --> 02:16:17.640
+that we are able to build this whole testing
+
+02:16:17.640 --> 02:16:20.640
+this metrics, this data set
+
+02:16:20.640 --> 02:16:23.640
+yes, so I think
+
+02:16:23.640 --> 02:16:26.640
+I am going in the correct direction
+
+02:16:26.640 --> 02:16:29.640
+if you are able to build relationships
+
+02:16:29.640 --> 02:16:32.639
+if you are able to build logic
+
+02:16:32.639 --> 02:16:35.639
+then it is good
+
+02:16:35.639 --> 02:16:38.639
+I have shared the code with you
+
+02:16:38.639 --> 02:16:41.639
+so you can update the code
+
+02:16:41.639 --> 02:16:44.639
+you can test it
+
+02:16:44.639 --> 02:16:47.639
+you can make some examples with chat gbt
+
+02:16:47.639 --> 02:16:50.639
+and test it
+
+02:16:50.639 --> 02:16:53.639
+great
+
+02:16:53.639 --> 02:16:56.639
+what are the con in retriever
+
+02:16:56.639 --> 02:16:59.639
+what are the con in generator
+
+02:16:59.639 --> 02:17:02.639
+what are the things to be tweaked
+
+02:17:02.639 --> 02:17:05.639
+what is the use of when, what is the value up
+
+02:17:05.639 --> 02:17:08.639
+what is the down, what is the value up
+
+02:17:08.639 --> 02:17:11.639
+we will read the data set
+
+02:17:11.639 --> 02:17:14.639
+we will read an evaluate api
+
+02:17:14.639 --> 02:17:17.639
+how you evaluate all the metrics
+
+02:17:17.639 --> 02:17:20.639
+and then our baseline application will be evaluated
+
+02:17:20.639 --> 02:17:23.639
+so we will keep those scores for now
+
+02:17:23.639 --> 02:17:26.639
+and we will improve our application
+
+02:17:26.639 --> 02:17:29.639
+and here I will show you
+
+02:17:29.639 --> 02:17:32.639
+how you can make custom metrics in natural language
+
+02:17:32.639 --> 02:17:35.639
+so to define custom metrics
+
+02:17:35.639 --> 02:17:38.639
+you don't have to do technical things
+
+02:17:38.639 --> 02:17:41.639
+you have to explain in natural language
+
+02:17:41.639 --> 02:17:44.639
+what is your metric, what is its passing criteria
+
+02:17:44.639 --> 02:17:47.639
+what steps you have to take
+
+02:17:47.639 --> 02:17:50.639
+and what are your rubrics
+
+02:17:50.639 --> 02:17:53.639
+you can simply define them
+
+02:17:53.639 --> 02:17:56.639
+and you can make any custom metrics
+
+02:17:56.639 --> 02:17:59.639
+what inputs you have to pass, you can define them
+
+02:17:59.639 --> 02:18:02.639
+so I think in the next lecture
+
+02:18:02.639 --> 02:18:05.639
+I hope so
+
+02:18:05.639 --> 02:18:08.639
+yes sumit, you can ping me once
+
+02:18:08.639 --> 02:18:11.639
+and I will check the main metrics
+
+02:18:11.639 --> 02:18:14.639
+sure we can discuss about this
+
+02:18:14.639 --> 02:18:17.639
+I am also looking forward
+
+02:18:17.639 --> 02:18:20.639
+what we can do is
+
+02:18:20.639 --> 02:18:23.639
+we can keep a doubt clearance session or an hour class
+
+02:18:23.639 --> 02:18:26.639
+when we cover some important modules
+
+02:18:26.639 --> 02:18:29.639
+we can have a discussion session
+
+02:18:29.639 --> 02:18:32.639
+so that these topics are more solidified in your mind
+
+02:18:32.639 --> 02:18:35.639
+so we can do that session also
+
+02:18:44.639 --> 02:18:47.639
+is it clear guys?
+
+02:18:47.639 --> 02:18:50.639
+thank you
+
+02:18:50.639 --> 02:18:53.639
+thank you sumit
+
+02:18:53.639 --> 02:18:56.639
+my goal from the beginning is
+
+02:18:56.639 --> 02:18:59.639
+to make you understand the vibe
+
+02:18:59.639 --> 02:19:02.639
+when you are coding, you will know why you are doing this
+
+02:19:02.639 --> 02:19:05.639
+why is there any value coming
+
+02:19:05.639 --> 02:19:08.639
+how to improve
+
+02:19:08.639 --> 02:19:11.639
+why are we reading this
+
+02:19:11.639 --> 02:19:14.639
+so that you can answer the interview
+
+02:19:14.639 --> 02:19:17.639
+that's my final goal
+
+02:19:17.639 --> 02:19:20.639
+any more questions guys?
+
+02:19:20.639 --> 02:19:23.639
+I have 2 more minutes
+
+02:19:23.639 --> 02:19:26.639
+and then we will close the session
+
+02:19:26.639 --> 02:19:29.639
+ok
+
+02:19:29.639 --> 02:19:32.639
+I am making a workflow
+
+02:19:32.639 --> 02:19:35.639
+I am not getting time
+
+02:19:35.639 --> 02:19:38.639
+because you have sessions
+
+02:19:38.639 --> 02:19:41.639
+and the session of pine cone is also scheduled
+
+02:19:41.639 --> 02:19:44.639
+so I am not getting time
+
+02:19:44.639 --> 02:19:47.639
+I am not getting time
+
+02:19:47.639 --> 02:19:50.640
+but trust me I will provide you these structure notes
+
+02:19:50.640 --> 02:19:53.640
+I have transcripts
+
+02:19:53.640 --> 02:19:56.640
+I am actually doing a workflow on test
+
+02:19:56.640 --> 02:19:59.640
+I have created version 1, it is not that good
+
+02:19:59.640 --> 02:20:02.640
+but I will share it with you
+
+02:20:02.640 --> 02:20:05.640
+but the progress will be
+
+02:20:05.640 --> 02:20:08.640
+when 3-4 modules are done, I will share it with you
+
+02:20:08.640 --> 02:20:11.640
+because sharing each class individually
+
+02:20:12.640 --> 02:20:15.640
+2-3 modules are done
+
+02:20:15.640 --> 02:20:18.640
+4 modules are done, I will share it with you
+
+02:20:18.640 --> 02:20:21.640
+I am providing you the hand written notes
+
+02:20:26.640 --> 02:20:29.640
+I know it is tough but you will get the structure notes
+
+02:20:29.640 --> 02:20:32.640
+that is my guarantee
+
+02:20:35.640 --> 02:20:38.640
+any more questions guys?
+
+02:20:38.640 --> 02:20:41.640
+if not, write it clear
+
+02:20:42.640 --> 02:20:45.640
+I will see you on Monday
+
+02:20:48.640 --> 02:20:51.640
+I am signing off guys
+
+02:20:51.640 --> 02:20:54.640
+you have dinner and see you on Monday
+
+02:20:54.640 --> 02:20:57.640
+we will cover the remaining topics of the evaluation on Monday
+
+02:20:57.640 --> 02:21:00.640
+we will also see the code implementation
+
+02:21:00.640 --> 02:21:03.640
+and then we will move to prompt versioning
+
