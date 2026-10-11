@@ -30,9 +30,15 @@ def flatten_params(param_dict: dict) -> dict:
 
     return config_dict 
 
-def get_latest_result(path: Path | str): 
+def get_latest_result(path: Path | str, pattern: str): 
+    if isinstance(path, str): 
+        path = Path(path)
+
+    if not path.is_dir(): 
+        raise ValueError("Provided path is not a directory ")
+    
     filenames = []
-    files = Path(path).glob("*.json")
+    files = path.glob(pattern)
     for file in files: 
         filenames.append(file.stem)
 
@@ -75,7 +81,7 @@ def artifact_name(artifact_type: Literal['eval_dataset_final', 'golden_dataset_f
 
         return (artifact_path, artifact_dir)
 
-    elif artifact_type == 'eval_dataset_final': 
+    elif artifact_type == 'golden_dataset_final': 
         artifact_path = (DATA_PATH / "goldens" / params_config.golden_dataset.golden_dataset_filename).as_posix() + ".json"
 
         return (artifact_path, artifact_dir)
@@ -135,9 +141,9 @@ if __name__ == "__main__":
         
 
         # GET THE LATEST FILES AFTER EVAL PIPELINE 
-        latest_results_filename = get_latest_result(result_dir)
-        latest_report_filename = get_latest_result(report_dir)
-        report_file = (result_dir / latest_report_filename).with_suffix(".json").as_posix()
+        latest_results_filename = get_latest_result(result_dir, "*.json")
+        latest_report_filename = get_latest_result(report_dir, "*.md")
+        report_file = (report_dir / latest_report_filename).with_suffix(".md").as_posix()
         result_file = (result_dir / latest_results_filename).with_suffix(".json").as_posix()
 
         # LOG THE RESULT 

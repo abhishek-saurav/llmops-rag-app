@@ -11,3 +11,4 @@ ipykernel
 langchain_chroma
 langfuse
 mlflow
+dagshub
