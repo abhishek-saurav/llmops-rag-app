@@ -11,7 +11,10 @@ k = 3
 
 system_prompt = """ You are helpful assistant. Answer the user query 
                     based on the given context only. If you do not know the answer 
-                    say I don't know. Do not add any preamble to the response."""
+                    say I don't know. Do not add any preamble to the response.
+                    Always try to answer in simple languagae. Make sure your answer sticks to the input and the 
+                    available context and try to make your answers correct.
+                """
 
 
 # ADD SYSTEM PROMPT TO LANGFUSE 
@@ -21,7 +24,7 @@ created_prompt = langfuse.create_prompt(
     name = "rag_app_system_prompt", 
     type = 'text', 
     prompt= system_prompt, 
-    labels= ['baseline'], 
+    labels= ['staging'], 
     config= {
         "chunk_size": chunk_size, 
         "chunk_overlap": chunk_overlap, 

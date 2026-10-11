@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 # LOAD THE API KEYS 
 load_dotenv() 
 
+
 # DEFINING THE MODEL (to save cost for test purpose)
 model = 'gpt-5.4-mini'
 
@@ -63,45 +64,50 @@ simple_explanation = GEval(
     model = model
 )
 
-# DEFINE THE DATASET PATH 
+def evaluate_app(): 
 
-ROOT_DIR = Path(__file__).parent.parent.parent.parent
-DATASET_PATH = ROOT_DIR / "data" / "evaluation" / "eval_dataset" / "evaluation_dataset_final.json"
+    # DEFINE THE DATASET PATH 
 
-if DATASET_PATH: 
-    # LOAD THE DATASET 
-    dataset = EvaluationDataset() 
+    ROOT_DIR = Path(__file__).parent.parent.parent.parent
+    DATASET_PATH = ROOT_DIR / "data" / "evaluation" / "eval_dataset" / "evaluation_dataset_final.json"
 
-    # LOAD THE TEST CASES 
-    dataset.add_test_cases_from_json_file(
-        file_path= DATASET_PATH, 
-        input_key_name= "input", 
-        actual_output_key_name= "actual_output", 
-        expected_output_key_name= "expected_output",
-        retrieval_context_key_name= "retrieval_context"
-    )
+    if DATASET_PATH: 
+        # LOAD THE DATASET 
+        dataset = EvaluationDataset() 
 
-    # STORE THE TEST CASES IN A LIST 
-    test_cases = dataset.test_cases 
-
-
-    # EVALUATE THE DATASET 
-    evaluate(
-        test_cases= test_cases, 
-        metrics= [
-            recall, 
-            precision, 
-            answer_correctness, 
-            answer_relevancy, 
-            faithfulness, 
-            contextual_relevancy, 
-            simple_explanation
-        ], 
-        async_config= AsyncConfig(throttle_value= 3, 
-                                  max_concurrent= 5),
-        display_config= DisplayConfig(
-            results_folder= (ROOT_DIR / "reports" / "evaluation_result").as_posix(), 
-            file_type= "md",
-            file_output_dir= (ROOT_DIR / "reports" / "evaluation_report").as_posix()
+        # LOAD THE TEST CASES 
+        dataset.add_test_cases_from_json_file(
+            file_path= DATASET_PATH, 
+            input_key_name= "input", 
+            actual_output_key_name= "actual_output", 
+            expected_output_key_name= "expected_output",
+            retrieval_context_key_name= "retrieval_context"
         )
-    )
+
+        # STORE THE TEST CASES IN A LIST 
+        test_cases = dataset.test_cases 
+
+
+        # EVALUATE THE DATASET 
+        evaluate(
+            test_cases= test_cases, 
+            metrics= [
+                recall, 
+                precision, 
+                answer_correctness, 
+                answer_relevancy, 
+                faithfulness, 
+                contextual_relevancy, 
+                simple_explanation
+            ], 
+            async_config= AsyncConfig(throttle_value= 3, 
+                                    max_concurrent= 5),
+            display_config= DisplayConfig(
+                results_folder= (ROOT_DIR / "reports" / "evaluation_result").as_posix(), 
+                file_type= "md",
+                file_output_dir= (ROOT_DIR / "reports" / "evaluation_report").as_posix()
+            )
+        )
+
+if __name__ == "main": 
+    evaluate_app() 

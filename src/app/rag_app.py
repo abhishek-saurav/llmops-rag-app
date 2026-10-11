@@ -6,6 +6,22 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma 
 from pathlib import Path 
 from dotenv import load_dotenv 
+from langfuse import get_client 
+from dotenv import load_dotenv 
+from config.config import params_config 
+app_config = params_config.rag_app
+
+# LOAD THE API KEYS 
+load_dotenv() 
+
+langfuse = get_client() 
+
+system_prompt = langfuse.get_prompt(
+    name = "rag_app_system_prompt", 
+    type= 'text', 
+    label= app_config.prompt_label
+    )
+
 
 
 # 1. Load the api keys 
@@ -17,9 +33,9 @@ VECTOR_STORE_DIR = REPO_ROOT / "saved_embedding"
 
 # 2. Create the LLM and Embedding model 
 
-llm = ChatOpenAI(model = 'gpt-5-mini')
-embedder = OpenAIEmbeddings(model = 'text-embedding-3-small', 
-                            dimensions= 1024) # defaul 1536 
+llm = ChatOpenAI(model = app_config.llm)
+embedder = OpenAIEmbeddings(model = app_config.embedding_model, 
+                            dimensions= app_config.embedding_dimension) # defaul 1536 
 
 
 # 3. Load the documents from source 
@@ -40,9 +56,9 @@ def upsert_document(chunk_size: int, chunk_overlap: int):
     # 4. Chunk the text 
 
     chunker = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-                                                encoding_name= "o200k_base",
-                                                chunk_size = chunk_size, 
-                                            chunk_overlap = chunk_overlap)
+                                                encoding_name= app_config.tokenizer_embedding,
+                                                chunk_size = app_config.chunk_size, 
+                                            chunk_overlap = app_config.chunk_overlap)
 
 
     chunks = chunker.split_documents(docs)
@@ -51,7 +67,7 @@ def upsert_document(chunk_size: int, chunk_overlap: int):
     # 5. Create a vector store 
 
     vs = Chroma(
-        collection_name = 'rag_demo', 
+        collection_name = app_config.collection_name, 
         embedding_function= embedder, 
         persist_directory= VECTOR_STORE_DIR.as_posix() 
     )
@@ -66,7 +82,7 @@ def upsert_document(chunk_size: int, chunk_overlap: int):
 def load_knowledge_base(): 
     # vector_store 
     vs = Chroma(
-        collection_name= "rag_demo", 
+        collection_name= app_config.collection_name, 
         embedding_function= embedder, 
         persist_directory= VECTOR_STORE_DIR.as_posix()
     )
@@ -76,13 +92,13 @@ def load_knowledge_base():
 if VECTOR_STORE_DIR.exists(): 
     vs = load_knowledge_base() 
 else: 
-    vs = upsert_document(chunk_size, chunk_overlap)
+    vs = upsert_document(app_config.chunk_size, app_config.chunk_overlap)
 
 
 # 7. Retriever 
 
-retriever = vs.as_retriever(search_type = "similarity", 
-                            search_kwargs = {"k": 3})
+retriever = vs.as_retriever(search_type = app_config.search_type, 
+                            search_kwargs = {"k": app_config.k})
 
 # creating langgraph 
 from langgraph.graph import StateGraph , START, END 
@@ -112,9 +128,7 @@ def augmentation(state: RagState) -> dict:
     # context = state['context']
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """ You are helpful assistant. Answer the user query 
-                        based on the given context only. If you do not know the answer 
-                        say I don't know. Do not add any preamble to the response"""), 
+        ("system", system_prompt.prompt), 
         ("human", "context: {context}\n\nquery: {query}")
     ])
 
