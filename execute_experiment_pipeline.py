@@ -8,7 +8,9 @@ from typing import Literal
 import logging
 from logging import INFO
 import mlflow 
+import dagshub
 import json 
+from mlflow_utils import log_run_info
 from time import sleep
 # LOAD THE API KEYS 
 load_dotenv() 
@@ -102,8 +104,12 @@ def return_code_files():
 if __name__ == "__main__": 
 
     # SET TRACKING SERVER 
-    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_tracking_uri("https://dagshub.com/abhishek-saurav/llmops-rag-app.mlflow")
 
+    # INITIATING DOGSHUB 
+    dagshub.init(repo_owner='abhishek-saurav', repo_name='llmops-rag-app', mlflow=True)
+
+        
     # SET THE EXPERIMENT NAME 
     mlflow.set_experiment("rag_app")
 
@@ -117,8 +123,8 @@ if __name__ == "__main__":
     formatter = logging.Formatter(fmt = "%(asctime)s - %(levelname)s - %(message)s")
     handler.setFormatter(fmt = formatter)
 
-
     with mlflow.start_run() as run: 
+
 
         # GET ALL THE PARAMS 
         all_params = params_config.model_dump()
@@ -182,3 +188,14 @@ if __name__ == "__main__":
             mlflow.log_artifact(code_file, "code")
 
         logger.info("code files logged")
+
+        # SET TAG FOR THE RUN 
+        mlflow.set_tag("stage", "baseline") 
+        mlflow.set_tag("phase", "noise_threshold")
+
+    # EXTRACT INFO FROM RUN 
+    run_id = run.info.run_id
+    run_name = run.info.run_name
+
+    # LOG TO JSON FILE 
+    log_run_info(run_id=run_id, run_name=run_name)
